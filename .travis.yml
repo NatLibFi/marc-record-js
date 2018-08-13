@@ -7,4 +7,4 @@ after_script:
 addons:
   code_climate:
     repo_token:
-      secure: ""
+      secure: "iohuZBi7qE7QXJdP51DlHNEI+VvmI1Rzu9ydugZULNgt2aO28/EtyLztCVJcb5gFTMqblT7C+sBgVJsOSBdJbsCC9pcwGHlvTmdZm1ZtHDEcyxYcVMyWGyyR1xUsU4jqqAvRLpU7urCQng5t6IhKBi42N/67MiYzZL1pOYAiJ2jXUCUi2FY/ygAJ7MHE5tT4yobaqm8uYCRcrMd+hepkqrLyoORN2Df6IJV3yYOpzc1LSdTutRkquR0tNOD1sSEFfm53A1bWEa6j87IlR1xJ/NZ2xwNNjtg70JTN/alOcOTUOChn4FNHXn7VeotgJ4ruMRaes21AKWACgA1Y1dxS/AZDj7rjev79813rdHqXQLO1fAcvSLlgmZDD9X799CGx+RheDP8FNTRIsjGmXtWEBaRQJTUQJ9TOTlP0r8ae3jexEjDfC8d1zcdH3doCFQOfE/pdETOgL/eDY1GI2yn6gpKz5jakuHlqb2lZLr/y5ZL9ZeQBsKoDTmAxCebDQkAEor3iCns/h5L1RxCs0EjterHuh/Kh+oAzjmSOSX95+8/b86c+qYVhQuswlv9Ksl6Ft0GE2PMCwi5IzdW85nS6++GJFwC+79cJrl/6DE3f+1Rlm3iPUSqk/YlxK0BE6INW5ONik3caDLsic1ZKAXoedOtT+q1Zfc8Wp+Tg4DKak4w="
