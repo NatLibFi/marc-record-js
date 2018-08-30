@@ -22,9 +22,20 @@ const Validator = createValidator();
 export class MarcRecord {
 	constructor(record) {
 		if (record) {
-			if (Validator.validateRecord(record)) {
-				this.leader = record.leader;
-				this.fields = clone(record.fields);
+			const recordClone = clone(record);
+
+			if (Array.isArray(recordClone.fields)) {
+				recordClone.fields.forEach(field => {
+					if ('subfields' in field) {
+						field.ind1 = field.ind1 || ' ';
+						field.ind2 = field.ind2 || ' ';
+					}
+				});
+			}
+
+			if (Validator.validateRecord(recordClone)) {
+				this.leader = recordClone.leader;
+				this.fields = recordClone.fields;
 			} else {
 				throw new Error('Record is invalid');
 			}

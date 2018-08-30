@@ -29,15 +29,26 @@ describe('index', () => {
 			expect(record).to.have.all.keys('leader', 'fields');
 		});
 
-		it('Should clone a record', () => {
-			const a = new MarcRecord();
-			a.leader = 'foo';
-			a.fields = [];
+		it('Should create a record based on an object', () => {
+			const a = {
+				leader: '',
+				fields: [
+					{tag: '245', subfields: [{code: 'a', value: 'foo'}]}
+				]
+			};
 
 			const b = new MarcRecord(a);
 
-			expect(a).to.not.equal(b);
-			expect(JSON.stringify(a)).to.eql(JSON.stringify(b));
+			expect({
+				leader: '',
+				fields: [
+					{
+						tag: '245',
+						ind1: ' ', ind2: ' ',
+						subfields: [{code: 'a', value: 'foo'}]
+					}
+				]
+			}).to.eql(b);
 		});
 
 		it('Should fail to create a record from an object', () => {
