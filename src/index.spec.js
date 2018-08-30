@@ -113,7 +113,7 @@ describe('index', () => {
 					rec.appendField({tag: '001', value: '98234240'});
 					rec.appendField({tag: '008', value: 'field008'});
 
-					rec.appendField({tag: '500', ind1: ' ', ind2: ' ', subfields: [
+					rec.appendField({tag: '500', subfields: [
 						{code: 'a', value: 'Note'}
 					]});
 					rec.insertField({tag: '245', ind1: ' ', ind2: ' ', subfields: [
