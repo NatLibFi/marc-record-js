@@ -24,6 +24,8 @@ export class MarcRecord {
 		if (record) {
 			const recordClone = clone(record);
 
+			recordClone.leader = recordClone.leader || '';
+
 			if (Array.isArray(recordClone.fields)) {
 				recordClone.fields.forEach(field => {
 					if ('subfields' in field) {
@@ -34,7 +36,7 @@ export class MarcRecord {
 			}
 
 			if (Validator.validateRecord(recordClone)) {
-				this.leader = recordClone.leader || '';
+				this.leader = recordClone.leader;
 				this.fields = recordClone.fields;
 			} else {
 				throw new Error('Record is invalid');
