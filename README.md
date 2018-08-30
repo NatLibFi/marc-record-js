@@ -33,8 +33,7 @@ record.insertField({
 // Append fields to the end of the record
 record.appendField({
 	tag: '245',
-	ind1: ' ',
-	ind2: ' ',
+	ind2: '1',
 	subfields: [
 		{
 			code: "a"
