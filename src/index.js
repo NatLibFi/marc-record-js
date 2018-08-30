@@ -194,7 +194,7 @@ export class MarcRecord {
 		function reorder(obj) {
 			return Object.keys(obj).sort().reduce((acc, key) => {
 				return Object.assign(acc, {
-					[key]: obj[key]
+					[key]: typeof obj[key] === 'object' ? reorder(obj[key]) : obj[key]
 				});
 			}, {});
 		}
