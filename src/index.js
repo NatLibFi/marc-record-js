@@ -10,7 +10,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-* 
+*
 * @licend  The above is the entire license notice
 * for the JavaScript code in this file.
 *
@@ -54,6 +54,11 @@ export class MarcRecord {
 	}
 
 	insertField(field, index) {
+		if ('subfields' in field) {
+			field.ind1 = field.ind1 || ' ';
+			field.ind2 = field.ind2 || ' ';
+		}
+
 		if (Validator.validateField(field)) {
 			if (index === undefined) {
 				index = this.findPosition(field.tag);
