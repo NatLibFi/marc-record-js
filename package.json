@@ -27,9 +27,6 @@
   "license": "MIT",
   "version": "1.1.2",
   "main": "./dist/index.js",
-  "files": [
-    "./dist"
-  ],
   "engines": {
     "node": ">=7"
   },
@@ -44,7 +41,7 @@
     "build:transpile": "babel src --source-maps --out-dir=dist --minified",
     "build": "npm run clean && npm run build:transpile && npm run check-deps",
     "watch": "cross-env DEBUG=1 NODE_ENV=test chokidar src -c 'npm test && babel-node src/index.js'",
-    "publish-to-npm": "npm install && npm test && npm run coverage && npm run build:transpile && npm publish --access=public"
+    "publish-to-npm": "npm install && npm test && npm run coverage && npm publish --access=public"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
