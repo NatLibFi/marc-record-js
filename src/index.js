@@ -34,7 +34,7 @@ export class MarcRecord {
 			}
 
 			if (Validator.validateRecord(recordClone)) {
-				this.leader = recordClone.leader;
+				this.leader = recordClone.leader || '';
 				this.fields = recordClone.fields;
 			} else {
 				throw new Error('Record is invalid');
