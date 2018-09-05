@@ -27,7 +27,8 @@
             "type": "object",
             "properties": {
               "tag": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "ind1": {
                 "type": "string",
@@ -45,10 +46,12 @@
                   "type": "object",
                   "properties": {
                     "code": {
-                      "type": "string"
+                      "type": "string",
+                      "minLength": 1
                     },
                     "value": {
-                      "type": "string"
+                      "type": "string",
+                      "minLength": 1
                     }
                   },
                   "required": [
