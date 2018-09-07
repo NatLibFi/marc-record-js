@@ -10,7 +10,7 @@ This a fork of the original [marc-record-js](https://github.com/petuomin/marc-re
 
 ## Usage
 ```js
-import MarcRecord from '@natlibfi/marc-record';
+import {MarcRecord} from '@natlibfi/marc-record';
 const record = new MarcRecord();
 ```
 ### Create record from object
