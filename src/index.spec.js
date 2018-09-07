@@ -153,6 +153,20 @@ describe('index', () => {
 					].join());
 				});
 
+				it('should insert fields specified as arrays', () => {
+					const rec = new MarcRecord();
+					rec.insertField(['FOO', 'bar']);
+					rec.insertField(['BAR', '', '', 'a', 'foo', 'b', 'bar']);
+
+					expect(rec.fields).to.eql([
+						{tag: 'BAR', ind1: ' ', ind2: ' ', subfields: [
+							{code: 'a', value: 'foo'},
+							{code: 'b', value: 'bar'}
+						]},
+						{tag: 'FOO', value: 'bar'}
+					]);
+				});
+
 				it('should fail to insert a field', () => {
 					const rec = new MarcRecord();
 					expect(() => {
