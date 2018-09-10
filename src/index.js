@@ -67,6 +67,8 @@ export class MarcRecord {
 	}
 
 	insertField(field, index) {
+		field = Array.isArray(field) ? convertFromArray(field) : field;
+
 		if ('subfields' in field) {
 			field.ind1 = field.ind1 || ' ';
 			field.ind2 = field.ind2 || ' ';
@@ -82,6 +84,29 @@ export class MarcRecord {
 		}
 
 		throw new Error('Field is invalid');
+
+		function convertFromArray(args) {
+			if (field.length === 2) {
+				const [tag, value] = args;
+				return {tag, value};
+			}
+
+			const [tag, ind1, ind2] = args;
+			const subfields = parseSubfields(args.slice(3));
+
+			return {tag, ind1, ind2, subfields};
+
+			function parseSubfields(args, subfields = []) {
+				const [code, value] = args;
+
+				if (code && value) {
+					subfields.push({code, value});
+					return parseSubfields(args.slice(2), subfields);
+				}
+
+				return subfields;
+			}
+		}
 	}
 
 	findPosition(tag) {
