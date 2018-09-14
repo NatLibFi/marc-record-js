@@ -16,18 +16,14 @@
 *
 */
 
-import fs from 'fs';
-import path from 'path';
 import {validate} from 'jsonschema';
+import schema from './schema';
 
 export function clone(obj) {
 	return JSON.parse(JSON.stringify(obj));
 }
 
 export function createValidator() {
-	const schemaPath = path.resolve(__dirname, '..', 'schema.json');
-	const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
-
 	return {
 		validateRecord: record => {
 			const validationResult = validate(record, schema);
