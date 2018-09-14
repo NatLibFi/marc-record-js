@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/NatLibFi/marc-record-js.svg)](https://travis-ci.org/NatLibFi/marc-record-js)
 [![Test Coverage](https://codeclimate.com/github/NatLibFi/marc-record-js/badges/coverage.svg)](https://codeclimate.com/github/NatLibFi/marc-record-js/coverage)
 
-MARC record implementation in JavaScript. [A JSON schema](schema.json) file specifies the data format.
+MARC record implementation in JavaScript. [A JSON schema](src/schema.js) file specifies the data format.
 
 This a fork of the original [marc-record-js](https://github.com/petuomin/marc-record-js). The new implementation uses ES6 syntax and adds validation of the record structure.
 
