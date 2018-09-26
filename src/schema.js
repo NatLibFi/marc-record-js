@@ -44,6 +44,7 @@ export default {
 							},
 							subfields: {
 								type: 'array',
+								minLength: 1,
 								items: {
 									type: 'object',
 									properties: {
