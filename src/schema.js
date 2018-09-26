@@ -6,6 +6,7 @@ export default {
 		},
 		fields: {
 			type: 'array',
+			minItems: 1,
 			items: {
 				anyOf: [
 					{
@@ -44,6 +45,7 @@ export default {
 							},
 							subfields: {
 								type: 'array',
+								minItems: 1,
 								items: {
 									type: 'object',
 									properties: {
