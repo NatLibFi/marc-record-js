@@ -46,7 +46,9 @@ describe('utils', () => {
 				const Validator = Utils.createValidator();
 				const record = {
 					leader: 'foo',
-					fields: []
+					fields: [
+						{tag: 'FOO', value: 'bar'}
+					]
 				};
 
 				expect(Validator.validateRecord(record)).to.be.true;
