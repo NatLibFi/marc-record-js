@@ -6,6 +6,7 @@ export default {
 		},
 		fields: {
 			type: 'array',
+			minItems: 1,
 			items: {
 				anyOf: [
 					{
