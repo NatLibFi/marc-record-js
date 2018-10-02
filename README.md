@@ -20,6 +20,20 @@ const record = new MarcRecord({leader: 'foo', fields: [
 ]})
 ```
 
+### Validation options
+```js
+MarcRecord.getValidationOptions(); // {fields: true, subfields: true, subfieldValues: true }
+MarcRecord.setValidationOptions({fields: false});
+
+const record = new MarcRecord({leader: 'foo', fields: []}); // This is ok because setting strict field validation to false
+
+try {
+  const record = new MarcRecord({leader: 'foo', fields: []}, {fields: true); // No longer ok
+ } catch (err) {
+   MarcRecord.setValidationOptions({}); // Reset to default
+ }
+```
+
 ### Mutating the record
 ```js
 record.leader = "00000cam^a22001817i^4500";
