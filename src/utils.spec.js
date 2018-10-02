@@ -32,52 +32,54 @@ describe('utils', () => {
 		});
 	});
 
-	describe('#createValidator', () => {
-		it('Should create the expected object', () => {
-			const Validator = Utils.createValidator();
+	describe('#validateRecord', () => {
+		it('Should consider the record valid', () => {
+			const record = {
+				leader: 'foo',
+				fields: [
+					{tag: 'FOO', value: 'bar'}
+				]
+			};
 
-			expect(Validator).to.be.an('object').that
-				.respondsTo('validateRecord')
-				.and.respondsTo('validateField');
+			expect(Utils.validateRecord(record)).to.not.throw;
 		});
 
-		describe('#validateRecord', () => {
-			it('Should consider the record valid', () => {
-				const Validator = Utils.createValidator();
-				const record = {
-					leader: 'foo',
-					fields: [
-						{tag: 'FOO', value: 'bar'}
-					]
-				};
+		it('Should consider the record invalid', () => {
+			const record = {
+				leader: 'foo'
+			};
 
-				expect(Validator.validateRecord(record)).to.be.true;
-			});
+			try {
+				Utils.validateRecord(record);
+			} catch (err) {
+				expect(err.message).to.match(/^Record is invalid$/);
+				expect(err).to.have.property('validationResults');
+				return;
+			}
 
-			it('Should consider the record invalid', () => {
-				const Validator = Utils.createValidator();
-				const record = {
-					leader: 'foo'
-				};
+			throw new Error('Should throw');
+		});
+	});
 
-				expect(Validator.validateRecord(record)).to.be.false;
-			});
+	describe('#validateField', () => {
+		it('Should consider the field valid', () => {
+			const field = {tag: 'FOO', value: 'BAR'};
+
+			expect(Utils.validateField(field)).to.not.throw;
 		});
 
-		describe('#validateField', () => {
-			it('Should consider the field valid', () => {
-				const Validator = Utils.createValidator();
-				const field = {tag: 'FOO', value: 'BAR'};
+		it('Should consider the field invalid', () => {
+			const field = {tag: 'FOO'};
 
-				expect(Validator.validateField(field)).to.be.true;
-			});
+			try {
+				Utils.validateField(field);
+			} catch (err) {
+				expect(err.message).to.match(/^Field is invalid: {"tag":"FOO"}$/);
+				expect(err).to.have.property('validationResults');
+				return;
+			}
 
-			it('Should consider the field invalid', () => {
-				const Validator = Utils.createValidator();
-				const field = {tag: 'FOO'};
-
-				expect(Validator.validateField(field)).to.be.false;
-			});
+			throw new Error('Should throw');
 		});
 	});
 });

@@ -15,12 +15,32 @@
 * for the JavaScript code in this file.
 *
 */
-import {createValidator, clone} from './utils';
+import {clone, validateRecord, validateField} from './utils';
 
-const Validator = createValidator();
+const VALIDATION_OPTIONS = {
+	fields: true,
+	subfields: true,
+	subfieldValues: true
+};
+
+function createValidationOptions(options) {
+	return Object.assign({}, VALIDATION_OPTIONS, options);
+}
 
 export class MarcRecord {
-	constructor(record) {
+	static setValidationOptions({fields = true, subfields = true, subfieldValues = true}) {
+		VALIDATION_OPTIONS.fields = fields;
+		VALIDATION_OPTIONS.subfields = subfields;
+		VALIDATION_OPTIONS.subfieldValues = subfieldValues;
+	}
+
+	static getValidationOptions() {
+		return clone(VALIDATION_OPTIONS);
+	}
+
+	constructor(record, validationOptions = {}) {
+		this._validationOptions = validationOptions;
+
 		if (record) {
 			const recordClone = clone(record);
 
@@ -35,12 +55,10 @@ export class MarcRecord {
 				});
 			}
 
-			if (Validator.validateRecord(recordClone)) {
-				this.leader = recordClone.leader;
-				this.fields = recordClone.fields;
-			} else {
-				throw new Error('Record is invalid');
-			}
+			validateRecord(recordClone, createValidationOptions(this._validationOptions));
+
+			this.leader = recordClone.leader;
+			this.fields = recordClone.fields;
 		} else {
 			this.leader = '';
 			this.fields = [];
@@ -74,16 +92,13 @@ export class MarcRecord {
 			field.ind2 = field.ind2 || ' ';
 		}
 
-		if (Validator.validateField(field)) {
-			if (index === undefined) {
-				index = this.findPosition(field.tag);
-			}
+		validateField(field, createValidationOptions(this._validationOptions));
 
-			this.fields.splice(index, 0, field);
-			return;
+		if (index === undefined) {
+			index = this.findPosition(field.tag);
 		}
 
-		throw new Error('Field is invalid');
+		this.fields.splice(index, 0, field);
 
 		function convertFromArray(args) {
 			if (field.length === 2) {
@@ -170,7 +185,15 @@ export class MarcRecord {
 	}
 
 	toObject() {
-		return clone(this);
+		const obj = clone(this);
+
+		Object.keys(obj)
+			.filter(k => k.startsWith('_'))
+			.forEach(k => {
+				delete obj[k];
+			});
+
+		return obj;
 	}
 
 	static fromString(str) {
