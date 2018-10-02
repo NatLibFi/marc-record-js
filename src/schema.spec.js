@@ -16,27 +16,21 @@
 *
 */
 
-import {validate} from 'jsonschema';
+/* eslint-disable no-unused-expressions, max-nested-callbacks */
+import {expect} from 'chai';
 import createSchema from './schema';
 
-export function clone(obj) {
-	return JSON.parse(JSON.stringify(obj));
-}
+describe('schema', () => {
+	it('Create a schema', () => {
+		const schema = createSchema({});
+		expect(schema).to.be.an('object');
+	});
 
-export function validateRecord(record, options = {}) {
-	const result = validate(record, createSchema(options));
-	if (result.errors.length > 0) {
-		const error = new Error('Record is invalid');
-		error.validationResults = result;
-		throw error;
-	}
-}
-
-export function validateField(field, options = {}) {
-	const result = validate(field, createSchema(options).properties.fields.items);
-	if (result.errors.length > 0) {
-		const error = new Error(`Field is invalid: ${JSON.stringify(field)}`);
-		error.validationResults = result;
-		throw error;
-	}
-}
+	it('Create a schema with options', () => {
+		const schema = createSchema({fields: false, subfields: false, subfieldValues: false});
+		expect(schema).to.be.an('object');
+		expect(schema.properties.fields.minItems).to.equal(0);
+		expect(schema.properties.fields.items.anyOf[1].properties.subfields.minItems).to.equal(0);
+		expect(schema.properties.fields.items.anyOf[1].properties.subfields.items.required).to.eql(['code']);
+	});
+});

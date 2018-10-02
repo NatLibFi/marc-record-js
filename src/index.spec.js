@@ -26,7 +26,7 @@ describe('index', () => {
 			const record = new MarcRecord();
 
 			expect(record).to.be.an('object');
-			expect(record).to.have.all.keys('leader', 'fields');
+			expect(record).to.have.all.keys('_validationOptions', 'leader', 'fields');
 		});
 
 		it('Should create a record based on an object', () => {
@@ -40,6 +40,7 @@ describe('index', () => {
 			const b = new MarcRecord(a);
 
 			expect({
+				_validationOptions: {},
 				leader: '',
 				fields: [
 					{
@@ -49,6 +50,16 @@ describe('index', () => {
 					}
 				]
 			}).to.eql(b);
+		});
+
+		it('Should create a record with validation options', () => {
+			const record = new MarcRecord({
+				leader: 'foo',
+				fields: []
+			}, {fields: false});
+
+			expect(record).to.be.an('object');
+			expect(record).to.have.all.keys('_validationOptions', 'leader', 'fields');
 		});
 
 		it('Should fail to create a record from an object', () => {
@@ -171,7 +182,7 @@ describe('index', () => {
 					const rec = new MarcRecord();
 					expect(() => {
 						rec.appendField({tag: '001'});
-					}).to.throw(/^Field is invalid$/);
+					}).to.throw(/^Field is invalid: {"tag":"001"}$/);
 				});
 			});
 
@@ -504,6 +515,22 @@ describe('index', () => {
 
 			expect(cloneOfMarcRecord.equalsTo(record)).to.be.true;
 			expect(cloneOfMarcRecord.fields !== record.fields);
+		});
+	});
+
+	describe('#setValidationOptions/#getValidationOptions', () => {
+		it('Should set validationOptions', () => {
+			MarcRecord.setValidationOptions({fields: false});
+
+			expect(MarcRecord.getValidationOptions({})).to.eql({
+				fields: false, subfields: true, subfieldValues: true
+			});
+
+			MarcRecord.setValidationOptions({});
+
+			expect(MarcRecord.getValidationOptions({})).to.eql({
+				fields: true, subfields: true, subfieldValues: true
+			});
 		});
 	});
 });
