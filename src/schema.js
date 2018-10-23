@@ -56,7 +56,7 @@ export default function ({fields = true, subfields = true, subfieldValues = true
 											},
 											value: {
 												type: 'string',
-												minLength: 1
+												minLength: subfieldValues ? 1 : 0
 											}
 										},
 										required: subfieldValues ? ['code', 'value'] : ['code']
