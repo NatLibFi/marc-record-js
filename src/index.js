@@ -114,7 +114,7 @@ export class MarcRecord {
 			function parseSubfields(args, subfields = []) {
 				const [code, value] = args;
 
-				if (code && value) {
+				if (code) {
 					subfields.push({code, value});
 					return parseSubfields(args.slice(2), subfields);
 				}
