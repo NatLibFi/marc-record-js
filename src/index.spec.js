@@ -21,6 +21,10 @@ import {expect} from 'chai';
 import {MarcRecord} from './index';
 
 describe('index', () => {
+	afterEach(() => {
+		MarcRecord.setValidationOptions({});
+	});
+
 	describe('#constructor', () => {
 		it('Should create a record', () => {
 			const record = new MarcRecord();
@@ -175,6 +179,20 @@ describe('index', () => {
 							{code: 'b', value: 'bar'}
 						]},
 						{tag: 'FOO', value: 'bar'}
+					]);
+				});
+
+				it('should insert fields specified as arrays (Incomplete subfields /w custom validation', () => {
+					const rec = new MarcRecord();
+					MarcRecord.setValidationOptions({subfieldValues: false});
+					rec.insertField(['FOO', '', '', 'a', 'foo', 'b', '']);
+
+					expect(rec.fields).to.eql([
+						{tag: 'FOO', ind1: ' ', ind2: ' ',
+							subfields: [
+								{code: 'a', value: 'foo'},
+								{code: 'b', value: ''}
+							]}
 					]);
 				});
 
