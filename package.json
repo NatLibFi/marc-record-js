@@ -43,6 +43,9 @@
     "watch": "cross-env DEBUG=1 NODE_ENV=test chokidar src -c 'npm test'",
     "publish-to-npm": "npm install && npm test && npm run coverage && npm publish --access=public"
   },
+  "dependencies": {
+    "jsonschema": "^1.2.4"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.6",
@@ -113,8 +116,5 @@
     "statements": 100,
     "functions": 100,
     "branches": 100
-  },
-  "dependencies": {
-    "jsonschema": "^1.2.4"
   }
 }
