@@ -12,4 +12,5 @@ pipeline:
     secrets: [npm_token]
     when:
       event: tag
-      branch: master
+      # Not working with Github, see https://github.com/drone/drone/issues/2536
+      #branch: master
