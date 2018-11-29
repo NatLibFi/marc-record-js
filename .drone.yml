@@ -4,7 +4,6 @@ pipeline:
     commands:
     - npm install
     - npm test
-    - npm run build
   npm:
     image: plugins/npm
     settings:
