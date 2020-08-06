@@ -3,7 +3,7 @@
 * @licstart  The following is the entire license notice for the JavaScript code in this file.
 *
 * Copyright 2014-2017 Pasi Tuominen
-* Copyright 2018 University Of Helsinki (The National Library Of Finland)
+* Copyright 2018-2020 University Of Helsinki (The National Library Of Finland)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 *
@@ -15,236 +15,224 @@
 * for the JavaScript code in this file.
 *
 */
-import {clone, validateRecord, validateField} from './utils';
 
-const VALIDATION_OPTIONS = {
-	fields: true,
-	subfields: true,
-	subfieldValues: true
+import {clone, validateRecord, validateField} from './utils';
+export {default as MarcRecordError} from './error';
+
+const validationOptionsDefaults = {
+  fields: true,
+  subfields: true,
+  subfieldValues: true
 };
 
-function createValidationOptions(options) {
-	return Object.assign({}, VALIDATION_OPTIONS, options);
-}
+let globalValidationOptions = {...validationOptionsDefaults}; // eslint-disable-line functional/no-let
 
 export class MarcRecord {
-	static setValidationOptions({fields = true, subfields = true, subfieldValues = true}) {
-		VALIDATION_OPTIONS.fields = fields;
-		VALIDATION_OPTIONS.subfields = subfields;
-		VALIDATION_OPTIONS.subfieldValues = subfieldValues;
-	}
+  static setValidationOptions(options) {
+    globalValidationOptions = {...validationOptionsDefaults, ...options};
+  }
 
-	static getValidationOptions() {
-		return clone(VALIDATION_OPTIONS);
-	}
+  static getValidationOptions() {
+    return clone(globalValidationOptions);
+  }
 
-	constructor(record, validationOptions = {}) {
-		this._validationOptions = validationOptions;
+  constructor(record, validationOptions = {}) {
+    this._validationOptions = validationOptions; // eslint-disable-line functional/no-this-expression
 
-		if (record) {
-			const recordClone = clone(record);
+    if (record) {
+      const recordClone = clone(record);
+      recordClone.leader = recordClone.leader || '';
+      recordClone.fields = recordClone.fields || [];
 
-			recordClone.leader = recordClone.leader || '';
+      recordClone.fields
+        .filter(({subfields}) => subfields)
+        .forEach(field => {
+          field.ind1 = field.ind1 || ' ';
+          field.ind2 = field.ind2 || ' ';
+        });
 
-			if (Array.isArray(recordClone.fields)) {
-				recordClone.fields.forEach(field => {
-					if ('subfields' in field) {
-						field.ind1 = field.ind1 || ' ';
-						field.ind2 = field.ind2 || ' ';
-					}
-				});
-			}
+      validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions}); // eslint-disable-line functional/no-this-expression
+      this.leader = recordClone.leader; // eslint-disable-line functional/no-this-expression
+      this.fields = recordClone.fields; // eslint-disable-line functional/no-this-expression
+      return;
+    }
 
-			validateRecord(recordClone, createValidationOptions(this._validationOptions));
+    this.leader = ''; // eslint-disable-line functional/no-this-expression
+    this.fields = []; // eslint-disable-line functional/no-this-expression
+  }
 
-			this.leader = recordClone.leader;
-			this.fields = recordClone.fields;
-		} else {
-			this.leader = '';
-			this.fields = [];
-		}
-	}
+  get(query) {
+    return this.fields.filter(field => field.tag.match(query)); // eslint-disable-line functional/no-this-expression
+  }
 
-	get(query) {
-		return this.fields.filter(field => {
-			return field.tag.match(query);
-		});
-	}
+  removeField(field) {
+    this.fields.splice(this.fields.indexOf(field), 1); // eslint-disable-line functional/no-this-expression, functional/immutable-data
+  }
 
-	removeField(field) {
-		this.fields.splice(this.fields.indexOf(field), 1);
-	}
+  removeSubfield(subfield, field) { // eslint-disable-line class-methods-use-this
+    const index = field.subfields.indexOf(subfield);
+    field.subfields.splice(index, 1); // eslint-disable-line functional/immutable-data
+  }
 
-	removeSubfield(subfield, field) {
-		const index = field.subfields.indexOf(subfield);
-		field.subfields.splice(index, 1);
-	}
+  appendField(field) {
+    this.insertField(field, this.fields.length); // eslint-disable-line functional/no-this-expression
+  }
 
-	appendField(field) {
-		this.insertField(field, this.fields.length);
-	}
+  insertField(field, index) {
+    const newField = Array.isArray(field) ? format(convertFromArray(field)) : format(field);
 
-	insertField(field, index) {
-		field = Array.isArray(field) ? convertFromArray(field) : field;
+    validateField(newField, {...globalValidationOptions, ...this._validationOptions}); // eslint-disable-line functional/no-this-expression
 
-		if ('subfields' in field) {
-			field.ind1 = field.ind1 || ' ';
-			field.ind2 = field.ind2 || ' ';
-		}
+    if (index === undefined) {
+      const newIndex = this.findPosition(newField.tag); // eslint-disable-line functional/no-this-expression
+      this.fields.splice(newIndex, 0, newField); // eslint-disable-line functional/no-this-expression, functional/immutable-data
+      return;
+    }
 
-		validateField(field, createValidationOptions(this._validationOptions));
+    this.fields.splice(index, 0, field); // eslint-disable-line functional/no-this-expression, functional/immutable-data
 
-		if (index === undefined) {
-			index = this.findPosition(field.tag);
-		}
+    function format(field) {
+      const cloned = clone(field);
 
-		this.fields.splice(index, 0, field);
+      if ('subfields' in field) {
+        return {
+          ...cloned,
+          ind1: cloned.ind1 || ' ',
+          ind2: cloned.ind2 || ' '
+        };
+      }
 
-		function convertFromArray(args) {
-			if (field.length === 2) {
-				const [tag, value] = args;
-				return {tag, value};
-			}
+      return cloned;
+    }
 
-			const [tag, ind1, ind2] = args;
-			const subfields = parseSubfields(args.slice(3));
+    function convertFromArray(args) {
+      if (field.length === 2) {
+        const [tag, value] = args;
+        return {tag, value};
+      }
 
-			return {tag, ind1, ind2, subfields};
+      const [tag, ind1, ind2] = args;
+      const subfields = parseSubfields(args.slice(3));
 
-			function parseSubfields(args, subfields = []) {
-				const [code, value] = args;
+      return {tag, ind1, ind2, subfields};
 
-				if (code) {
-					subfields.push({code, value});
-					return parseSubfields(args.slice(2), subfields);
-				}
+      function parseSubfields(args, subfields = []) {
+        const [code, value] = args;
 
-				return subfields;
-			}
-		}
-	}
+        if (code) {
+          return parseSubfields(args.slice(2), subfields.concat({code, value}));
+        }
 
-	findPosition(tag) {
-		for (let i = 0; i < this.fields.length; i++) {
-			if (this.fields[i].tag > tag) {
-				return i;
-			}
-		}
+        return subfields;
+      }
+    }
+  }
 
-		return this.fields.length;
-	}
+  findPosition(tag) {
+    const index = this.fields.findIndex(({tag: fieldTag}) => fieldTag > tag); // eslint-disable-line functional/no-this-expression
+    return index < 0 ? this.fields.length : index; // eslint-disable-line functional/no-this-expression
+  }
 
-	getControlfields() {
-		return this.fields.filter(field => 'value' in field);
-	}
+  getControlfields() {
+    return this.fields.filter(field => 'value' in field); // eslint-disable-line functional/no-this-expression
+  }
 
-	getDatafields() {
-		return this.fields.filter(field => 'subfields' in field);
-	}
+  getDatafields() {
+    return this.fields.filter(field => 'subfields' in field); // eslint-disable-line functional/no-this-expression
+  }
 
-	getFields(tag, query) {
-		const fields = this.fields.filter(f => f.tag === tag);
-		if (typeof query === 'string') {
-			return fields.filter(f => f.value === query);
-		}
+  getFields(tag, query) {
+    const fields = this.fields.filter(f => f.tag === tag); // eslint-disable-line functional/no-this-expression
+    if (typeof query === 'string') {
+      return fields.filter(f => f.value === query);
+    }
 
-		if (Array.isArray(query)) {
-			return fields.filter(field => {
-				return query.every(sfQuery => {
-					return field.subfields.some(sf => {
-						return sf.code === sfQuery.code && sf.value === sfQuery.value;
-					});
-				});
-			});
-		}
+    if (Array.isArray(query)) {
+      return fields.filter(field => query.every(sfQuery => field.subfields.some(sf => sf.code === sfQuery.code && sf.value === sfQuery.value)));
+    }
 
-		return fields;
-	}
+    return fields;
+  }
 
-	containsFieldWithValue(tag, query) {
-		return this.getFields(tag, query).length > 0;
-	}
+  containsFieldWithValue(tag, query) {
+    return this.getFields(tag, query).length > 0; // eslint-disable-line functional/no-this-expression
+  }
 
-	equalsTo(record) {
-		return MarcRecord.isEqual(this, record);
-	}
+  equalsTo(record) {
+    return MarcRecord.isEqual(this, record); // eslint-disable-line functional/no-this-expression
+  }
 
-	toString() {
-		return [].concat(`LDR    ${this.leader}`,
-			this.getControlfields().map(f => `${f.tag}    ${f.value}`),
-			this.getDatafields().map(mapDatafield)
-		).join('\n');
+  toString() {
+    return [].concat(
+      `LDR    ${this.leader}`, // eslint-disable-line functional/no-this-expression
+      this.getControlfields().map(f => `${f.tag}    ${f.value}`), // eslint-disable-line functional/no-this-expression
+      this.getDatafields().map(mapDatafield) // eslint-disable-line functional/no-this-expression
+    ).join('\n');
 
-		function mapDatafield(f) {
-			return `${f.tag} ${f.ind1}${f.ind2} ‡${formatSubfields(f)}`;
+    function mapDatafield(f) {
+      return `${f.tag} ${f.ind1}${f.ind2} ‡${formatSubfields(f)}`;
 
-			function formatSubfields(field) {
-				return field.subfields.map(sf => `${sf.code}${sf.value}`).join('‡');
-			}
-		}
-	}
+      function formatSubfields(field) {
+        return field.subfields.map(sf => `${sf.code}${sf.value}`).join('‡');
+      }
+    }
+  }
 
-	toObject() {
-		const obj = clone(this);
+  toObject() {
+    return Object.entries(clone(this)) // eslint-disable-line functional/no-this-expression
+      .filter(([k]) => k.startsWith('_') === false)
+      .reduce((acc, [k, v]) => ({...acc, [k]: v}), {});
+  }
 
-		Object.keys(obj)
-			.filter(k => k.startsWith('_'))
-			.forEach(k => {
-				delete obj[k];
-			});
+  static fromString(str) {
+    const record = new MarcRecord();
 
-		return obj;
-	}
+    str.split('\n')
+      .map(ln => ({
+        tag: ln.substr(0, 3),
+        ind1: ln.substr(4, 1),
+        ind2: ln.substr(5, 1),
+        data: ln.substr(7)
+      }))
+      .forEach(field => {
+        const {tag, ind1, ind2, data} = field;
 
-	static fromString(str) {
-		const record = new MarcRecord();
+        if (tag === 'LDR') {
+          record.leader = data; // eslint-disable-line functional/immutable-data
+          return;
+        }
 
-		str.split('\n')
-			.map(ln => {
-				return {
-					tag: ln.substr(0, 3),
-					ind1: ln.substr(4, 1),
-					ind2: ln.substr(5, 1),
-					data: ln.substr(7)
-				};
-			})
-			.forEach(field => {
-				const {tag, ind1, ind2, data} = field;
-				if (tag === 'LDR') {
-					record.leader = data;
-				} else if (data.substr(0, 1) === '‡') {
-					record.appendField({tag, ind1, ind2, subfields: parseSubfields(data)});
-				} else {
-					record.appendField({tag, value: data});
-				}
-			});
+        if (data.substr(0, 1) === '‡') {
+          record.appendField({tag, ind1, ind2, subfields: parseSubfields(data)});
+          return;
+        }
 
-		return record;
+        record.appendField({tag, value: data});
+      });
 
-		function parseSubfields(str) {
-			return str.substr(1).split('‡').map(data => {
-				return {
-					code: data.substr(0, 1),
-					value: data.substr(1)
-				};
-			});
-		}
-	}
+    return record;
 
-	static clone(record) {
-		return new MarcRecord(record);
-	}
+    function parseSubfields(str) {
+      return str.substr(1).split('‡').map(data => ({
+        code: data.substr(0, 1),
+        value: data.substr(1)
+      }));
+    }
+  }
 
-	// This uses a strict string-to-string check but re-orders the object keys beforehand (MARC fields should be in same order, but the instance's properties order doesn't matter)
-	static isEqual(r1, r2) {
-		return JSON.stringify(reorder(r1)) === JSON.stringify(reorder(r2));
+  static clone(record) {
+    return new MarcRecord(record);
+  }
 
-		function reorder(obj) {
-			return Object.keys(obj).sort().reduce((acc, key) => {
-				return Object.assign(acc, {
-					[key]: typeof obj[key] === 'object' ? reorder(obj[key]) : obj[key]
-				});
-			}, {});
-		}
-	}
+  // This uses a strict string-to-string check but re-orders the object keys beforehand (MARC fields should be in same order, but the instance's properties order doesn't matter)
+  static isEqual(r1, r2) {
+    return JSON.stringify(reorder(r1)) === JSON.stringify(reorder(r2));
+
+    function reorder(obj) {
+      return Object.keys(obj).sort().reduce((acc, key) => ({ // eslint-disable-line functional/immutable-data
+        ...acc,
+        [key]: typeof obj[key] === 'object' ? reorder(obj[key]) : obj[key]
+      }), {});
+    }
+  }
 }

@@ -3,7 +3,7 @@
 * @licstart  The following is the entire license notice for the JavaScript code in this file.
 *
 * Copyright 2014-2017 Pasi Tuominen
-* Copyright 2018 University Of Helsinki (The National Library Of Finland)
+* Copyright 2018-2020 University Of Helsinki (The National Library Of Finland)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 *
@@ -16,21 +16,20 @@
 *
 */
 
-/* eslint-disable no-unused-expressions, max-nested-callbacks */
 import {expect} from 'chai';
 import createSchema from './schema';
 
 describe('schema', () => {
-	it('Create a schema', () => {
-		const schema = createSchema({});
-		expect(schema).to.be.an('object');
-	});
+  it('Create a schema', () => {
+    const schema = createSchema({});
+    expect(schema).to.be.an('object');
+  });
 
-	it('Create a schema with options', () => {
-		const schema = createSchema({fields: false, subfields: false, subfieldValues: false});
-		expect(schema).to.be.an('object');
-		expect(schema.properties.fields.minItems).to.equal(0);
-		expect(schema.properties.fields.items.anyOf[1].properties.subfields.minItems).to.equal(0);
-		expect(schema.properties.fields.items.anyOf[1].properties.subfields.items.required).to.eql(['code']);
-	});
+  it('Create a schema with options', () => {
+    const schema = createSchema({fields: false, subfields: false, subfieldValues: false});
+    expect(schema).to.be.an('object');
+    expect(schema.properties.fields.minItems).to.equal(0);
+    expect(schema.properties.fields.items.anyOf[1].properties.subfields.minItems).to.equal(0);
+    expect(schema.properties.fields.items.anyOf[1].properties.subfields.items.required).to.eql(['code']);
+  });
 });

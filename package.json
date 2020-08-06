@@ -1,119 +1,107 @@
 {
-  "name": "@natlibfi/marc-record",
-  "description": "MARC record implementation in JavaScript",
-  "contributors": [
-    {
-      "name": "The National Library of Finland"
-    },
-    {
-      "name": "Pasi Tuominen",
-      "email": "pasi.tuominen@gmail.com"
-    }
-  ],
-  "keywords": [
-    "library",
-    "libraries",
-    "bibliography",
-    "bibliographic"
-  ],
-  "homepage": "https://github.com/natlibfi/marc-record-js",
-  "bugs": {
-    "url": "https://github.com/natlibfi/marc-record-js/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:natlibfi/marc-record-js.git"
-  },
-  "license": "MIT",
-  "version": "4.0.4",
-  "main": "./dist/index.js",
-  "engines": {
-    "node": ">=7"
-  },
-  "scripts": {
-    "prepublishOnly": "npm run build:transpile",
-    "check-deps": "npm-check;exit 0",
-    "lint": "eslint --fix src",
-    "test:unit": "cross-env NODE_ENV=test nyc -x src/**/*.spec.js mocha --require babel-core/register src/**/*.spec.js",
-    "test": "npm run lint && npm run test:unit && npm run coverage",
-    "clean": "rimraf build dist",
-    "coverage": "nyc check-coverage --per-file",
-    "build:transpile": "babel src --source-maps --out-dir=dist",
-    "build": "npm run clean && npm run build:transpile && npm run check-deps",
-    "watch": "cross-env DEBUG=1 NODE_ENV=test chokidar src -c 'npm test'"
-  },
-  "dependencies": {
-    "jsonschema": "^1.2.4"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.2.6",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-preset-env": "^1.6.1",
-    "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
-    "chokidar-cli": "^1.2.0",
-    "codeclimate-test-reporter": ">=0.5.0 <1.0.0",
-    "cross-env": "^5.2.0",
-    "eslint": "^5.2.0",
-    "eslint-config-xo": ">=0.24.1 <1.0.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-mocha": "^5.1.0",
-    "mocha": "^5.2.0",
-    "npm-check": "^5.7.1",
-    "nyc": "^12.0.2",
-    "rimraf": "^2.6.2"
-  },
-  "eslintConfig": {
-    "parser": "babel-eslint",
-    "plugins": [
-      "import"
-    ],
-    "extends": [
-      "xo",
-      "plugin:import/errors"
-    ],
-    "rules": {
-      "prefer-arrow-callback": [
-        "error"
-      ]
-    },
-    "env": {
-      "mocha": true
-    }
-  },
-  "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "node": "7"
-          }
-        }
-      ]
-    ],
-    "env": {
-      "test": {
-        "plugins": [
-          "istanbul"
-        ]
-      }
-    }
-  },
-  "nyc": {
-    "reporter": [
-      "lcov",
-      "html"
-    ],
-    "require": [
-      "babel-register"
-    ],
-    "sourceMap": false,
-    "instrument": false,
-    "lines": 100,
-    "statements": 100,
-    "functions": 100,
-    "branches": 100
-  }
+	"name": "@natlibfi/marc-record",
+	"description": "MARC record implementation in JavaScript",
+	"contributors": [
+		{
+			"name": "The National Library of Finland"
+		},
+		{
+			"name": "Pasi Tuominen",
+			"email": "pasi.tuominen@gmail.com"
+		}
+	],
+	"keywords": [
+		"library",
+		"libraries",
+		"bibliography",
+		"bibliographic"
+	],
+	"homepage": "https://github.com/natlibfi/marc-record-js",
+	"bugs": {
+		"url": "https://github.com/natlibfi/marc-record-js/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:natlibfi/marc-record-js.git"
+	},
+	"license": "MIT",
+	"version": "6.0.0",
+	"main": "./dist/index.js",
+	"engines": {
+		"node": ">=12"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"prepare": "npm run build",
+		"lint": "eslint src",
+		"lint:dev": "eslint --fix src",
+		"test:base": "cross-env NODE_ENV=test nyc mocha --require @babel/register",
+		"test": "npm run lint && npm run test:base -- src/*.spec.js && npm run coverage",
+		"test:dev": "npm run lint:dev && npm run test:base -- src/*.spec.js && npm run coverage",
+		"coverage": "nyc check-coverage --per-file",
+		"build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist",
+		"watch:test": "cross-env DEBUG=1 NODE_ENV=test nodemon -w src -w test-fixtures --exec 'npm run test:dev'"
+	},
+	"dependencies": {
+		"jsonschema": "^1.2.4"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.10.1",
+		"@babel/core": "^7.10.1",
+		"@babel/node": "^7.10.1",
+		"@babel/preset-env": "^7.10.1",
+		"@babel/register": "^7.10.1",
+		"@natlibfi/eslint-config-melinda-backend": "^1.0.3",
+		"babel-eslint": "^10.1.0",
+		"babel-plugin-istanbul": "^6.0.0",
+		"chai": "^4.2.0",
+		"cross-env": "^7.0.2",
+		"eslint": "^7.0.0",
+		"mocha": "^8.1.1",
+		"nodemon": "^2.0.4",
+		"nyc": "^15.0.1"
+	},
+	"eslintConfig": {
+		"extends": "@natlibfi/melinda-backend"
+	},
+	"babel": {
+		"presets": [
+			[
+				"@babel/preset-env",
+				{
+					"targets": [
+						"maintained node versions",
+						"not dead"
+					]
+				}
+			]
+		],
+		"env": {
+			"test": {
+				"plugins": [
+					"istanbul"
+				]
+			}
+		}
+	},
+	"nyc": {
+		"exclude": [
+			"*/*.spec.js"
+		],
+		"reporter": [
+			"lcov",
+			"html"
+		],
+		"require": [
+			"@babel/register"
+		],
+		"sourceMap": false,
+		"instrument": false,
+		"lines": 100,
+		"statements": 100,
+		"functions": 100,
+		"branches": 100
+	}
 }
