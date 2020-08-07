@@ -51,6 +51,7 @@
 		"@babel/cli": "^7.10.1",
 		"@babel/core": "^7.10.1",
 		"@babel/node": "^7.10.1",
+		"@babel/plugin-transform-runtime": "^7.11.0",
 		"@babel/preset-env": "^7.10.1",
 		"@babel/register": "^7.10.1",
 		"@natlibfi/eslint-config-melinda-backend": "^1.0.3",
@@ -67,13 +68,18 @@
 		"extends": "@natlibfi/melinda-backend"
 	},
 	"babel": {
+		"plugins": [
+			[
+				"@babel/transform-runtime"
+			]
+		],
 		"presets": [
 			[
 				"@babel/preset-env",
 				{
 					"targets": [
-						"maintained node versions",
-						"not dead"
+						"defaults",
+						"maintained node versions"
 					]
 				}
 			]
