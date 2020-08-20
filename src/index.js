@@ -173,7 +173,7 @@ export class MarcRecord {
       return `${f.tag} ${f.ind1}${f.ind2} ‡${formatSubfields(f)}`;
 
       function formatSubfields(field) {
-        return field.subfields.map(sf => `${sf.code}${sf.value}`).join('‡');
+        return field.subfields.map(sf => `${sf.code}${sf.value || ''}`).join('‡');
       }
     }
   }
@@ -184,8 +184,8 @@ export class MarcRecord {
       .reduce((acc, [k, v]) => ({...acc, [k]: v}), {});
   }
 
-  static fromString(str) {
-    const record = new MarcRecord();
+  static fromString(str, validationOptions) {
+    const record = new MarcRecord(undefined, validationOptions);
 
     str.split('\n')
       .map(ln => ({
@@ -213,10 +213,11 @@ export class MarcRecord {
     return record;
 
     function parseSubfields(str) {
-      return str.substr(1).split('‡').map(data => ({
-        code: data.substr(0, 1),
-        value: data.substr(1)
-      }));
+      return str.substr(1).split('‡').map(data => {
+        const code = data.substr(0, 1);
+        const value = data.substr(1);
+        return value ? {code, value} : {code};
+      });
     }
   }
 
