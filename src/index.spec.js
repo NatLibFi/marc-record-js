@@ -246,6 +246,38 @@ describe('index', () => {
 
           expect(parsedMarcRecord.toString()).to.equal(rec.toString());
         });
+
+        it('should handle empty values', () => {
+          const testDataObject = {
+            leader: 'leader',
+            fields: [
+              {
+                tag: '001',
+                value: '28474'
+              }
+            ]
+          };
+          const rec = new MarcRecord(testDataObject, {fields: false, subfields: false, subfieldValues: false});
+
+          rec.appendField({tag: '100', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Test Author'}]});
+          rec.appendField({tag: '245', ind1: '0', ind2: ' ', subfields: [{code: 'a', value: 'Test Title'}]});
+          rec.appendField({tag: '500', ind1: '#', ind2: ' ', subfields: [
+            {code: 'a', value: 'Note'},
+            {code: 'b'}
+          ]});
+
+          const stringRep = [
+            'LDR    leader',
+            '001    28474',
+            '100    ‡aTest Author',
+            '245 0  ‡aTest Title',
+            '500 #  ‡aNote‡b'
+          ].join('\n');
+
+          const parsedMarcRecord = MarcRecord.fromString(stringRep, {fields: false, subfields: false, subfieldValues: false});
+
+          expect(parsedMarcRecord.toString()).to.equal(rec.toString());
+        });
       });
 
       describe('#toObject', () => {
