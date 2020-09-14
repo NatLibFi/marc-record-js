@@ -221,8 +221,8 @@ export class MarcRecord {
     }
   }
 
-  static clone(record) {
-    return new MarcRecord(record);
+  static clone(record, validationOptions = {}) {
+    return new MarcRecord(record, validationOptions);
   }
 
   // This uses a strict string-to-string check but re-orders the object keys beforehand (MARC fields should be in same order, but the instance's properties order doesn't matter)

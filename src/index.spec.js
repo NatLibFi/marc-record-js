@@ -155,10 +155,12 @@ describe('index', () => {
           rec.insertField(['BAR', '', '', 'a', 'foo', 'b', 'bar']);
 
           expect(rec.fields).to.eql([
-            {tag: 'BAR', ind1: ' ', ind2: ' ', subfields: [
-              {code: 'a', value: 'foo'},
-              {code: 'b', value: 'bar'}
-            ]},
+            {
+              tag: 'BAR', ind1: ' ', ind2: ' ', subfields: [
+                {code: 'a', value: 'foo'},
+                {code: 'b', value: 'bar'}
+              ]
+            },
             {tag: 'FOO', value: 'bar'}
           ]);
         });
@@ -169,11 +171,13 @@ describe('index', () => {
           rec.insertField(['FOO', '', '', 'a', 'foo', 'b', '']);
 
           expect(rec.fields).to.eql([
-            {tag: 'FOO', ind1: ' ', ind2: ' ',
+            {
+              tag: 'FOO', ind1: ' ', ind2: ' ',
               subfields: [
                 {code: 'a', value: 'foo'},
                 {code: 'b', value: ''}
-              ]}
+              ]
+            }
           ]);
         });
 
@@ -229,10 +233,12 @@ describe('index', () => {
 
           rec.appendField({tag: '100', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Test Author'}]});
           rec.appendField({tag: '245', ind1: '0', ind2: ' ', subfields: [{code: 'a', value: 'Test Title'}]});
-          rec.appendField({tag: '500', ind1: '#', ind2: ' ', subfields: [
-            {code: 'a', value: 'Note'},
-            {code: 'b', value: 'Second subfield'}
-          ]});
+          rec.appendField({
+            tag: '500', ind1: '#', ind2: ' ', subfields: [
+              {code: 'a', value: 'Note'},
+              {code: 'b', value: 'Second subfield'}
+            ]
+          });
 
           const stringRep = [
             'LDR    leader',
@@ -261,10 +267,12 @@ describe('index', () => {
 
           rec.appendField({tag: '100', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Test Author'}]});
           rec.appendField({tag: '245', ind1: '0', ind2: ' ', subfields: [{code: 'a', value: 'Test Title'}]});
-          rec.appendField({tag: '500', ind1: '#', ind2: ' ', subfields: [
-            {code: 'a', value: 'Note'},
-            {code: 'b'}
-          ]});
+          rec.appendField({
+            tag: '500', ind1: '#', ind2: ' ', subfields: [
+              {code: 'a', value: 'Note'},
+              {code: 'b'}
+            ]
+          });
 
           const stringRep = [
             'LDR    leader',
@@ -358,15 +366,19 @@ describe('index', () => {
 
         it('returns array of fields that match the given tag', () => {
           expect(record.getFields('245')).to.eql([
-            {tag: '245', ind1: ' ', ind2: ' ', subfields: [
-              {code: 'a', value: 'Some content'},
-              {code: 'b', value: 'Test field'}
-            ]},
-            {tag: '245', ind1: ' ', ind2: ' ', subfields: [
-              {code: 'a', value: 'Test Title'},
-              {code: 'b', value: 'Test field'},
-              {code: 'c', value: 'Test content'}
-            ]}
+            {
+              tag: '245', ind1: ' ', ind2: ' ', subfields: [
+                {code: 'a', value: 'Some content'},
+                {code: 'b', value: 'Test field'}
+              ]
+            },
+            {
+              tag: '245', ind1: ' ', ind2: ' ', subfields: [
+                {code: 'a', value: 'Test Title'},
+                {code: 'b', value: 'Test field'},
+                {code: 'c', value: 'Test content'}
+              ]
+            }
           ]);
         });
         it('returns array of fields that match a control field', () => {
@@ -374,11 +386,13 @@ describe('index', () => {
         });
         it('returns array of fields that match a datafield', () => {
           expect(record.getFields('245', [{code: 'c', value: 'Test content'}])).to.eql([
-            {tag: '245', ind1: ' ', ind2: ' ', subfields: [
-              {code: 'a', value: 'Test Title'},
-              {code: 'b', value: 'Test field'},
-              {code: 'c', value: 'Test content'}
-            ]}
+            {
+              tag: '245', ind1: ' ', ind2: ' ', subfields: [
+                {code: 'a', value: 'Test Title'},
+                {code: 'b', value: 'Test field'},
+                {code: 'c', value: 'Test content'}
+              ]
+            }
           ]);
         });
         it('returns an empty array when no tags match', () => {
@@ -538,6 +552,15 @@ describe('index', () => {
 
       expect(cloneOfMarcRecord.equalsTo(record)).to.be.true; // eslint-disable-line no-unused-expressions
       expect(cloneOfMarcRecord.fields !== record.fields);
+    });
+
+    it('should make a deep copy of the record with custom validation options', () => {
+      const newRecord = new MarcRecord(record, {subfieldValues: false});
+      const cloneOfMarcRecord = MarcRecord.clone(record, {subfieldValues: false});
+
+      expect(cloneOfMarcRecord.equalsTo(newRecord)).to.be.true; // eslint-disable-line no-unused-expressions
+      expect(cloneOfMarcRecord.fields !== newRecord.fields);
+      expect(cloneOfMarcRecord._validationOptions.subfieldValues).to.equals(false);
     });
   });
 
