@@ -83,13 +83,7 @@ export class MarcRecord {
 
     validateField(newField, {...globalValidationOptions, ...this._validationOptions}); // eslint-disable-line functional/no-this-expression
 
-    if (index === undefined) {
-      const newIndex = this.findPosition(newField.tag); // eslint-disable-line functional/no-this-expression
-      this.fields.splice(newIndex, 0, newField); // eslint-disable-line functional/no-this-expression, functional/immutable-data
-      return;
-    }
-
-    this.fields.splice(index, 0, field); // eslint-disable-line functional/no-this-expression, functional/immutable-data
+    this.fields.splice(index ?? this.findPosition(newField.tag), 0, newField); // eslint-disable-line functional/no-this-expression, functional/immutable-data
 
     function format(field) {
       const cloned = clone(field);
