@@ -3,3 +3,5 @@ coverage
 npm-debug.log
 .nyc_output
 dist
+.DS_Store
+

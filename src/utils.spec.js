@@ -78,5 +78,30 @@ describe('utils', () => {
 
       throw new Error('Should throw');
     });
+
+    it('Should consider the field invalid (field with subfield without value)', () => {
+      const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': ''}, {'code': 'c', 'value': '20150121'}]};
+
+      try {
+        Utils.validateField(field);
+      } catch (err) {
+        expect(err.message).to.match(/^Field is invalid: /u);
+        expect(err).to.have.property('validationResults');
+        return;
+      }
+
+      throw new Error('Should throw');
+    });
+
+    it('Should consider the field valid (field with subfield without value), subfieldValues: false', () => {
+      const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': ''}, {'code': 'c', 'value': '20150121'}]};
+
+      // eslint-disable-next-line no-unused-expressions
+      expect(Utils.validateField(field, {subfieldValues: false})).not.to.throw;
+
+    });
+
   });
+
+
 });
