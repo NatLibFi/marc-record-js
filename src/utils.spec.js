@@ -59,13 +59,13 @@ describe('utils', () => {
   });
 
   describe('#validateField', () => {
-    it('Should consider the field valid (tag and value)', () => {
+    it('Should consider the field valid (control field: tag and value)', () => {
       const field = {tag: 'FOO', value: 'BAR'};
 
       expect(Utils.validateField(field)).to.not.throw; // eslint-disable-line no-unused-expressions
     });
 
-    it('Should consider the field valid (tag, indicators and subfields)', () => {
+    it('Should consider the field valid (data field: tag, indicators and subfields)', () => {
       const field = {tag: 'FOO', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': '39'}, {'code': 'c', 'value': '20150121'}]};
 
       expect(Utils.validateField(field)).to.not.throw; // eslint-disable-line no-unused-expressions
@@ -84,6 +84,9 @@ describe('utils', () => {
 
       throw new Error('Should throw');
     });
+
+    // https://www.loc.gov/marc/specifications/specrecstruc.html:
+    // ... Indicators are not used in control fields ...
 
     it.skip('Should consider the field invalid (tag, indicators and value)', () => {
       const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'value': '20150121'};
@@ -128,7 +131,7 @@ describe('utils', () => {
     });
 
 
-    it('Should consider the field invalid (tag, subfields but no indicators)', () => {
+    it('Should consider the field invalid (tag, subfields, no indicators)', () => {
       const field = {'tag': 'CAT', 'subfields': [{'code': 'b', 'value': '39'}, {'code': 'c', 'value': '20150121'}]};
 
       try {
@@ -158,62 +161,134 @@ describe('utils', () => {
 
 
     describe('subfields', () => {
-      it('Should consider the field invalid (subfield with no code)', () => {
-        const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
 
-        try {
-          Utils.validateField(field);
-        } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
-          return;
-        }
+      describe('subfieldCodes', () => {
 
-        throw new Error('Should throw');
+        // https://www.loc.gov/marc/specifications/specrecstruc.html
+        // data element identifier: A one-character code used to identify individual data elements within a variable field.
+        // The data element may be any ASCII lowercase alphabetic, numeric, or graphic symbol except blank.
+        //
+        //      http://oeis.org/wiki/ASCII#ASCII_graphic.2Fnongraphic_characters
+        //      "Among the ninety-five ASCII printable characters, there are the ninety-four [visible] ASCII graphic characters
+        //      (of which the space is not) and the [invisible] ASCII nongraphic character, namely the space character."
+
+
+        it('Should consider the field invalid (subfield with no code)', () => {
+          const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
+
+          try {
+            Utils.validateField(field);
+          } catch (err) {
+            expect(err.message).to.match(/^Field is invalid: /u);
+            expect(err).to.have.property('validationResults');
+            return;
+          }
+
+          throw new Error('Should throw');
+        });
+
+        it.skip('Should consider the field invalid (subfield with empty code)', () => {
+          const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': ' ', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
+
+          try {
+            Utils.validateField(field);
+          } catch (err) {
+            expect(err.message).to.match(/^Field is invalid: /u);
+            expect(err).to.have.property('validationResults');
+            return;
+          }
+
+          throw new Error('Should throw');
+        });
+
+        it.skip('Should consider the field invalid (subfield with two-character code)', () => {
+          const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'aa', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
+
+          try {
+            Utils.validateField(field);
+          } catch (err) {
+            expect(err.message).to.match(/^Field is invalid: /u);
+            expect(err).to.have.property('validationResults');
+            return;
+          }
+
+          throw new Error('Should throw');
+        });
+
+        it.skip('Should consider the field invalid (subfield with uppercase code)', () => {
+          const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'A', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
+
+          try {
+            Utils.validateField(field);
+          } catch (err) {
+            expect(err.message).to.match(/^Field is invalid: /u);
+            expect(err).to.have.property('validationResults');
+            return;
+          }
+
+          throw new Error('Should throw');
+        });
+
+        it.skip('Should consider the field invalid (subfield with non-ASCII code)', () => {
+          const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'Ä', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
+
+          try {
+            Utils.validateField(field);
+          } catch (err) {
+            expect(err.message).to.match(/^Field is invalid: /u);
+            expect(err).to.have.property('validationResults');
+            return;
+          }
+
+          throw new Error('Should throw');
+        });
       });
 
-      it('Should consider the field invalid (subfield with empty value)', () => {
-        const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': ''}, {'code': 'c', 'value': '20150121'}]};
+      describe('subfieldValues', () => {
 
-        try {
-          Utils.validateField(field);
-        } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
-          return;
-        }
+        it('Should consider the field invalid (subfield with empty value)', () => {
+          const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': ''}, {'code': 'c', 'value': '20150121'}]};
 
-        throw new Error('Should throw');
-      });
+          try {
+            Utils.validateField(field);
+          } catch (err) {
+            expect(err.message).to.match(/^Field is invalid: /u);
+            expect(err).to.have.property('validationResults');
+            return;
+          }
 
-      it('Should consider the field valid (subfield with empty value), subfieldValues: false', () => {
-        const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': ''}, {'code': 'c', 'value': '20150121'}]};
+          throw new Error('Should throw');
+        });
 
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {subfieldValues: false})).not.to.throw;
+        it('Should consider the field valid (subfield with empty value), subfieldValues: false', () => {
+          const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': ''}, {'code': 'c', 'value': '20150121'}]};
 
-      });
+          // eslint-disable-next-line no-unused-expressions
+          expect(Utils.validateField(field, {subfieldValues: false})).not.to.throw;
 
-      it('Should consider the field invalid (subfield with no value)', () => {
-        const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b'}, {'code': 'c', 'value': '20150121'}]};
+        });
 
-        try {
-          Utils.validateField(field);
-        } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
-          return;
-        }
+        it('Should consider the field invalid (subfield with no value)', () => {
+          const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b'}, {'code': 'c', 'value': '20150121'}]};
 
-        throw new Error('Should throw');
-      });
+          try {
+            Utils.validateField(field);
+          } catch (err) {
+            expect(err.message).to.match(/^Field is invalid: /u);
+            expect(err).to.have.property('validationResults');
+            return;
+          }
 
-      it('Should consider the field valid (subfield with no value), subfieldValues: false', () => {
-        const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b'}, {'code': 'c', 'value': '20150121'}]};
+          throw new Error('Should throw');
+        });
 
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {subfieldValues: false})).not.to.throw;
+        it('Should consider the field valid (subfield with no value), subfieldValues: false', () => {
+          const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b'}, {'code': 'c', 'value': '20150121'}]};
 
+          // eslint-disable-next-line no-unused-expressions
+          expect(Utils.validateField(field, {subfieldValues: false})).not.to.throw;
+
+        });
       });
     });
 
@@ -246,9 +321,50 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
+      // https://www.loc.gov/marc/specifications/specrecstruc.html:
+      // ... An indicator may be any ASCII lowercase alphabetic, numeric, or blank .
 
+      it.skip('Should consider the field invalid (uppercase indicator)', () => {
+        const field = {'tag': 'CAT', 'ind1': 'A', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid: /u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+      it.skip('Should consider the field invalid (non alpha-numercic/blank indicator)', () => {
+        const field = {'tag': 'CAT', 'ind1': '#', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid: /u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+      it.skip('Should consider the field invalid (non-ASCII indicator)', () => {
+        const field = {'tag': 'CAT', 'ind1': 'Ä', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid: /u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
     });
-
   });
-
 });
