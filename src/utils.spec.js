@@ -71,6 +71,20 @@ describe('utils', () => {
       expect(Utils.validateField(field)).to.not.throw; // eslint-disable-line no-unused-expressions
     });
 
+    it('Should consider the field invalid (just value)', () => {
+      const field = {value: 'FOO'};
+
+      try {
+        Utils.validateField(field);
+      } catch (err) {
+        expect(err.message).to.match(/^Field is invalid:/u);
+        expect(err).to.have.property('validationResults');
+        return;
+      }
+
+      throw new Error('Should throw');
+    });
+
     it('Should consider the field invalid (just a tag)', () => {
       const field = {tag: 'FOO'};
 
@@ -85,6 +99,35 @@ describe('utils', () => {
       throw new Error('Should throw');
     });
 
+    it('Should consider the field invalid (just subfields)', () => {
+      const field = {'subfields': [{'code': 'b', 'value': '39'}, {'code': 'c', 'value': '20150121'}]};
+
+      try {
+        Utils.validateField(field);
+      } catch (err) {
+        expect(err.message).to.match(/^Field is invalid:/u);
+        expect(err).to.have.property('validationResults');
+        return;
+      }
+
+      throw new Error('Should throw');
+    });
+
+    it('Should consider the field invalid (just indicators)', () => {
+      const field = {'ind1': ' ', 'ind2': ' '};
+
+      try {
+        Utils.validateField(field);
+      } catch (err) {
+        expect(err.message).to.match(/^Field is invalid:/u);
+        expect(err).to.have.property('validationResults');
+        return;
+      }
+
+      throw new Error('Should throw');
+    });
+
+
     // https://www.loc.gov/marc/specifications/specrecstruc.html:
     // ... Indicators are not used in control fields ...
 
@@ -94,7 +137,7 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid: /u);
+        expect(err.message).to.match(/^Field is invalid:/u);
         expect(err).to.have.property('validationResults');
         return;
       }
@@ -157,6 +200,154 @@ describe('utils', () => {
       }
 
       throw new Error('Should throw');
+    });
+
+    describe('controlfields/datafields', () => {
+
+      //  https://www.loc.gov/marc/specifications/specrecstruc.html
+      // control field. A variable field containing information useful or required for the processing of the record.
+      // Control fields are assigned tags beginning with two zeroes. Control fields with fixed length data elements are restricted to ASCII graphics.
+      // NOTE: Aleph uses also some other controlfields with non-numeric tags (FMT, LDR if its handled as a controlfield)
+
+      it.skip('Should consider the field invalid (numeric controlfield tag not beginning with 00)', () => {
+        const field = {'tag': '500', 'value': '123456'};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid:/u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+      it.skip('Should consider the field invalid (controlfield with non-ASCII content)', () => {
+        const field = {'tag': '003', 'value': 'ÅÖÖ'};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid:/u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+      // https://www.loc.gov/marc/specifications/specrecstruc.html
+      // data field. A variable field containing bibliographic or other data. Data fields are assigned tags beginning with characters other than two zeroes.
+      // Data fields contain data in any MARC 21 character set unless a field-specific restriction applies.
+
+      it.skip('Should consider the field invalid (datafield tag beginning with 00)', () => {
+        const field = {'tag': '004', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid:/u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+
+    });
+
+    describe('tag', () => {
+
+      // https://www.loc.gov/marc/specifications/specrecstruc.html
+      // tag. A three character string used to identify or label an associated variable field.
+      // The tag may consist of ASCII numeric characters (decimal integers 0-9) and/or ASCII alphabetic characters (uppercase or lowercase, but not both).
+
+      it.skip('Should consider the field invalid (4 character tag)', () => {
+        const field = {'tag': '4444', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid: /u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+      it.skip('Should consider the field invalid (2 character tag)', () => {
+        const field = {'tag': '44', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid: /u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+      it.skip('Should consider the field invalid (empty tag)', () => {
+        const field = {'tag': '44', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid: /u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+      it.skip('Should consider the field invalid (tag with non-alphanumeric character)', () => {
+        const field = {'tag': '#44', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid: /u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+      it.skip('Should consider the field invalid (tag with mixed case characters)', () => {
+        const field = {'tag': 'AaA', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid: /u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
+      it.skip('Should consider the field invalid (tag with non-ASCII characters)', () => {
+        const field = {'tag': 'ÄÄÄ', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+
+        try {
+          Utils.validateField(field);
+        } catch (err) {
+          expect(err.message).to.match(/^Field is invalid: /u);
+          expect(err).to.have.property('validationResults');
+          return;
+        }
+
+        throw new Error('Should throw');
+      });
+
     });
 
 
