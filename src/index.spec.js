@@ -205,6 +205,8 @@ describe('index', () => {
           record
             .removeField(field) // Do not remove clones
             .removeField({...field}) // Do not remove clones
+            .removeField('001') // Does not make queries
+            .removeField(/^001$/u) // Does not make queries
             .removeField({tag: '003', value: 'foo'}); // Similar field exists, but it is not the same
 
           expect(record.get()).to.eql([
@@ -223,17 +225,21 @@ describe('index', () => {
           fields: [
             {tag: '001', value: 'foo'},
             {tag: '002', value: 'foo'}, // pop
+            {tag: '002', value: 'foo'}, // pop
             {tag: '003', value: 'foo'}, // pop
             {tag: '004', value: 'foo'},
-            {tag: '002', value: 'foo'}, // pop
             {tag: '005', value: 'bar'}
           ]
         });
 
         const fields = rec.pop(/002|003/u); // eslint-disable-line functional/immutable-data
 
-        expect(fields.map(f => f.tag).join()).to.equal(['002', '003', '002'].join());
+        expect(fields.map(f => f.tag).join()).to.equal(['002', '002', '003'].join());
         expect(rec.fields.map(f => f.tag).join()).to.equal(['001', '004', '005'].join());
+
+        rec.insertFields(fields);
+        expect(rec.fields.map(f => f.tag).join()).to.equal(['001', '002', '002', '003', '004', '005'].join());
+
         //record.removeField(record.fields[1]);
         //expect(record.get()).to.eql([{tag: '001', value: 'foo'}]);
       });

@@ -182,7 +182,11 @@ const record = new MarcRecord(
 // FAIL: Even if fields have same values, they are different fields
 record.removeField({tag: "001", value: "bar"})
 
-// FAIL: Insert may insert copy of a parameter field
+// FAIL: removeField accepts fields, not strings
+record.removeField("001")     // FAIL: removeField does not perform query
+record.removeField(/^001$/u)  // FAIL: removeField does not perform query
+
+// FAIL: insertField (may) insert copy of a parameter field
 const field = {tag: "300", subfields: [{code: "a", value: "b"}]}
 record
   .insertField(field)
