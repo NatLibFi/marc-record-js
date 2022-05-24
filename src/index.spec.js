@@ -85,8 +85,39 @@ describe('index', () => {
           const record = new MarcRecord(JSON.parse(JSON.stringify(recordObject)));
 
           record.removeField(record.fields[1]);
+
           expect(record.get()).to.eql([{tag: '001', value: 'foo'}]);
         });
+
+        it('Should not alter record if field is not found', () => {
+          const recordObject = {
+            leader: '01331cam a22003494i 4500',
+            fields: [{tag: '001', value: '007346734'}]
+          };
+          const record = new MarcRecord(JSON.parse(JSON.stringify(recordObject)));
+
+          record.removeField({tag: '003', value: 'test'});
+
+          expect(record.get()).to.eql([{tag: '001', value: '007346734'}]);
+        });
+
+        it('Should remove all duplicates', () => {
+          const recordObject = {
+            leader: '01331cam a22003494i 4500',
+            fields: [
+              {tag: '001', value: '007346734'},
+              {tag: '003', value: 'test'},
+              {tag: '003', value: 'test'}
+            ]
+          };
+          const record = new MarcRecord(JSON.parse(JSON.stringify(recordObject)));
+
+          record.removeField({tag: '003', value: 'test'});
+          //record.removeField(record.fields[1]);
+
+          expect(record.get()).to.eql([{tag: '001', value: '007346734'}]);
+        });
+
       });
 
       describe('#pop', () => {
