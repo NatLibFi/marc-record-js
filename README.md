@@ -35,16 +35,36 @@ try {
 ```
 
 ### Mutating the record
+
+Inserting fields. Insertion handles the proper field ordering automatically:
+
 ```js
 record.leader = "00000cam^a22001817i^4500";
 
-// Insert field to the record. Proper ordering is handled automatically.
+// Insert single field:
 record.insertField({
 	tag: "001"
 	value: "007045872"
 });
 
-// Append fields to the end of the record
+// Insert multiple fields to record:
+record
+  .insertField({tag: "001", value: "A"})
+	.insertField({tag: "002", value: "B"})
+	.insertField({tag: "003", value: "C"});
+
+// ...or:
+record.insertFields([
+	{tag: "001", value: "A"},
+	{tag: "002", value: "B"},
+	{tag: "003", value: "C"}
+]);
+```
+
+Appending fields to the end of record:
+
+```js
+// Append single field:
 record.appendField({
 	tag: '245',
 	ind2: '1',
@@ -59,6 +79,82 @@ record.appendField({
 		}
 	]
 });
+
+// Append multiple fields to the end of the record
+record
+  .appendField({tag: "001", value: "A"})
+	.appendField({tag: "002", value: "B"})
+	.appendField({tag: "003", value: "C"});
+
+// ...or:
+record.appendFields([
+	{tag: "001", value: "A"},
+	{tag: "002", value: "B"},
+	{tag: "003", value: "C"}
+]);
+```
+
+Removing fields. You can use queries to fetch the fields to be removed:
+
+```js
+// Remove single field:
+record.removeField({
+	tag: "001"
+	value: "007045872"
+});
+
+// Remove multiple fields:
+record
+  .removeField({tag: "001", value: "A"})
+	.removeField({tag: "002", value: "B"})
+	.removeField({tag: "003", value: "C"});
+
+// ...or:
+record.removeFields([
+	{tag: "001", value: "A"},
+	{tag: "002", value: "B"},
+	{tag: "003", value: "C"}
+]);
+```
+
+Sorting fields:
+```js
+// Sort fields in record:
+record.sortFields();
+```
+
+Sorting, inserting and removing can be chained together:
+
+```js
+// Sort fields in record:
+record
+	.removeField({tag: "001", value: "A"})
+	.insertField({tag: "005", value: "A"})
+	.sortFields();
+```
+
+Popping fields with queries. Query matches field tag. Matched fields are returned, and removed from record. Once you have modified the fields according to your needs, you can push them back with insert.
+
+```js
+// Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
+
+// 1) Query without removing fields:
+fields = record.get(/(001|004)/u);
+
+// Result:
+// - Field tags: [001, 001, 004]
+// - Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
+
+// 2) Pop fields with query:
+fields = record.pop(/(001|004)/u);
+
+// Result:
+// - Field tags: [001, 001, 004]
+// - Record tags: [002, 003, 003, 005, 006]
+
+// 3) Push back modified fields:
+record.insertFields(fields)
+// Result: Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
 ```
 
 ### Querying for fields

@@ -1,20 +1,4 @@
-/**
-*
-* @licstart  The following is the entire license notice for the JavaScript code in this file.
-*
-* Copyright 2014-2017 Pasi Tuominen
-* Copyright 2018-2020 University Of Helsinki (The National Library Of Finland)
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*
-* @licend  The above is the entire license notice
-* for the JavaScript code in this file.
-*
-*/
+/* eslint-disable max-lines */
 
 import {expect} from 'chai';
 import {MarcRecord} from './index';
@@ -70,6 +54,28 @@ describe('index', () => {
     });
 
     describe('instance', () => {
+
+      describe('#get', () => {
+        it('Should get fields with tag matching query', () => {
+          const recordObject = {
+            leader: 'foo',
+            fields: [
+              {tag: '001', value: 'foo'},
+              {tag: '002', value: 'foo'}, // get
+              {tag: '003', value: 'foo'}, // get
+              {tag: '004', value: 'foo'},
+              {tag: '002', value: 'foo'}, // get
+              {tag: '005', value: 'bar'}
+            ]
+          };
+          const rec = new MarcRecord(JSON.parse(JSON.stringify(recordObject)));
+
+          const fields = rec.get(/002|003/u);
+          expect(fields.map(f => f.tag).join()).to.equal(['002', '003', '002'].join());
+          expect(rec.fields.map(f => f.tag).join()).to.equal(['001', '002', '003', '004', '002', '005'].join());
+        });
+      });
+
       describe('#removeField', () => {
         it('Should remove a field from the record', () => {
           const recordObject = {
@@ -80,6 +86,30 @@ describe('index', () => {
 
           record.removeField(record.fields[1]);
           expect(record.get()).to.eql([{tag: '001', value: 'foo'}]);
+        });
+      });
+
+      describe('#pop', () => {
+        it('Should get fields with tag matching query and remove them from record', () => {
+          const recordObject = {
+            leader: 'foo',
+            fields: [
+              {tag: '001', value: 'foo'},
+              {tag: '002', value: 'foo'}, // pop
+              {tag: '003', value: 'foo'}, // pop
+              {tag: '004', value: 'foo'},
+              {tag: '002', value: 'foo'}, // pop
+              {tag: '005', value: 'bar'}
+            ]
+          };
+          const rec = new MarcRecord(JSON.parse(JSON.stringify(recordObject)));
+
+          const fields = rec.pop(/002|003/u); // eslint-disable-line functional/immutable-data
+
+          expect(fields.map(f => f.tag).join()).to.equal(['002', '003', '002'].join());
+          expect(rec.fields.map(f => f.tag).join()).to.equal(['001', '004', '005'].join());
+          //record.removeField(record.fields[1]);
+          //expect(record.get()).to.eql([{tag: '001', value: 'foo'}]);
         });
       });
 
@@ -129,10 +159,11 @@ describe('index', () => {
       describe('#insertField', () => {
         it('should insert field into the correct location', () => {
           const rec = new MarcRecord();
-          rec.appendField({tag: '001', value: '98234240'});
-          rec.appendField({tag: '008', value: 'field008'});
-
-          rec.appendField({tag: '500', subfields: [{code: 'a', value: 'Note'}]});
+          rec.appendFields([
+            {tag: '001', value: '98234240'},
+            {tag: '008', value: 'field008'},
+            {tag: '500', subfields: [{code: 'a', value: 'Note'}]}
+          ]);
           rec.insertField({tag: '245', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Note'}]});
 
           expect(rec.fields.map(f => f.tag).join()).to.equal(['001', '008', '245', '500'].join());
@@ -140,10 +171,11 @@ describe('index', () => {
 
         it('should append field into the end if its the correct location', () => {
           const rec = new MarcRecord();
-          rec.appendField({tag: '001', value: '98234240'});
-          rec.appendField({tag: '008', value: 'field008'});
+          rec
+            .appendField({tag: '001', value: '98234240'})
+            .appendField({tag: '008', value: 'field008'})
+            .appendField({tag: '500', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Note'}]});
 
-          rec.appendField({tag: '500', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Note'}]});
           rec.insertField({tag: '600', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Note'}]});
 
           expect(rec.fields.map(f => f.tag).join()).to.equal(['001', '008', '500', '600'].join());
@@ -151,18 +183,20 @@ describe('index', () => {
 
         it('should insert fields specified as arrays', () => {
           const rec = new MarcRecord();
-          rec.insertField(['FOO', 'bar']);
-          rec.insertField(['BAR', '', '', 'a', 'foo', 'b', 'bar']);
 
-          expect(rec.fields).to.eql([
-            {
-              tag: 'BAR', ind1: ' ', ind2: ' ', subfields: [
-                {code: 'a', value: 'foo'},
-                {code: 'b', value: 'bar'}
-              ]
-            },
-            {tag: 'FOO', value: 'bar'}
+          rec.insertFields([
+            {tag: 'CAT', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
+            {tag: 'SID', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
+            ['LDR', '0'],
+            {tag: '900', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
+            {tag: '003', value: '0'},
+            {tag: 'STA', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
+            {tag: '080', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
+            {tag: 'LOW', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
+            {tag: '100', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]}
           ]);
+
+          expect(rec.fields.map(f => f.tag).join()).to.equal(['LDR', '003', '080', 'STA', '100', 'SID', 'CAT', 'LOW', '900'].join());
         });
 
         it('should insert fields specified as arrays (Incomplete subfields /w custom validation', () => {
