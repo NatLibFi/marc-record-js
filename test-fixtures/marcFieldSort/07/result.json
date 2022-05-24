@@ -1,0 +1,25 @@
+{
+  "leader": "",
+  "fields":
+  [
+    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<KEEP>"}] },
+    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<DROP>"}] },
+    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<KEEP>"}] },
+    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<DROP>"}] },
+    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<KEEP>"}] },
+    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<DROP>"}] },
+    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<KEEP>"}] },
+    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<DROP>"}] },
+
+    {"tag": "650", "subfields": [{"code": "a", "value": "A"}] },
+    {"tag": "650", "subfields": [{"code": "a", "value": "B"}] },
+    {"tag": "650", "subfields": [{"code": "a", "value": "A"}] },
+    {"tag": "650", "subfields": [{"code": "a", "value": "B"}] },
+    {"tag": "650", "subfields": [{"code": "a", "value": "A"}] },
+    {"tag": "650", "subfields": [{"code": "a", "value": "B"}] },
+    {"tag": "650", "subfields": [{"code": "a", "value": "A"}] },
+    {"tag": "650", "subfields": [{"code": "a", "value": "B"}] },
+
+    {"tag": "LOW", "subfields": [{"code": "a", "value": "LAST"}]}
+  ]
+}

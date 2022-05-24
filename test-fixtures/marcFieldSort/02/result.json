@@ -1,0 +1,18 @@
+{
+  "leader": "",
+  "fields":
+  [
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/fin"}, {"code": "a", "value": "C" }]},
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/fin"}, {"code": "a", "value": "B" }]},
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/fin"}, {"code": "a", "value": "A" }]},
+
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/swe"}, {"code": "a", "value": "C" }]},
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/swe"}, {"code": "a", "value": "B" }]},
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/swe"}, {"code": "a", "value": "A" }]},
+
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/eng"}] },
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "kaunokki"}] },
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "bella"}] },
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "external"}] }
+  ]
+}

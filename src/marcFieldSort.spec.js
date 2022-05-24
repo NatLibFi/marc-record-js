@@ -1,28 +1,35 @@
-import generatedTests from '@natlibfi/fixugen';
-import {Readers} from '@natlibfi/fixura';
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
+
+import generateTests from '@natlibfi/fixugen';
+import {READERS} from '@natlibfi/fixura';
 import {expect} from 'chai';
 import createDebugLogger from 'debug';
+import {MarcRecord} from '.';
 
-/*
-describe('#sortFields', () => {
-  it('should sort shuffled fields to correct order', () => {
-    const rec = new MarcRecord();
+const debug = createDebugLogger('@natlibfi/marc-record/marcFieldSort.spec.js'); // <---
 
-    rec.appendFields([
-      {tag: 'CAT', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
-      {tag: 'SID', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
-      {tag: 'LDR', value: '0'},
-      {tag: '900', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
-      {tag: '003', value: '0'},
-      {tag: 'STA', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
-      {tag: '080', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
-      {tag: 'LOW', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]},
-      {tag: '100', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'b'}]}
-    ]);
-    expect(rec.fields.map(f => f.tag).join()).to.equal(['CAT', 'SID', 'LDR', '900', '003', 'STA', '080', 'LOW', '100'].join());
-
-    rec.sortFields();
-    expect(rec.fields.map(f => f.tag).join()).to.equal(['LDR', '003', '080', 'STA', '100', 'SID', 'CAT', 'LOW', '900'].join());
-  });
+generateTests({
+  callback,
+  path: [__dirname, '..', 'test-fixtures', 'marcFieldSort'],
+  useMetadataFile: true,
+  recurse: false,
+  fixura: {
+    reader: READERS.JSON,
+    failWhenNotFound: false
+  }
 });
-*/
+
+function callback({getFixture, disabled}) {
+  if (disabled) {
+    throw new Error('Test disabled.');
+  }
+
+  const rec = new MarcRecord(getFixture('input.json'));
+  const sorted = rec.sortFields();
+  //console.log(JSON.stringify(sorted.fields.map(f => f.subfields)));
+  //debug(JSON.stringify(rec));
+  //console.log(JSON.stringify(rec.fields.map(f => f.subfields).flat().filter(s => s && s.code === '2'), null, 2));
+  //console.log(JSON.stringify(rec.fields.map(f => f.subfields).filter(s => s.code === '2'), null, 2));
+  expect(sorted).to.eql(new MarcRecord(getFixture('result.json')));
+}
