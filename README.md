@@ -15,18 +15,47 @@ const record = new MarcRecord();
 ```
 ### Create record from object
 ```js
-const record = new MarcRecord({leader: 'foo', fields: [
-  {tag: '001', value: 'bar'}
-]})
+const record = new MarcRecord(
+  {
+    leader: 'foo',
+    fields: [
+      {tag: '001', value: 'foo'},
+      {tag: '002', value: 'bar'},
+    ]
+  }
+)
 ```
 
 ### Validation options
+
+Setting and getting global validation options:
+
 ```js
-MarcRecord.getValidationOptions(); // {fields: true, subfields: true, subfieldValues: true }
-MarcRecord.setValidationOptions({fields: false});
+MarcRecord.getValidationOptions();
 
-const record = new MarcRecord({leader: 'foo', fields: []}); // This is ok because setting strict field validation to false
+// Default settings
+MarcRecord.setValidationOptions(
+  {
+    fields: true,          // Do not allow empty fields
+    subfields: true,       // Do not allow empty subfields
+    subfieldsValues: true, // Do not allow subfields without value
+  }
+);
+```
 
+Local validation options can be given when constructing:
+
+```js
+const record = new MarcRecord(
+  {
+    leader: 'foo',
+    fields: []
+  },
+	{fields: false} // Allow empty fields
+);
+```
+
+```js
 try {
   const record = new MarcRecord({leader: 'foo', fields: []}, {fields: true); // No longer ok
  } catch (err) {
@@ -36,28 +65,34 @@ try {
 
 ### Mutating the record
 
-Inserting fields. Insertion handles the proper field ordering automatically:
+**Adding new fields**
+
+Insertion handles the proper field ordering automatically:
 
 ```js
 record.leader = "00000cam^a22001817i^4500";
 
 // Insert single field:
 record.insertField({
-	tag: "001"
-	value: "007045872"
+  tag: "001",
+  value: "007045872"
 });
+```
+You can add multiple fields either by chaining insertions, or
+from an Array:
 
+```js
 // Insert multiple fields to record:
 record
   .insertField({tag: "001", value: "A"})
-	.insertField({tag: "002", value: "B"})
-	.insertField({tag: "003", value: "C"});
+  .insertField({tag: "002", value: "B"})
+  .insertField({tag: "003", value: "C"});
 
-// ...or:
+// from Array:
 record.insertFields([
-	{tag: "001", value: "A"},
-	{tag: "002", value: "B"},
-	{tag: "003", value: "C"}
+  {tag: "001", value: "A"},
+  {tag: "002", value: "B"},
+  {tag: "003", value: "C"}
 ]);
 ```
 
@@ -66,72 +101,75 @@ Appending fields to the end of record:
 ```js
 // Append single field:
 record.appendField({
-	tag: '245',
-	ind2: '1',
-	subfields: [
-		{
-			code: "a"
-			value: "The title of the book"
-		},
-		{
-			code: "c",
-			value: "Some author"
-		}
-	]
+  tag: '245',
+  ind2: '1',
+  subfields: [
+    {
+      code: "a"
+      value: "The title of the book"
+    },
+    {
+      code: "c",
+      value: "Some author"
+    }
+  ]
 });
+```
 
+You can append multiple fields by chaining appends, or from an Array:
+
+```js
 // Append multiple fields to the end of the record
 record
   .appendField({tag: "001", value: "A"})
-	.appendField({tag: "002", value: "B"})
-	.appendField({tag: "003", value: "C"});
+  .appendField({tag: "002", value: "B"})
+  .appendField({tag: "003", value: "C"});
 
 // ...or:
 record.appendFields([
-	{tag: "001", value: "A"},
-	{tag: "002", value: "B"},
-	{tag: "003", value: "C"}
+  {tag: "001", value: "A"},
+  {tag: "002", value: "B"},
+  {tag: "003", value: "C"}
 ]);
 ```
 
-Removing fields. You can use queries to fetch the fields to be removed:
+**Removing fields**
+
+Removing single field:
 
 ```js
 // Remove single field:
 record.removeField({
-	tag: "001"
-	value: "007045872"
+  tag: "001"
+  value: "007045872"
 });
+```
 
-// Remove multiple fields:
+Removing multiple fields:
+
+```js
+// Chain removes:
 record
   .removeField({tag: "001", value: "A"})
-	.removeField({tag: "002", value: "B"})
-	.removeField({tag: "003", value: "C"});
+  .removeField({tag: "002", value: "B"})
+  .removeField({tag: "003", value: "C"});
 
-// ...or:
+// Remove fields in an Array:
 record.removeFields([
-	{tag: "001", value: "A"},
-	{tag: "002", value: "B"},
-	{tag: "003", value: "C"}
+  {tag: "001", value: "A"},
+  {tag: "002", value: "B"},
+  {tag: "003", value: "C"}
 ]);
 ```
 
-Sorting fields:
+You can use queries to remove multiple fields:
 ```js
-// Sort fields in record:
-record.sortFields();
+// Remove all 020 and 021 fields
+const fields = record.get(/020|021/u);
+record.removeFields(fields)
 ```
 
-Sorting, inserting and removing can be chained together:
-
-```js
-// Sort fields in record:
-record
-	.removeField({tag: "001", value: "A"})
-	.insertField({tag: "005", value: "A"})
-	.sortFields();
-```
+**Popping fields**
 
 Popping fields with queries. Query matches field tag. Matched fields are returned, and removed from record. Once you have modified the fields according to your needs, you can push them back with insert.
 
@@ -155,6 +193,25 @@ fields = record.pop(/(001|004)/u);
 // 3) Push back modified fields:
 record.insertFields(fields)
 // Result: Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
+```
+
+**Sorting fields**
+
+```js
+// Sort fields in record:
+record.sortFields();
+```
+
+**Chaining**
+
+Sorting, inserting and removing can be chained together:
+
+```js
+// Sort fields in record:
+record
+  .removeField({tag: "001", value: "A"})
+  .insertField({tag: "005", value: "A"})
+  .sortFields();
 ```
 
 ### Querying for fields
