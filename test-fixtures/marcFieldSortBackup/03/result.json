@@ -1,0 +1,10 @@
+{
+  "leader": "",
+  "fields":
+  [
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "x", "value": "A"}] },
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "x", "value": "B"}] },
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "x", "value": "C"}] },
+    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "x", "value": "D"}] }
+  ]
+}

@@ -100,6 +100,9 @@ export function fieldOrderComparator(fieldA, fieldB) {
       'bella': '4'
     };
 
+    // ATM this is not needed.
+    // You may need this, if you change compare function order in sorterFunctions
+    // istanbul ignore next
     if (fieldA.tag !== fieldB.tag) {
       return 0;
     }
@@ -108,12 +111,15 @@ export function fieldOrderComparator(fieldA, fieldB) {
       return 0;
     }
 
+    // Do not sort by indicators
+    /*
     if (fieldA.ind2 > fieldB.ind2) {
       return 1;
     }
     if (fieldA.ind2 < fieldB.ind2) {
       return -1;
     }
+    */
 
     const dictionaryA = selectFirstValue(fieldA, '2');
     const dictionaryB = selectFirstValue(fieldB, '2');
@@ -153,6 +159,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
     }
     */
 
+    /*
     const valueAX = selectFirstValue(fieldA, 'x');
     const valueBX = selectFirstValue(fieldB, 'x');
 
@@ -181,6 +188,8 @@ export function fieldOrderComparator(fieldA, fieldB) {
     if (valueAY < valueBY) {
       return -1;
     }
+    */
+
     return 0;
   }
 

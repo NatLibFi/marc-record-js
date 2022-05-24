@@ -27,9 +27,5 @@ function callback({getFixture, disabled}) {
 
   const rec = new MarcRecord(getFixture('input.json'));
   const sorted = rec.sortFields();
-  //console.log(JSON.stringify(sorted.fields.map(f => f.subfields)));
-  //debug(JSON.stringify(rec));
-  //console.log(JSON.stringify(rec.fields.map(f => f.subfields).flat().filter(s => s && s.code === '2'), null, 2));
-  //console.log(JSON.stringify(rec.fields.map(f => f.subfields).filter(s => s.code === '2'), null, 2));
   expect(sorted).to.eql(new MarcRecord(getFixture('result.json')));
 }
