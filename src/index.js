@@ -62,12 +62,12 @@ export class MarcRecord {
   }
 
   removeField(field) {
-    this.fields = this.fields.filter(f => !compare(f, field)); // eslint-disable-line functional/immutable-data
-    return this;
-
-    function compare(a, b) {
-      return JSON.stringify(a) === JSON.stringify(b);
+    const index = this.fields.indexOf(field);
+    if (index !== -1) {
+      this.fields.splice(index, 1); // eslint-disable-line functional/immutable-data
+      return this;
     }
+    return this;
   }
 
   removeFields(fields) {

@@ -26,6 +26,17 @@ const record = new MarcRecord(
 )
 ```
 
+### Cloning a record
+```js
+const recordB = MarcRecord.clone(recordA)
+```
+
+### Record equality check
+```ks
+MarcRecord.isEqual(recordA, recordB);
+recordA.equalsTo(recordB);
+```
+
 ### Validation options
 
 Setting and getting global validation options:
@@ -36,14 +47,17 @@ MarcRecord.getValidationOptions();
 // Default settings
 MarcRecord.setValidationOptions(
   {
-    fields: true,          // Do not allow empty fields
+    fields: true,          // Do not allow record without fields
     subfields: true,       // Do not allow empty subfields
     subfieldsValues: true, // Do not allow subfields without value
   }
 );
+
+// Reset to default
+MarcRecord.setValidationOptions({});
 ```
 
-Local validation options can be given when constructing:
+Record specific validation options can be given when constructing:
 
 ```js
 const record = new MarcRecord(
@@ -51,167 +65,40 @@ const record = new MarcRecord(
     leader: 'foo',
     fields: []
   },
-	{fields: false} // Allow empty fields
+  {fields: false} // Allow empty fields
 );
 ```
 
-```js
-try {
-  const record = new MarcRecord({leader: 'foo', fields: []}, {fields: true); // No longer ok
- } catch (err) {
-   MarcRecord.setValidationOptions({}); // Reset to default
- }
-```
-
-### Mutating the record
-
-**Adding new fields**
-
-Insertion handles the proper field ordering automatically:
+Validation examples:
 
 ```js
-record.leader = "00000cam^a22001817i^4500";
+// Error: fields[] is empty
+new MarcRecord(
+  {
+    leader: 'foo',
+    fields: []
+  }
+);
 
-// Insert single field:
-record.insertField({
-  tag: "001",
-  value: "007045872"
-});
-```
-You can add multiple fields either by chaining insertions, or
-from an Array:
+// Error: subfields[] is empty
+new MarcRecord(
+  {
+    leader: 'foo',
+    fields: [
+      {tag: "021", subfields: []}
+    ]
+  }
+);
 
-```js
-// Insert multiple fields to record:
-record
-  .insertField({tag: "001", value: "A"})
-  .insertField({tag: "002", value: "B"})
-  .insertField({tag: "003", value: "C"});
-
-// from Array:
-record.insertFields([
-  {tag: "001", value: "A"},
-  {tag: "002", value: "B"},
-  {tag: "003", value: "C"}
-]);
-```
-
-Appending fields to the end of record:
-
-```js
-// Append single field:
-record.appendField({
-  tag: '245',
-  ind2: '1',
-  subfields: [
-    {
-      code: "a"
-      value: "The title of the book"
-    },
-    {
-      code: "c",
-      value: "Some author"
-    }
-  ]
-});
-```
-
-You can append multiple fields by chaining appends, or from an Array:
-
-```js
-// Append multiple fields to the end of the record
-record
-  .appendField({tag: "001", value: "A"})
-  .appendField({tag: "002", value: "B"})
-  .appendField({tag: "003", value: "C"});
-
-// ...or:
-record.appendFields([
-  {tag: "001", value: "A"},
-  {tag: "002", value: "B"},
-  {tag: "003", value: "C"}
-]);
-```
-
-**Removing fields**
-
-Removing single field:
-
-```js
-// Remove single field:
-record.removeField({
-  tag: "001"
-  value: "007045872"
-});
-```
-
-Removing multiple fields:
-
-```js
-// Chain removes:
-record
-  .removeField({tag: "001", value: "A"})
-  .removeField({tag: "002", value: "B"})
-  .removeField({tag: "003", value: "C"});
-
-// Remove fields in an Array:
-record.removeFields([
-  {tag: "001", value: "A"},
-  {tag: "002", value: "B"},
-  {tag: "003", value: "C"}
-]);
-```
-
-You can use queries to remove multiple fields:
-```js
-// Remove all 020 and 021 fields
-const fields = record.get(/020|021/u);
-record.removeFields(fields)
-```
-
-**Popping fields**
-
-Popping fields with queries. Query matches field tag. Matched fields are returned, and removed from record. Once you have modified the fields according to your needs, you can push them back with insert.
-
-```js
-// Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
-
-// 1) Query without removing fields:
-fields = record.get(/(001|004)/u);
-
-// Result:
-// - Field tags: [001, 001, 004]
-// - Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
-
-// 2) Pop fields with query:
-fields = record.pop(/(001|004)/u);
-
-// Result:
-// - Field tags: [001, 001, 004]
-// - Record tags: [002, 003, 003, 005, 006]
-
-// 3) Push back modified fields:
-record.insertFields(fields)
-// Result: Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
-```
-
-**Sorting fields**
-
-```js
-// Sort fields in record:
-record.sortFields();
-```
-
-**Chaining**
-
-Sorting, inserting and removing can be chained together:
-
-```js
-// Sort fields in record:
-record
-  .removeField({tag: "001", value: "A"})
-  .insertField({tag: "005", value: "A"})
-  .sortFields();
+// Error: subfield has no value
+new MarcRecord(
+  {
+    leader: 'foo',
+    fields: [
+      {tag: "021", subfields: [{code: "a", value: ""}]}
+    ]
+  }
+);
 ```
 
 ### Querying for fields
@@ -224,15 +111,129 @@ record.getFields('245', [{code: 'a', value: 'foo'}]);
 record.getFields('001', 'foo');
 ```
 
-### Cloning a record
+### Adding fields
+
+**insertField / insertFields:** Insertion handles the proper field ordering automatically.
+
 ```js
-const recordB = MarcRecord.clone(recordA)
+// Insert single field
+record.insertField({tag: "001", value: "foo"});
+
+// Chained inserts
+record
+  .insertField({tag: "001", value: "A"})
+  .insertField({tag: "003", value: "C"})
+  .insertField({tag: "002", value: "B"});
+
+// Insert from array:
+record.insertFields([
+  {tag: "001", value: "A"},
+  {tag: "003", value: "C"},
+  {tag: "002", value: "B"}
+]);
 ```
 
-### Record equality check
-```ks
-MarcRecord.isEqual(recordA, recordB);
-recordA.equalsTo(recordB);
+**appendField / appendFields:** Appending fields to the end of record. In general, you
+close always use insert instead of append.
+
+```js
+// Append single field:
+record.appendField({tag: "001", value: "foo"});
+
+// Chained appending
+record
+  .appendField({tag: "001", value: "A"})
+  .appendField({tag: "003", value: "C"})
+  .appendField({tag: "002", value: "B"});
+
+// Append from array
+record.appendFields([
+  {tag: "001", value: "A"},
+  {tag: "003", value: "C"},
+  {tag: "002", value: "B"}
+]);
+
+```
+
+### Removing fields
+
+Removing a field **ONLY** removes fields that are in the record. It
+**DOES NOT** compare the field content to find field.
+
+So, always use queries to remove fields:
+```js
+// Remove all 020 and 021 fields
+const fields = record.get(/020|021/u);	// Returns an array
+record.removeFields(fields); // Removes fields in array of matching fields
+```
+
+Failing examples:
+
+```js
+// Example record
+const record = new MarcRecord(
+{
+  leader: "foo",
+  fields: [
+    {tag: "001", value: "bar"}
+  ]
+})
+
+// FAIL: Even if fields have same values, they are different fields
+record.removeField({tag: "001", value: "bar"})
+
+// FAIL: Insert may insert copy of a parameter field
+const field = {tag: "300", subfields: [{code: "a", value: "b"}]}
+record
+  .insertField(field)
+  .removeField(field);
+
+// "Direct query"
+const field = record.fields[2];
+record.removeField({...field})  // Obvious FAIL
+record.removeField(field) // OK
+```
+
+### Popping fields
+
+Popping fields with queries. Query matches field tag. Matched fields are returned, and removed from record. Once you have modified the fields according to your needs, you can push them back with insert.
+
+```js
+// Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
+
+// 1) Pop fields with query:
+fields = record.pop(/(001|004)/u);
+
+// Result:
+// - Field tags: [001, 001, 004]
+// - Record tags: [002, 003, 003, 005, 006]
+
+// 2) Do something with fields
+...
+
+// 3) Push back modified fields:
+record.insertFields(fields)
+// Result: Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
+```
+
+## Sorting fields
+
+```js
+record.sortFields();
+```
+
+## Chaining
+
+Sorting, inserting and removing can be chained together:
+
+```js
+record
+  .removeField(record.get(/005/u))        // Remove all 005 fields
+  .insertField({tag: "005", value: "A"})  // Insert new 005 field
+  .sortFields();                          // Sort fields
+
+// Note: In this case, there is no need for sort, as insert puts the field to
+// correct place. It is there just as an example.
 ```
 
 ### Simple assertions
@@ -240,7 +241,6 @@ recordA.equalsTo(recordB);
 record.containsFieldWithValue('245', [{code: 'a', value: 'foo'}]);
 record.containsFieldWithValue('001', 'foo');
 ```
-
 
 ## See also
 To serialize and unserialize MARC records, see [marc-record-serializers](https://github.com/natlibfi/marc-record-serializers)
