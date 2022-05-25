@@ -219,13 +219,13 @@ export function fieldOrderComparator(fieldA, fieldB) {
 
   function fieldHasSubfield(subcode, value) {
     return (field) => field.subfields
-      .filter(subfield => subcode.equals ? subcode.equals(subfield.code) : subcode === subfield.code)
+      .filter(subfield => subcode === subfield.code)
       .some(subfield => subfield.value === value);
   }
 
   function selectFirstValue(field, subcode) {
     return field.subfields
-      .filter(subfield => subcode.equals ? subcode.equals(subfield.code) : subcode === subfield.code)
+      .filter(subfield => subcode === subfield.code)
       .map(subfield => subfield.value)
       .slice(0, 1);
   }

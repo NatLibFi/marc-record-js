@@ -37,6 +37,7 @@
     {"tag": "LOW", "subfields": [{"code": "a", "value": "c"}]},
     {"tag": "LOW", "subfields": [{"code": "a", "value": "d"}]},
 
-    {"tag": "900", "subfields": [{"code": "a", "value": "-"}]}
+    {"tag": "900", "subfields": [{"code": "a", "value": "-"}]},
+    {"tag": "FOO", "value": "0"}
   ]
 }

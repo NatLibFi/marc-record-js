@@ -1,0 +1,17 @@
+{
+  "leader": "",
+  "fields":
+  [
+    {"tag": "SID", "subfields": [{"code": "b", "value": "A"}, {"code": "#", "value": "1"}] },
+    {"tag": "SID", "subfields": [{"code": "b", "value": "B"}, {"code": "#", "value": "1"}] },
+    {"tag": "SID", "subfields": [{"code": "b", "value": "A"}, {"code": "#", "value": "2"}] },
+    {"tag": "SID", "subfields": [{"code": "b", "value": "B"}, {"code": "#", "value": "2"}] },
+
+    {"tag": "SID", "subfields": [{"code": "b", "value": "C"}, {"code": "#", "value": "1"}] },
+    {"tag": "SID", "subfields": [{"code": "b", "value": "D"}, {"code": "#", "value": "1"}] },
+    {"tag": "SID", "subfields": [{"code": "b", "value": "C"}, {"code": "#", "value": "2"}] },
+    {"tag": "SID", "subfields": [{"code": "b", "value": "D"}, {"code": "#", "value": "2"}] },
+
+    {"tag": "LOW", "subfields": [{"code": "a", "value": "LAST"}]}
+  ]
+}

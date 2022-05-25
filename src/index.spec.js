@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 
@@ -161,10 +162,23 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      if (name === 'pop') {
+        const {string, regexp} = args;
+        if (string) {
+          return record.pop(string); // eslint-disable-line functional/immutable-data
+        }
+
+        if (regexp) {
+          return record.pop(new RegExp(regexp, 'u')); // eslint-disable-line functional/immutable-data
+        }
+
+        throw new Error(`No arg for get: ${args}`);
+      }
+
+      //-------------------------------------------------------------------------
       throw new Error(`Invalid operation: ${name}`);
       //assert.fail(`Invalid operation: ${name}`);
     }
-
   }
 
   //*****************************************************************************
@@ -213,35 +227,6 @@ describe('index', () => {
       expect(() => {
         new MarcRecord({}); // eslint-disable-line no-new
       }).to.throw(/^Record is invalid$/u);
-    });
-  });
-
-  //*****************************************************************************
-
-  describe('#pop', () => {
-    it('Should get fields with tag matching query and remove them from record', () => {
-      const rec = new MarcRecord({
-        leader: 'foo',
-        fields: [
-          {tag: '001', value: 'foo'},
-          {tag: '002', value: 'foo'}, // pop
-          {tag: '002', value: 'foo'}, // pop
-          {tag: '003', value: 'foo'}, // pop
-          {tag: '004', value: 'foo'},
-          {tag: '005', value: 'bar'}
-        ]
-      });
-
-      const fields = rec.pop(/002|003/u); // eslint-disable-line functional/immutable-data
-
-      expect(fields.map(f => f.tag).join()).to.equal(['002', '002', '003'].join());
-      expect(rec.fields.map(f => f.tag).join()).to.equal(['001', '004', '005'].join());
-
-      rec.insertFields(fields);
-      expect(rec.fields.map(f => f.tag).join()).to.equal(['001', '002', '002', '003', '004', '005'].join());
-
-      //record.removeField(record.fields[1]);
-      //expect(record.get()).to.eql([{tag: '001', value: 'foo'}]);
     });
   });
 

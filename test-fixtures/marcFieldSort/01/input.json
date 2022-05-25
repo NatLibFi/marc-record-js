@@ -5,6 +5,7 @@
     {"tag": "900", "subfields": [{"code": "a", "value": "-"}]},
     {"tag": "CAT", "subfields": [{"code": "a", "value": "-"}]},
 
+    {"tag": "FOO", "value": "0"},
     {"tag": "002", "value": "0"},
     {"tag": "001", "value": "0"},
     {"tag": "003", "value": "0"},
@@ -12,9 +13,9 @@
     {"tag": "STA", "subfields": [{"code": "a", "value": "-"}]},
 
     {"tag": "LOW", "subfields": [{"code": "a", "value": "c"}]},
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "b"}]},
     {"tag": "LOW", "subfields": [{"code": "a", "value": "d"}]},
     {"tag": "LOW", "subfields": [{"code": "a", "value": "a"}]},
+    {"tag": "LOW", "subfields": [{"code": "a", "value": "b"}]},
 
     {"tag": "SID", "subfields": [{"code": "b", "value": "d"}]},
     {"tag": "SID", "subfields": [{"code": "b", "value": "b"}]},
