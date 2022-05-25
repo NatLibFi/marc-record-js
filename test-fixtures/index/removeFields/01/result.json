@@ -1,0 +1,12 @@
+{
+  "leader": "foo",
+  "fields":
+  [
+    {"tag": "001", "value": "bar"},
+    {"tag": "002", "value": "bar"},
+    {"tag": "003", "value": "bar"},
+    {"tag": "004", "value": "bar"},
+    {"tag": "005", "value": "bar"},
+    {"tag": "006", "value": "foo"}
+  ]
+}

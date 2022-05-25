@@ -1,0 +1,8 @@
+{
+  "description": "#1",
+  "disabled": false,
+  "testType": "removeFields",
+  "operations": [
+    { "name": "insertField", "args": {"tag": "006", "value": "foo"}}
+  ]
+}
