@@ -43,12 +43,12 @@ describe('index', () => {
       throw new Error('Test disabled.');
     }
 
-    const {getFixture, validationOptions, input, result, immutable} = metadata;
+    const {getFixture, validationOptions, input, result, immutable, noinput} = metadata;
 
-    const inputRecord = new MarcRecord(input || getFixture('input.json'), validationOptions);
-    const outputRecord = immutable ? inputRecord : new MarcRecord(result || getFixture('result.json'), validationOptions);
+    const inputRecord = noinput ? null : getRecord(input, 'input.json');
+    const outputRecord = immutable ? inputRecord : getRecord(result, 'result.json');
 
-    const record = MarcRecord.clone(inputRecord, validationOptions);
+    const record = inputRecord ? MarcRecord.clone(inputRecord, validationOptions) : null;
 
     const {operations, returns, throws} = metadata;
 
@@ -71,6 +71,18 @@ describe('index', () => {
 
     //---------------------------------------------------------------------------
 
+    function getRecord(fromMeta, filename) {
+      const data = fromMeta || getFixture(filename);
+
+      if (Array.isArray(data)) {
+        const text = data.join('\n');
+        return MarcRecord.fromString(text, validationOptions);
+      }
+      return new MarcRecord(data, validationOptions);
+    }
+
+    //---------------------------------------------------------------------------
+
     function runOps() {
       return operations.reduce((_, op) => runOperation(op), record);
     }
@@ -85,25 +97,25 @@ describe('index', () => {
 
       //-------------------------------------------------------------------------
       if (name === 'insertField') {
-        assert.equal(record.insertField(args), record);
+        expect(record.insertField(args)).to.eql(record);
         return record;
       }
 
       //-------------------------------------------------------------------------
       if (name === 'insertFields') {
-        assert.equal(record.insertFields(args), record);
+        expect(record.insertFields(args)).to.eql(record);
         return record;
       }
 
       //-------------------------------------------------------------------------
       if (name === 'appendField') {
-        assert.equal(record.appendField(args), record);
+        expect(record.appendField(args)).to.eql(record);
         return record;
       }
 
       //-------------------------------------------------------------------------
       if (name === 'appendFields') {
-        assert.equal(record.appendFields(args), record);
+        expect(record.appendFields(args)).to.eql(record);
         return record;
       }
 
@@ -112,17 +124,17 @@ describe('index', () => {
         const {string, field, regexp, index} = args;
 
         if (string || field) {
-          assert.equal(record.removeField(string || field), record);
+          expect(record.removeField(string || field)).to.eql(record);
           return record;
         }
 
         if (regexp) {
-          assert.equal(record.removeField(new RegExp(regexp, 'u')), record);
+          expect(record.removeField(new RegExp(regexp, 'u'))).to.eql(record);
           return record;
         }
 
         if (index) {
-          assert.equal(record.removeField(record.fields[index]), record);
+          expect(record.removeField(record.fields[index])).to.eql(record);
           return record;
         }
 
@@ -134,7 +146,7 @@ describe('index', () => {
         const {getRegExp} = args;
 
         if (getRegExp) {
-          assert.equal(record.removeFields(record.get(new RegExp(getRegExp, 'u'))), record);
+          expect(record.removeFields(record.get(new RegExp(getRegExp, 'u')))).to.eql(record);
           return record;
         }
 
@@ -166,6 +178,16 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      if (name === 'getValidationOptions') {
+        return MarcRecord.getValidationOptions();
+      }
+
+      //-------------------------------------------------------------------------
+      if (name === 'setValidationOptions') {
+        return MarcRecord.setValidationOptions(args);
+      }
+
+      //-------------------------------------------------------------------------
       if (name === 'pop') {
         const {string, regexp} = args;
         if (string) {
@@ -180,21 +202,173 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      if (name === 'toString') {
+        return record.toString().split('\n');
+      }
+
+      //-------------------------------------------------------------------------
+      if (name === 'MarcRecord') {
+        const {record: object, validationOptions} = args ?? {};
+        return new MarcRecord(object, validationOptions);
+      }
+
+      //-------------------------------------------------------------------------
       throw new Error(`Invalid operation: ${name}`);
-      //assert.fail(`Invalid operation: ${name}`);
     }
   }
+
+  /*
+  //*****************************************************************************
+
+  describe('#isEqual', () => {
+    it('should return true when record is compared to itself', () => {
+      const recordString = [
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n');
+
+      const record = MarcRecord.fromString(recordString);
+
+      expect(MarcRecord.isEqual(record, record)).to.be.true; // eslint-disable-line no-unused-expressions
+    });
+
+    it('should return true if records are equal', () => {
+      const recordString = [
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n');
+
+      const record1 = MarcRecord.fromString(recordString);
+      const record2 = MarcRecord.fromString(recordString);
+
+      expect(MarcRecord.isEqual(record1, record2)).to.be.true; // eslint-disable-line no-unused-expressions
+    });
+
+    it('should return false if records have differing data fields', () => {
+      const record1 = MarcRecord.fromString([
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n'));
+
+      const record2 = MarcRecord.fromString([
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author‡cExtra-content'
+      ].join('\n'));
+
+      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
+    });
+
+    it('should return false if records have differing amount of data fields', () => {
+      const record1 = MarcRecord.fromString([
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n'));
+
+      const record2 = MarcRecord.fromString([
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author',
+        '245    ‡aTest Title'
+      ].join('\n'));
+
+      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
+    });
+
+    it('should return false if records have differing indicators', () => {
+      const record1 = MarcRecord.fromString([
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n'));
+      const record2 = MarcRecord.fromString([
+        'LDR    lead',
+        '001    28474',
+        '100 2  ‡aTest Author'
+      ].join('\n'));
+
+      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
+    });
+
+    it('should return false if records have differing control fields', () => {
+      const record1 = MarcRecord.fromString([
+        'LDR    lead',
+        '001    284333',
+        '100    ‡aTest Author'
+      ].join('\n'));
+      const record2 = MarcRecord.fromString([
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n'));
+
+      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
+    });
+
+    it('should return false if records have differing leaders', () => {
+      const record1 = MarcRecord.fromString([
+        'LDR    leader1',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n'));
+      const record2 = MarcRecord.fromString([
+        'LDR    leader2',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n'));
+
+      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
+    });
+  });
+*/
+  /*
+  //*****************************************************************************
+
+  describe('#equalsTo', () => {
+    it('should return true when record is compared to itself', () => {
+      const recordString = [
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n');
+
+      const record = MarcRecord.fromString(recordString);
+
+      expect(record.equalsTo(record)).to.be.true; // eslint-disable-line no-unused-expressions
+    });
+
+    it('should return true if records are equal', () => {
+      const recordString = [
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author'
+      ].join('\n');
+
+      const record1 = MarcRecord.fromString(recordString);
+      const record2 = MarcRecord.fromString(recordString);
+
+      expect(record1.equalsTo(record2)).to.be.true; // eslint-disable-line no-unused-expressions
+    });
+  });
+  */
 
   //*****************************************************************************
   //*****************************************************************************
 
   describe('#constructor', () => {
+
+    /*
     it('Should create a record', () => {
       const record = new MarcRecord();
 
       expect(record).to.be.an('object');
       expect(record).to.have.all.keys('_validationOptions', 'leader', 'fields');
     });
+    */
 
     it('Should create a record based on an object', () => {
       const a = {
@@ -236,6 +410,38 @@ describe('index', () => {
 
   //*****************************************************************************
 
+  describe('#clone', () => {
+    let record; // eslint-disable-line functional/no-let
+
+    beforeEach(() => {
+      record = MarcRecord.fromString([
+        'LDR    lead',
+        '001    28474',
+        '100    ‡aTest Author',
+        '245 0  ‡aTest Title',
+        '500 #  ‡aNote‡bSecond subfield'
+      ].join('\n'));
+    });
+
+    it('should make a deep copy of the record', () => {
+      const cloneOfMarcRecord = MarcRecord.clone(record);
+
+      expect(cloneOfMarcRecord.equalsTo(record)).to.be.true; // eslint-disable-line no-unused-expressions
+      expect(cloneOfMarcRecord.fields !== record.fields);
+    });
+
+    it('should make a deep copy of the record with custom validation options', () => {
+      const newRecord = new MarcRecord(record, {subfieldValues: false});
+      const cloneOfMarcRecord = MarcRecord.clone(record, {subfieldValues: false});
+
+      expect(cloneOfMarcRecord.equalsTo(newRecord)).to.be.true; // eslint-disable-line no-unused-expressions
+      expect(cloneOfMarcRecord.fields !== newRecord.fields);
+      expect(cloneOfMarcRecord._validationOptions.subfieldValues).to.equals(false);
+    });
+  });
+
+  //*****************************************************************************
+
   describe('#removeSubfield', () => {
     it('Should remove a subfield from the record', () => {
       const recordObject = {
@@ -252,109 +458,6 @@ describe('index', () => {
           subfields: [{code: 'a', value: 'foo'}]
         }
       ]);
-    });
-  });
-
-  //*****************************************************************************
-
-  describe('#toString', () => {
-    it('should generate human readable MARC string', () => {
-      const testDataObject = {
-        leader: 'leader',
-        fields: [
-          {
-            tag: '001',
-            value: '28474'
-          }
-        ]
-      };
-      const rec = new MarcRecord(testDataObject);
-
-      rec.appendField({tag: '100', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Test Author'}]});
-      rec.appendField({tag: '245', ind1: '0', ind2: ' ', subfields: [{code: 'a', value: 'Test Title'}]});
-      rec.appendField({tag: '500', ind1: '#', ind2: ' ', subfields: [{code: 'a', value: 'Note'}]});
-
-      const compareRec = [
-        'LDR    leader',
-        '001    28474',
-        '100    ‡aTest Author',
-        '245 0  ‡aTest Title',
-        '500 #  ‡aNote'
-      ].join('\n');
-
-      expect(rec.toString()).to.equal(compareRec);
-    });
-  });
-
-  //*****************************************************************************
-
-  describe('#fromString', () => {
-    it('should create proper record from string generated by toString()', () => {
-      const testDataObject = {
-        leader: 'leader',
-        fields: [
-          {
-            tag: '001',
-            value: '28474'
-          }
-        ]
-      };
-      const rec = new MarcRecord(testDataObject);
-
-      rec.appendField({tag: '100', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Test Author'}]});
-      rec.appendField({tag: '245', ind1: '0', ind2: ' ', subfields: [{code: 'a', value: 'Test Title'}]});
-      rec.appendField({
-        tag: '500', ind1: '#', ind2: ' ', subfields: [
-          {code: 'a', value: 'Note'},
-          {code: 'b', value: 'Second subfield'}
-        ]
-      });
-
-      const stringRep = [
-        'LDR    leader',
-        '001    28474',
-        '100    ‡aTest Author',
-        '245 0  ‡aTest Title',
-        '500 #  ‡aNote‡bSecond subfield'
-      ].join('\n');
-
-      const parsedMarcRecord = MarcRecord.fromString(stringRep);
-
-      expect(parsedMarcRecord.toString()).to.equal(rec.toString());
-    });
-
-    it('should handle empty values', () => {
-      const testDataObject = {
-        leader: 'leader',
-        fields: [
-          {
-            tag: '001',
-            value: '28474'
-          }
-        ]
-      };
-      const rec = new MarcRecord(testDataObject, {fields: false, subfields: false, subfieldValues: false});
-
-      rec.appendField({tag: '100', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'Test Author'}]});
-      rec.appendField({tag: '245', ind1: '0', ind2: ' ', subfields: [{code: 'a', value: 'Test Title'}]});
-      rec.appendField({
-        tag: '500', ind1: '#', ind2: ' ', subfields: [
-          {code: 'a', value: 'Note'},
-          {code: 'b'}
-        ]
-      });
-
-      const stringRep = [
-        'LDR    leader',
-        '001    28474',
-        '100    ‡aTest Author',
-        '245 0  ‡aTest Title',
-        '500 #  ‡aNote‡b'
-      ].join('\n');
-
-      const parsedMarcRecord = MarcRecord.fromString(stringRep, {fields: false, subfields: false, subfieldValues: false});
-
-      expect(parsedMarcRecord.toString()).to.equal(rec.toString());
     });
   });
 
@@ -473,192 +576,6 @@ describe('index', () => {
     });
     it('returns an empty array when no tags match', () => {
       expect(record.getFields('246')).to.eql([]);
-    });
-  });
-
-  //*****************************************************************************
-
-  describe('#equalsTo', () => {
-    it('should return true when record is compared to itself', () => {
-      const recordString = [
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n');
-
-      const record = MarcRecord.fromString(recordString);
-
-      expect(record.equalsTo(record)).to.be.true; // eslint-disable-line no-unused-expressions
-    });
-
-    it('should return true if records are equal', () => {
-      const recordString = [
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n');
-
-      const record1 = MarcRecord.fromString(recordString);
-      const record2 = MarcRecord.fromString(recordString);
-
-      expect(record1.equalsTo(record2)).to.be.true; // eslint-disable-line no-unused-expressions
-    });
-  });
-
-  //*****************************************************************************
-
-  describe('#clone', () => {
-    let record; // eslint-disable-line functional/no-let
-
-    beforeEach(() => {
-      record = MarcRecord.fromString([
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author',
-        '245 0  ‡aTest Title',
-        '500 #  ‡aNote‡bSecond subfield'
-      ].join('\n'));
-    });
-
-    it('should make a deep copy of the record', () => {
-      const cloneOfMarcRecord = MarcRecord.clone(record);
-
-      expect(cloneOfMarcRecord.equalsTo(record)).to.be.true; // eslint-disable-line no-unused-expressions
-      expect(cloneOfMarcRecord.fields !== record.fields);
-    });
-
-    it('should make a deep copy of the record with custom validation options', () => {
-      const newRecord = new MarcRecord(record, {subfieldValues: false});
-      const cloneOfMarcRecord = MarcRecord.clone(record, {subfieldValues: false});
-
-      expect(cloneOfMarcRecord.equalsTo(newRecord)).to.be.true; // eslint-disable-line no-unused-expressions
-      expect(cloneOfMarcRecord.fields !== newRecord.fields);
-      expect(cloneOfMarcRecord._validationOptions.subfieldValues).to.equals(false);
-    });
-  });
-
-  //*****************************************************************************
-
-  describe('#setValidationOptions/#getValidationOptions', () => {
-    it('Should set validationOptions', () => {
-      MarcRecord.setValidationOptions({fields: false});
-
-      expect(MarcRecord.getValidationOptions({})).to.eql({
-        fields: false, subfields: true, subfieldValues: true
-      });
-
-      MarcRecord.setValidationOptions({});
-
-      expect(MarcRecord.getValidationOptions({})).to.eql({
-        fields: true, subfields: true, subfieldValues: true
-      });
-    });
-  });
-
-  //*****************************************************************************
-
-  describe('#isEqual', () => {
-    it('should return true when record is compared to itself', () => {
-      const recordString = [
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n');
-
-      const record = MarcRecord.fromString(recordString);
-
-      expect(MarcRecord.isEqual(record, record)).to.be.true; // eslint-disable-line no-unused-expressions
-    });
-
-    it('should return true if records are equal', () => {
-      const recordString = [
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n');
-
-      const record1 = MarcRecord.fromString(recordString);
-      const record2 = MarcRecord.fromString(recordString);
-
-      expect(MarcRecord.isEqual(record1, record2)).to.be.true; // eslint-disable-line no-unused-expressions
-    });
-
-    it('should return false if records have differing data fields', () => {
-      const record1 = MarcRecord.fromString([
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n'));
-
-      const record2 = MarcRecord.fromString([
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author‡cExtra-content'
-      ].join('\n'));
-
-      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
-    });
-
-    it('should return false if records have differing amount of data fields', () => {
-      const record1 = MarcRecord.fromString([
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n'));
-
-      const record2 = MarcRecord.fromString([
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author',
-        '245    ‡aTest Title'
-      ].join('\n'));
-
-      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
-    });
-
-    it('should return false if records have differing indicators', () => {
-      const record1 = MarcRecord.fromString([
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n'));
-      const record2 = MarcRecord.fromString([
-        'LDR    lead',
-        '001    28474',
-        '100 2  ‡aTest Author'
-      ].join('\n'));
-
-      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
-    });
-
-    it('should return false if records have differing control fields', () => {
-      const record1 = MarcRecord.fromString([
-        'LDR    lead',
-        '001    284333',
-        '100    ‡aTest Author'
-      ].join('\n'));
-      const record2 = MarcRecord.fromString([
-        'LDR    lead',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n'));
-
-      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
-    });
-
-    it('should return false if records have differing leaders', () => {
-      const record1 = MarcRecord.fromString([
-        'LDR    leader1',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n'));
-      const record2 = MarcRecord.fromString([
-        'LDR    leader2',
-        '001    28474',
-        '100    ‡aTest Author'
-      ].join('\n'));
-
-      expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
     });
   });
 });

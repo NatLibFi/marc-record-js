@@ -1,0 +1,22 @@
+{
+  "description": "#2 Should set validation options to defaults",
+  "disabled": false,
+  "noinput": true,
+  "operations": [
+    { "name": "setValidationOptions", "args": {"fields": false}},
+    { "name": "MarcRecord", "args": {
+      "record": {
+        "leader": "foo"
+        }
+      }
+    },
+    { "name": "setValidationOptions", "args": {}},
+    { "name": "getValidationOptions" }
+  ],
+  "returns": {
+    "fields": true,
+    "subfields": true,
+    "subfieldValues": true
+  },
+  "immutable": true
+}

@@ -1,0 +1,19 @@
+{
+  "description": "#2 Should create MarcRecord without fields",
+  "disabled": false,
+  "noinput": true,
+  "operations": [
+    { "name": "MarcRecord", "args": {
+      "record": {
+        "leader": "foo"
+      },
+      "validationOptions": {"fields": false} }
+    }
+  ],
+  "returns": {
+    "_validationOptions": {"fields": false},
+    "leader": "foo",
+    "fields": []
+  },
+  "immutable": true
+}

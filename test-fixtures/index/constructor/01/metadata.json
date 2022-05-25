@@ -1,0 +1,14 @@
+{
+  "description": "#1 Should create empty MarcRecord",
+  "disabled": false,
+  "noinput": true,
+  "operations": [
+    { "name": "MarcRecord" }
+  ],
+  "returns": {
+    "_validationOptions": {},
+    "leader": "",
+    "fields": []
+  },
+  "immutable": true
+}

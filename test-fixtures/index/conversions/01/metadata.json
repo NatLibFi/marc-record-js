@@ -1,0 +1,24 @@
+{
+  "description": "#1 MarcRecord.fromString()",
+  "disabled": false,
+  "validationOptions": { "subfieldValues": false },
+  "input": [
+    "LDR    foo",
+    "001    28474",
+    "100    ‡aTest Author",
+    "245 0  ‡aTest Title",
+    "500 #  ‡aNote‡bSecond subfield",
+    "500 #  ‡a‡bSecond subfield"
+  ],
+  "operations": [],
+  "result": {
+    "leader": "foo",
+    "fields": [
+      { "tag": "001", "value": "28474" },
+      { "tag": "100", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Test Author"}] },
+      { "tag": "245", "ind1": "0", "ind2": " ", "subfields": [{"code": "a", "value": "Test Title"}] },
+      { "tag": "500", "ind1": "#", "ind2": " ", "subfields": [{"code": "a", "value": "Note"}, {"code": "b", "value": "Second subfield"}] },
+      { "tag": "500", "ind1": "#", "ind2": " ", "subfields": [{"code": "a"}, {"code": "b", "value": "Second subfield"}] }
+      ]
+  }
+}
