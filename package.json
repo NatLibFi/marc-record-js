@@ -39,12 +39,12 @@
 		"lint:dev": "eslint --fix src",
 		"test:base": "cross-env NODE_ENV=test mocha --require @babel/register --reporter-option maxDiffSize=15000 src/*.spec.js",
 		"test": "npm run lint && npm run test:base",
-		"test:dev": "npm run lint:dev && npm run coverage",
+		"test:dev": "clear && npm run lint:dev && npm run coverage",
 		"coverage": "npm run coverage:unit && npm run coverage:report",
 		"coverage:unit": "nyc --silent npm run test:base",
 		"coverage:report": "nyc report --reporter=text",
 		"build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist",
-		"dev:test": "clear && cross-env DEBUG=@natlibfi/* NODE_ENV=test nodemon -w src -w test-fixtures --exec 'npm run test:dev'"
+		"dev:test": "cross-env DEBUG=@natlibfi/* NODE_ENV=test nodemon -w src -w test-fixtures --exec 'npm run test:dev'"
 	},
 	"dependencies": {
 		"debug": "^4.3.4",

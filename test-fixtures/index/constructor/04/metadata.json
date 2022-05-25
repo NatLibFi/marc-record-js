@@ -1,0 +1,15 @@
+{
+  "description": "#3 Should fail to create record without subfields values",
+  "disabled": false,
+  "noinput": true,
+  "operations": [
+    { "name": "MarcRecord", "args": {
+      "leader": "foo",
+      "fields": [
+        {"tag": "001", "subfields": [{"code": "a"}]}
+      ]
+    }}
+  ],
+  "throws": "Record is invalid",
+  "immutable": true
+}

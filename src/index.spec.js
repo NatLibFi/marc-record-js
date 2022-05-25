@@ -208,8 +208,15 @@ describe('index', () => {
 
       //-------------------------------------------------------------------------
       if (name === 'MarcRecord') {
-        const {record: object, validationOptions} = args ?? {};
-        return new MarcRecord(object, validationOptions);
+        const {leader, fields, validationOptions} = args ?? {};
+        const object = args && {leader, fields};
+        //debug(`Object: ${JSON.stringify(object, null, 2)}`);
+
+        const created = new MarcRecord(object, validationOptions);
+        expect(created).to.be.an('object');
+        expect(object === undefined || created.fields !== object.fields);
+        //debug(`Created: ${JSON.stringify(created, null, 2)}`);
+        return created;
       }
 
       //-------------------------------------------------------------------------
@@ -217,7 +224,6 @@ describe('index', () => {
     }
   }
 
-  /*
   //*****************************************************************************
 
   describe('#isEqual', () => {
@@ -324,7 +330,7 @@ describe('index', () => {
       expect(MarcRecord.isEqual(record1, record2)).to.be.false; // eslint-disable-line no-unused-expressions
     });
   });
-*/
+
   /*
   //*****************************************************************************
 
@@ -358,55 +364,6 @@ describe('index', () => {
 
   //*****************************************************************************
   //*****************************************************************************
-
-  describe('#constructor', () => {
-
-    /*
-    it('Should create a record', () => {
-      const record = new MarcRecord();
-
-      expect(record).to.be.an('object');
-      expect(record).to.have.all.keys('_validationOptions', 'leader', 'fields');
-    });
-    */
-
-    it('Should create a record based on an object', () => {
-      const a = {
-        leader: '',
-        fields: [{tag: '245', subfields: [{code: 'a', value: 'foo'}]}]
-      };
-
-      const b = new MarcRecord(a);
-
-      expect({
-        _validationOptions: {},
-        leader: '',
-        fields: [
-          {
-            tag: '245',
-            ind1: ' ', ind2: ' ',
-            subfields: [{code: 'a', value: 'foo'}]
-          }
-        ]
-      }).to.eql(b);
-    });
-
-    it('Should create a record with validation options', () => {
-      const record = new MarcRecord({
-        leader: 'foo',
-        fields: []
-      }, {fields: false});
-
-      expect(record).to.be.an('object');
-      expect(record).to.have.all.keys('_validationOptions', 'leader', 'fields');
-    });
-
-    it('Should fail to create a record from an object', () => {
-      expect(() => {
-        new MarcRecord({}); // eslint-disable-line no-new
-      }).to.throw(/^Record is invalid$/u);
-    });
-  });
 
   //*****************************************************************************
 

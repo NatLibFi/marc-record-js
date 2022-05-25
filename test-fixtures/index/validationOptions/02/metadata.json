@@ -4,12 +4,7 @@
   "noinput": true,
   "operations": [
     { "name": "setValidationOptions", "args": {"fields": false}},
-    { "name": "MarcRecord", "args": {
-      "record": {
-        "leader": "foo"
-        }
-      }
-    },
+    { "name": "MarcRecord", "args": {"leader": "foo"}},
     { "name": "setValidationOptions", "args": {}},
     { "name": "getValidationOptions" }
   ],

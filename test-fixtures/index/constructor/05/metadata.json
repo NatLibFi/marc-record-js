@@ -1,0 +1,18 @@
+{
+  "description": "#5 Should create MarcRecord without subfields",
+  "disabled": false,
+  "noinput": true,
+  "operations": [
+    { "name": "MarcRecord", "args": {
+        "leader": "foo",
+        "validationOptions": {"fields": false}
+      }
+    }
+  ],
+  "returns": {
+    "_validationOptions": {"fields": false},
+    "leader": "foo",
+    "fields": []
+  },
+  "immutable": true
+}
