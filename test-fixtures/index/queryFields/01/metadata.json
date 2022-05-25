@@ -1,5 +1,5 @@
 {
-  "description": "#1 Should not alter record if remove fails",
+  "description": "#1 Should return fields by tag as string",
   "disabled": false,
   "input": {
     "leader": "foo",
@@ -14,10 +14,11 @@
     ]
   },
   "operations": [
-    { "name": "removeField", "args": { "string": "002"}},
-    { "name": "removeField", "args": { "regexp": "002|003"}},
-    { "name": "removeField", "args": { "field": { "tag": "002", "value": "bar"}} },
-    { "name": "removeField", "args": { "index": 999}}
+    { "name": "get", "args": {"string": "002"}}
+  ],
+  "returns": [
+    {"tag": "002", "value": "bar"},
+    {"tag": "002", "value": "foo"}
   ],
   "immutable": true
 }

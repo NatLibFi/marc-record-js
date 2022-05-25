@@ -1,5 +1,5 @@
 {
-  "description": "#1 Should return fields based on tag as string",
+  "description": "#2 Should return fields by tags with regexp",
   "disabled": false,
   "input": {
     "leader": "foo",
@@ -14,7 +14,7 @@
     ]
   },
   "operations": [
-    { "name": "get", "args": "002|004"}
+    { "name": "get", "args": { "regexp": "002|004" }}
   ],
   "returns": [
     {"tag": "002", "value": "bar"},

@@ -1,0 +1,25 @@
+{
+  "description": "#3 Should return control fields (fields with value)",
+  "disabled": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
+      {"tag": "003", "value": "bar"},
+      {"tag": "004", "subfields": [{"code": "a", "value": "bar"}]},
+      {"tag": "002", "subfields": [{"code": "a", "value": "bar"}]},
+      {"tag": "006", "subfields": [{"code": "a", "value": "bar"}]}
+    ]
+  },
+  "operations": [
+    { "name": "getControlfields" }
+  ],
+  "returns": [
+    {"tag": "001", "value": "bar"},
+    {"tag": "002", "value": "bar"},
+    {"tag": "003", "value": "bar"}
+  ],
+  "immutable": true
+}
