@@ -14,6 +14,10 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
 
 describe('index', () => {
 
+  afterEach(() => {
+    MarcRecord.setValidationOptions({});
+  });
+
   //***************************************************************************
   //
   // Generate tests which use operations table in metadata to perform operations
