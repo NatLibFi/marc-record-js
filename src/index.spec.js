@@ -12,6 +12,88 @@ import {MarcRecord} from '.';
 
 const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
 
+/******************************************************************************
+ *
+ * Short guide to make generated test cases:
+ *
+ * Test case directory structure:
+ *
+ *    test-fixtures/index/MyTest/01/
+ *
+ *        metadata.json   - Test specifications
+ *        input.json      - if input record is not specified in metadata.json
+ *        result.json     - if expected output record is not specified in metadata.json
+ *
+ * metadata.json:
+ *
+ *    description: string
+ *
+ *      Test description.
+ *
+ *    disabled: false
+ *
+ *      Set to true to disable this particular case.
+ *
+ * Specifying input record for test case:
+ *
+ *    input: object / array of strings
+ *
+ *      Either object suitable for MarcRecord constructor, or a list of
+ *      strings joined with newlines to be used with MarcRecord.fromString.
+ *
+ *    noinput: [optional]
+ *
+ *      Some test cases have no sensible input records, for example cases that test
+ *      MarcRecord constructor. You can omit "input" field by setting "noinput: true".
+ *
+ * Specifying expected result of test case:
+ *
+ *    result: object / array of strings
+ *
+ *      Record to compare the modifications made to input. Similar to input record,
+ *      you can specify the result either as object for MacrRecord(), or as a list
+ *      of strings for MarcRecord.fromString()
+ *
+ *    immutable: [optional]
+ *
+ *      If your test case should not modify the input, set "immutable: true"
+ *      to omit result record.
+ *
+ * Specifying operations performed in test case:
+ *
+ *    operations: array of objects
+ *
+ *      Operations performed to input record. The exact syntax is found from
+ *      runOperation() function below. In general, names match to function names,
+ *      but arguments may have special cases to feed internal values to functions.
+ *
+ *      Operations are pairs of name and args:
+ *
+ *          name - string
+ *          args - any
+ *
+ *      Args are parsed in runOperation() function. You can add new operations
+ *      to that specific function, as well as argument parsing for it.
+ *
+ *      You can add return value checks to operations.
+ *
+ *    returns: object / array
+ *
+ *      In some tests, you are interested in the return values of the operations,
+ *      not the modifications in input record. If "returns" field is present,
+ *      the return value of last operation is compared to it.
+ *
+ *      For example, you may check return values of MarcRecord.get() or
+ *      MarcRecord.toString(), and expect the input record stays immutable.
+ *
+ * For examples, consult test case descriptions in test-fixtures/index/ directory
+ * tree.
+ *
+ * In case your test case is not suitable for automated generation, you can
+ * add it in mocha way as usual (consult the end of this file for examples).
+ *
+ ******************************************************************************/
+
 describe('index', () => {
 
   afterEach(() => {
