@@ -31,15 +31,11 @@ const record = new MarcRecord(
 const recordB = MarcRecord.clone(recordA)
 ```
 
-### Record equality check
-```ks
-MarcRecord.isEqual(recordA, recordB);
-recordA.equalsTo(recordB);
-```
+### Record validation
 
-### Validation options
+When constructing or modifying the record, validation checks are run. You may need to alter these checks to work with incomplete intermediate records.
 
-Setting and getting global validation options:
+**Global validation options:**
 
 ```js
 MarcRecord.getValidationOptions();
@@ -52,12 +48,16 @@ MarcRecord.setValidationOptions(
     subfieldsValues: true, // Do not allow subfields without value
   }
 );
+```
 
+You can reset global validation options to default with empty object:
+
+```js
 // Reset to default
 MarcRecord.setValidationOptions({});
 ```
 
-Record specific validation options can be given when constructing:
+**Record specific validation options** can be given when constructing:
 
 ```js
 const record = new MarcRecord(
@@ -69,10 +69,12 @@ const record = new MarcRecord(
 );
 ```
 
-Validation examples:
+**Validation examples:**
+
+The following examples demonstrate the invalid records, when default validation options are used. To fix the errors, either fix the record, or modify global/record-specific validation options.
 
 ```js
-// Error: fields[] is empty
+// Error: fields[] is empty. Validation option: fields
 new MarcRecord(
   {
     leader: 'foo',
@@ -80,7 +82,7 @@ new MarcRecord(
   }
 );
 
-// Error: subfields[] is empty
+// Error: subfields[] is empty. Validation option: subfields
 new MarcRecord(
   {
     leader: 'foo',
@@ -90,7 +92,7 @@ new MarcRecord(
   }
 );
 
-// Error: subfield has no value
+// Error: subfield has no value. Validation option: subfieldValues
 new MarcRecord(
   {
     leader: 'foo',
@@ -101,14 +103,46 @@ new MarcRecord(
 );
 ```
 
+### Record equality check
+```ks
+MarcRecord.isEqual(recordA, recordB);
+recordA.equalsTo(recordB);
+```
+
 ### Querying for fields
+
+**get()** returns records which tags match the specified pattern:
+
 ```js
-record.getControlfields();
-record.getDatafields();
-record.get(/^001$/)
-record.fields;
+record.get("776")         // Return fields with tag 776
+record.get(/020|021/u)    // Return fields matching the regexp
+```
+
+**getControlfields()** returns so called control fields, that is, fields
+with simple value. These are generally fields 001 - 008.
+
+```js
+record.getControlfields();  // Return all control fields
+```
+
+**getDatafields()** returns fields with subfields.
+
+```js
+record.getDatafields();     // Return all data fields
+```
+
+**getFields()**
+
+```js
 record.getFields('245', [{code: 'a', value: 'foo'}]);
 record.getFields('001', 'foo');
+```
+
+**Custom queries:** You can access record fields to implement your custom
+queries.
+
+```js
+record.fields;    // Access to record fields
 ```
 
 ### Adding fields
@@ -232,7 +266,7 @@ Sorting, inserting and removing can be chained together:
 
 ```js
 record
-  .removeField(record.get(/005/u))        // Remove all 005 fields
+  .removeFields(record.get(/005/u))       // Remove all 005 fields
   .insertField({tag: "005", value: "A"})  // Insert new 005 field
   .sortFields();                          // Sort fields
 
