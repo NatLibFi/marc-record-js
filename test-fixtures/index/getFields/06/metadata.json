@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should return control fields with matching tag and value",
+  "description": "#6 Should return fields which contain all specified subfields",
   "disabled": false,
   "input": {
     "leader": "foo",
@@ -14,10 +14,8 @@
     ]
   },
   "operations": [
-    { "name": "getFields", "args": {"tag": "001", "value": "B"}}
+    { "name": "getFields", "args": {"tag": "245", "value": [{"code": "a", "value": "A"}, {"code": "b", "value": "C"}]}}
   ],
-  "returns": [
-    {"tag": "001", "ind1": " ", "ind2": " ", "value": "B"}
-  ],
+  "returns": [],
   "immutable": true
 }

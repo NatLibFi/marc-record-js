@@ -131,11 +131,33 @@ record.getControlfields();  // Return all control fields
 record.getDatafields();     // Return all data fields
 ```
 
-**getFields()**
+**getFields()** fetches fields from record.
+
+To get all 245 fields:
 
 ```js
-record.getFields('245', [{code: 'a', value: 'foo'}]);
+record.getFields('245');
+```
+
+To get all 001 fields which values is foo:
+
+```js
 record.getFields('001', 'foo');
+```
+
+To get all 245 fields, which have specific subfields. All subfields given as argument should be present in the fetched fields:
+
+```js
+// Fetch all 245 fields containing subfields a and b with specified values
+record.getFields('245', [{code: 'a', value: 'foo'}, {code: 'b', value: 'bar'}]);
+```
+
+**containsFieldWithValue()** uses the same arguments than getFields(). It is
+a shorthand to check, if getFields() returns more than an empty list.
+
+```js
+record.containsFieldWithValues('001', 'foo'); // getFields('001', 'foo').length > 0
+record.containsFieldWithValues('245', [{code: 'a', value: 'foo'}]);
 ```
 
 **Custom queries:** You can access record fields to implement your custom
@@ -272,12 +294,6 @@ record
 
 // Note: In this case, there is no need for sort, as insert puts the field to
 // correct place. It is there just as an example.
-```
-
-### Simple assertions
-```js
-record.containsFieldWithValue('245', [{code: 'a', value: 'foo'}]);
-record.containsFieldWithValue('001', 'foo');
 ```
 
 ## See also

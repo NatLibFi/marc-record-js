@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should return control fields with matching tag and value",
+  "description": "#2 Should return empty array if no tags match",
   "disabled": false,
   "input": {
     "leader": "foo",
@@ -14,10 +14,8 @@
     ]
   },
   "operations": [
-    { "name": "getFields", "args": {"tag": "001", "value": "B"}}
+    { "name": "getFields", "args": {"tag": "246"}}
   ],
-  "returns": [
-    {"tag": "001", "ind1": " ", "ind2": " ", "value": "B"}
-  ],
+  "returns": [],
   "immutable": true
 }

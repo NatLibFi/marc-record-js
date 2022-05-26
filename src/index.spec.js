@@ -383,12 +383,10 @@ describe('index', () => {
 
       //-------------------------------------------------------------------------
       if (name === 'getFields') {
-        const {tag, query} = args;
+        const {tag, value} = args;
 
-        const fields = record.getFields(tag, query);
-        const contains = record.containsFieldWithValue(tag, query);
-
-        expect(contains).eql(fields.length > 0);
+        const fields = record.getFields(tag, value);
+        expect(record.containsFieldWithValue(tag, value)).eql(fields.length > 0);
         return fields;
       }
 
@@ -401,40 +399,6 @@ describe('index', () => {
   //*****************************************************************************
 
   /*
-  //*****************************************************************************
-
-  describe('#getFields', () => {
-    const record = MarcRecord.fromString([
-      'LDR    leader',
-      '001    28474',
-      '003    aaabbb',
-      '100    ‡aTest Author',
-      '245    ‡aSome content‡bTest field',
-      '245    ‡aTest Title‡bTest field‡cTest content',
-      'STA    ‡aDELETED'
-    ].join('\n'));
-
-    it('returns array of fields that match a control field', () => {
-      expect(record.getFields('001', '28474')).to.eql([{tag: '001', value: '28474'}]);
-    });
-    it('returns array of fields that match a datafield', () => {
-      expect(record.getFields('245', [{code: 'c', value: 'Test content'}])).to.eql([
-        {
-          tag: '245', ind1: ' ', ind2: ' ', subfields: [
-            {code: 'a', value: 'Test Title'},
-            {code: 'b', value: 'Test field'},
-            {code: 'c', value: 'Test content'}
-          ]
-        }
-      ]);
-    });
-    it('returns an empty array when no tags match', () => {
-      expect(record.getFields('246')).to.eql([]);
-    });
-  });
-
-  //*****************************************************************************
-
   describe('#containsFieldWithValue', () => {
     const record = MarcRecord.fromString([
       'LDR    leader',
@@ -448,30 +412,6 @@ describe('index', () => {
 
     it('throws when called with less than 2 parameters', () => {
       expect(record.containsFieldWithValue).to.throw; // eslint-disable-line no-unused-expressions
-    });
-
-    it('returns true if matching subfield of a datafield is found', () => {
-      expect(record.containsFieldWithValue('245', {
-        code: 'b', value: 'Test field'
-      })).to.equal(true);
-    });
-
-    it('returns true if all subfields are matching', () => {
-      expect(record.containsFieldWithValue('245', [
-        {code: 'b', value: 'Test field'},
-        {code: 'c', value: 'Test content'}
-      ])).to.equal(true);
-    });
-
-    it('returns true if all subfields are matching in array form', () => {
-      expect(record.containsFieldWithValue('245', [
-        {code: 'b', value: 'Test field'},
-        {code: 'c', value: 'Test content'}
-      ])).to.equal(true);
-    });
-
-    it('returns false if any subfield is not matching', () => {
-      expect(record.containsFieldWithValue('245', 'b', 'Test field', 'c', 'not-matching')).to.equal(false);
     });
   });
   */
