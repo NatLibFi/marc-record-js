@@ -1,5 +1,5 @@
 {
-  "description": "#1 fromString() -> MarcRecord -> toString()",
+  "description": "#1 toObject()",
   "disabled": false,
   "validationOptions": { "subfieldValues": false },
   "input": [
@@ -11,17 +11,9 @@
     "500 #2 ‡a‡bSecond subfield"
   ],
   "operations": [
-    { "name": "toString" }
+    { "name": "toObject" }
   ],
-  "returns": [
-    "LDR    foo",
-    "001    28474",
-    "100    ‡aTest Author",
-    "245 0  ‡aTest Title",
-    "500 #1 ‡aNote‡bSecond subfield",
-    "500 #2 ‡a‡bSecond subfield"
-  ],
-  "result": {
+  "returns": {
     "leader": "foo",
     "fields": [
       { "tag": "001", "value": "28474" },
@@ -30,5 +22,6 @@
       { "tag": "500", "ind1": "#", "ind2": "1", "subfields": [{"code": "a", "value": "Note"}, {"code": "b", "value": "Second subfield"}] },
       { "tag": "500", "ind1": "#", "ind2": "2", "subfields": [{"code": "a"}, {"code": "b", "value": "Second subfield"}] }
       ]
-  }
+  },
+  "immutable": true
 }

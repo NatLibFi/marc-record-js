@@ -8,8 +8,8 @@
       { "tag": "001", "value": "28474" },
       { "tag": "100", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Test Author"}] },
       { "tag": "245", "ind1": "0", "ind2": " ", "subfields": [{"code": "a", "value": "Test Title"}] },
-      { "tag": "500", "ind1": "#", "ind2": " ", "subfields": [{"code": "a", "value": "Note"}, {"code": "b", "value": "Second subfield"}] },
-      { "tag": "500", "ind1": "#", "ind2": " ", "subfields": [{"code": "a"}, {"code": "b", "value": "Second subfield"}] }
+      { "tag": "500", "ind1": "#", "ind2": "1", "subfields": [{"code": "a", "value": "Note"}, {"code": "b", "value": "Second subfield"}] },
+      { "tag": "500", "ind1": "#", "ind2": "2", "subfields": [{"code": "a"}, {"code": "b", "value": "Second subfield"}] }
       ]
   },
   "operations": [
@@ -20,8 +20,8 @@
     "001    28474",
     "100    ‡aTest Author",
     "245 0  ‡aTest Title",
-    "500 #  ‡aNote‡bSecond subfield",
-    "500 #  ‡a‡bSecond subfield"
+    "500 #1 ‡aNote‡bSecond subfield",
+    "500 #2 ‡a‡bSecond subfield"
   ],
   "immutable": true
 }
