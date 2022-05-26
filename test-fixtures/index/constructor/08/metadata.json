@@ -1,30 +1,31 @@
 {
-  "description": "#2 Should remove fields with direct indexing",
+  "description": "#8 Should create a clone from record",
   "disabled": false,
   "input": {
     "leader": "foo",
     "fields":
     [
-      {"tag": "000", "value": "bar"},
       {"tag": "001", "value": "bar"},
       {"tag": "002", "value": "bar"},
       {"tag": "003", "value": "bar"},
-      {"tag": "004", "value": "foo"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "002", "value": "foo"},
       {"tag": "005", "value": "bar"}
     ]
   },
-  "operations": [
-    { "name": "removeField", "args": { "index": 4 }},
-    { "name": "removeField", "args": { "index": 2 }}
-  ],
-  "result": {
+  "operations": [{ "name": "clone" }],
+  "returns": {
+    "_validationOptions": {},
     "leader": "foo",
     "fields":
     [
-      {"tag": "000", "value": "bar"},
       {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
       {"tag": "003", "value": "bar"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "002", "value": "foo"},
       {"tag": "005", "value": "bar"}
     ]
-  }
+  },
+  "immutable": true
 }

@@ -1,0 +1,21 @@
+{
+  "description": "#5 Should throw error if all fields are removed?",
+  "disabled": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "000", "value": "bar"}
+    ]
+  },
+  "operations": [
+    { "name": "removeField", "args": { "index": 0 }}
+  ],
+  "throws": "Record is invalid",
+  "result": {
+    "leader": "foo",
+    "fields":
+    [
+    ]
+  }
+}

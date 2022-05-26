@@ -1,5 +1,5 @@
 {
-  "description": "#3 Should remove fields returned by get regexp",
+  "description": "#9 Should create a clone from record with custom validation options",
   "disabled": false,
   "input": {
     "leader": "foo",
@@ -13,16 +13,19 @@
       {"tag": "005", "value": "bar"}
     ]
   },
-  "operations": [
-    { "name": "removeFields", "args": { "getRegExp": "002|003" }}
-  ],
-  "result": {
+  "operations": [{ "name": "clone", "args": { "validationOptions": {"subfields": false}}}],
+  "returns": {
+    "_validationOptions": {"subfields": false},
     "leader": "foo",
     "fields":
     [
       {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
+      {"tag": "003", "value": "bar"},
       {"tag": "004", "value": "bar"},
+      {"tag": "002", "value": "foo"},
       {"tag": "005", "value": "bar"}
     ]
-  }
+  },
+  "immutable": true
 }
