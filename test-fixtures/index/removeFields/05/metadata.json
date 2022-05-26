@@ -1,6 +1,7 @@
 {
   "description": "#5 Should throw error if all fields are removed?",
   "disabled": false,
+  "bypass": true,
   "input": {
     "leader": "foo",
     "fields":

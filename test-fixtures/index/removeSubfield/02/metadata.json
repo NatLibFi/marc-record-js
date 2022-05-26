@@ -1,6 +1,7 @@
 {
   "description": "#2 Should throw error if removal leads to invalid record?",
   "disabled": false,
+  "bypass": true,
   "input": {
     "leader": "foo",
     "fields":

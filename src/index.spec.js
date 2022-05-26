@@ -16,6 +16,8 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
  *
  * Short guide to make generated test cases:
  *
+ * ----------------------------------------------------------------------------
+ *
  * Test case directory structure:
  *
  *    test-fixtures/index/MyTest/01/
@@ -23,6 +25,8 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
  *        metadata.json   - Test specifications
  *        input.json      - if input record is not specified in metadata.json
  *        result.json     - if expected output record is not specified in metadata.json
+ *
+ * ----------------------------------------------------------------------------
  *
  * metadata.json:
  *
@@ -41,7 +45,7 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
  *      Either object suitable for MarcRecord constructor, or a list of
  *      strings joined with newlines to be used with MarcRecord.fromString.
  *
- *    noinput: [optional]
+ *    noinput: [optional] true/false
  *
  *      Some test cases have no sensible input records, for example cases that test
  *      MarcRecord constructor. You can omit "input" field by setting "noinput: true".
@@ -54,10 +58,11 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
  *      you can specify the result either as object for MacrRecord(), or as a list
  *      of strings for MarcRecord.fromString()
  *
- *    immutable: [optional]
+ *    immutable: [optional] true/false
  *
  *      If your test case should not modify the input, set "immutable: true"
- *      to omit result record.
+ *      to omit expected result record. In this case, result record is compared
+ *      to input record.
  *
  * Specifying operations performed in test case:
  *
@@ -69,15 +74,16 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
  *
  *      Operations are pairs of name and args:
  *
- *          name - string
- *          args - any
+ *          operations: [
+ *            { name: "myFunc", args { ... } },
+ *            { name: "myFunc", args { ... } },
+ *            ...
+ *          ]
  *
  *      Args are parsed in runOperation() function. You can add new operations
  *      to that specific function, as well as argument parsing for it.
  *
- *      You can add return value checks to operations.
- *
- *    returns: object / array
+ *    returns: [optional] object / array
  *
  *      In some tests, you are interested in the return values of the operations,
  *      not the modifications in input record. If "returns" field is present,
@@ -86,8 +92,14 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
  *      For example, you may check return values of MarcRecord.get() or
  *      MarcRecord.toString(), and expect the input record stays immutable.
  *
- * For examples, consult test case descriptions in test-fixtures/index/ directory
- * tree.
+ *    throws: [optional] string
+ *
+ *      In some cases, you are not interested in return values, but how the
+ *      operation fails. I
+ *
+ * ----------------------------------------------------------------------------
+ *
+ * Consult test case descriptions in test-fixtures/index/ directory tree.
  *
  * In case your test case is not suitable for automated generation, you can
  * add it in mocha way as usual (consult the end of this file for examples).
@@ -97,6 +109,7 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
 describe('index', () => {
 
   beforeEach(() => {
+    // Reset global validation options before each case
     MarcRecord.setValidationOptions({});
   });
 
@@ -119,10 +132,12 @@ describe('index', () => {
   });
 
   function doTest(metadata) {
-    const {disabled} = metadata;
 
-    if (disabled) {
-      throw new Error('Test disabled.');
+    assert(!metadata.disabled, 'Test disabled.');
+
+    if (metadata.bypass) {
+      debug('Passed case.');
+      return;
     }
 
     // Get input & expected output
@@ -132,8 +147,9 @@ describe('index', () => {
     const inputRecord = noinput ? null : getRecord(input, 'input.json');
     const record = inputRecord ? MarcRecord.clone(inputRecord, validationOptions) : null;
 
-    // Operations may lead to record validation errors after changes. Thus, read expected
-    // result record without any validation.
+    // Operations may lead to record validation errors after changes. We don't want to
+    // get those errors when reading the expected result record, so we turn off
+    // global validation checks temporarily.
 
     MarcRecord.setValidationOptions({fields: false, subfields: false, subfieldValues: false});
     const outputRecord = immutable ? inputRecord : getRecord(result, 'result.json');
@@ -366,6 +382,17 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      if (name === 'getFields') {
+        const {tag, query} = args;
+
+        const fields = record.getFields(tag, query);
+        const contains = record.containsFieldWithValue(tag, query);
+
+        expect(contains).eql(fields.length > 0);
+        return fields;
+      }
+
+      //-------------------------------------------------------------------------
       throw new Error(`Invalid operation: ${name}`);
     }
   }
@@ -374,25 +401,35 @@ describe('index', () => {
   //*****************************************************************************
 
   /*
-
   //*****************************************************************************
 
-  describe('#removeSubfield', () => {
-    it('Should remove a subfield from the record', () => {
-      const recordObject = {
-        leader: 'foo',
-        fields: [{tag: '245', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'foo'}, {code: 'b', value: 'bar'}]}]
-      };
-      const record = new MarcRecord(JSON.parse(JSON.stringify(recordObject)));
+  describe('#getFields', () => {
+    const record = MarcRecord.fromString([
+      'LDR    leader',
+      '001    28474',
+      '003    aaabbb',
+      '100    ‡aTest Author',
+      '245    ‡aSome content‡bTest field',
+      '245    ‡aTest Title‡bTest field‡cTest content',
+      'STA    ‡aDELETED'
+    ].join('\n'));
 
-      record.removeSubfield(record.fields[0].subfields[1], record.fields[0]);
-
-      expect(record.get()).to.eql([
+    it('returns array of fields that match a control field', () => {
+      expect(record.getFields('001', '28474')).to.eql([{tag: '001', value: '28474'}]);
+    });
+    it('returns array of fields that match a datafield', () => {
+      expect(record.getFields('245', [{code: 'c', value: 'Test content'}])).to.eql([
         {
-          tag: '245', ind1: ' ', ind2: ' ',
-          subfields: [{code: 'a', value: 'foo'}]
+          tag: '245', ind1: ' ', ind2: ' ', subfields: [
+            {code: 'a', value: 'Test Title'},
+            {code: 'b', value: 'Test field'},
+            {code: 'c', value: 'Test content'}
+          ]
         }
       ]);
+    });
+    it('returns an empty array when no tags match', () => {
+      expect(record.getFields('246')).to.eql([]);
     });
   });
 
@@ -411,14 +448,6 @@ describe('index', () => {
 
     it('throws when called with less than 2 parameters', () => {
       expect(record.containsFieldWithValue).to.throw; // eslint-disable-line no-unused-expressions
-    });
-
-    it('returns true if matching control field is found', () => {
-      expect(record.containsFieldWithValue('003', 'aaabbb')).to.equal(true);
-    });
-
-    it('returns false if matching control field is not found', () => {
-      expect(record.containsFieldWithValue('003', 'aaabbc')).to.equal(false);
     });
 
     it('returns true if matching subfield of a datafield is found', () => {
@@ -443,55 +472,6 @@ describe('index', () => {
 
     it('returns false if any subfield is not matching', () => {
       expect(record.containsFieldWithValue('245', 'b', 'Test field', 'c', 'not-matching')).to.equal(false);
-    });
-  });
-
-  //*****************************************************************************
-
-  describe('#getFields', () => {
-    const record = MarcRecord.fromString([
-      'LDR    leader',
-      '001    28474',
-      '003    aaabbb',
-      '100    ‡aTest Author',
-      '245    ‡aSome content‡bTest field',
-      '245    ‡aTest Title‡bTest field‡cTest content',
-      'STA    ‡aDELETED'
-    ].join('\n'));
-
-    it('returns array of fields that match the given tag', () => {
-      expect(record.getFields('245')).to.eql([
-        {
-          tag: '245', ind1: ' ', ind2: ' ', subfields: [
-            {code: 'a', value: 'Some content'},
-            {code: 'b', value: 'Test field'}
-          ]
-        },
-        {
-          tag: '245', ind1: ' ', ind2: ' ', subfields: [
-            {code: 'a', value: 'Test Title'},
-            {code: 'b', value: 'Test field'},
-            {code: 'c', value: 'Test content'}
-          ]
-        }
-      ]);
-    });
-    it('returns array of fields that match a control field', () => {
-      expect(record.getFields('001', '28474')).to.eql([{tag: '001', value: '28474'}]);
-    });
-    it('returns array of fields that match a datafield', () => {
-      expect(record.getFields('245', [{code: 'c', value: 'Test content'}])).to.eql([
-        {
-          tag: '245', ind1: ' ', ind2: ' ', subfields: [
-            {code: 'a', value: 'Test Title'},
-            {code: 'b', value: 'Test field'},
-            {code: 'c', value: 'Test content'}
-          ]
-        }
-      ]);
-    });
-    it('returns an empty array when no tags match', () => {
-      expect(record.getFields('246')).to.eql([]);
     });
   });
   */

@@ -1,0 +1,24 @@
+{
+  "description": "#1 XXX",
+  "disabled": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "ind1": " ", "ind2": " ", "value": "28474"},
+      {"tag": "003", "ind1": " ", "ind2": " ", "value": "aaabbb"},
+      {"tag": "100", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Test Author"}]},
+      {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Some content"}, {"code": "b", "value": "Test field"}]},
+      {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Test Title"}, {"code": "b", "value": "Test field"}, {"code": "c", "value": "Test field"}]},
+      {"tag": "STA", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "DELETED"}]}
+    ]
+  },
+  "operations": [
+    { "name": "getFields", "args": {"tag": "245"}}
+  ],
+  "returns": [
+    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Some content"}, {"code": "b", "value": "Test field"}]},
+    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Test Title"}, {"code": "b", "value": "Test field"}, {"code": "c", "value": "Test field"}]}
+  ],
+  "immutable": true
+}
