@@ -205,25 +205,25 @@ describe('index', () => {
 
       //-------------------------------------------------------------------------
       if (name === 'insertField') {
-        expect(record.insertField(args)).to.eql(record);
+        expect(record.insertField(args) === record);
         return record;
       }
 
       //-------------------------------------------------------------------------
       if (name === 'insertFields') {
-        expect(record.insertFields(args)).to.eql(record);
+        expect(record.insertFields(args) === record);
         return record;
       }
 
       //-------------------------------------------------------------------------
       if (name === 'appendField') {
-        expect(record.appendField(args)).to.eql(record);
+        expect(record.appendField(args) === record);
         return record;
       }
 
       //-------------------------------------------------------------------------
       if (name === 'appendFields') {
-        expect(record.appendFields(args)).to.eql(record);
+        expect(record.appendFields(args) === record);
         return record;
       }
 
@@ -247,7 +247,7 @@ describe('index', () => {
           throw new Error(`No arg for ${name}(): ${JSON.stringify(args, null, 2)}`);
         }(args));
 
-        expect(record.removeField(what)).to.eql(record);
+        expect(record.removeField(what) === record);
         return record;
       }
 
@@ -263,7 +263,7 @@ describe('index', () => {
           throw new Error(`No arg for ${name}(): ${JSON.stringify(args, null, 2)}`);
         }(args));
 
-        expect(record.removeFields(what)).to.eql(record);
+        expect(record.removeFields(what) === record);
         return record;
       }
 
@@ -370,7 +370,7 @@ describe('index', () => {
         //debug(`What: ${JSON.stringify(what, null, 2)}`);
 
         const result = record.equalsTo(what);
-        expect(MarcRecord.isEqual(record, what)).to.eql(result);
+        expect(MarcRecord.isEqual(record, what) === result);
         return result;
       }
 
