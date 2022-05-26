@@ -126,34 +126,38 @@ describe('index', () => {
     }
 
     // Get input & expected output
-    const {getFixture, validationOptions, input, result, immutable, noinput} = metadata;
+    const {getFixture} = metadata;
+    const {input, result, immutable, noinput, validationOptions} = metadata;
 
     const inputRecord = noinput ? null : getRecord(input, 'input.json');
     const outputRecord = immutable ? inputRecord : getRecord(result, 'result.json');
-
     const record = inputRecord ? MarcRecord.clone(inputRecord, validationOptions) : null;
 
     // Get operations
     const {operations, returns, throws} = metadata;
 
-    if (throws) {
-      expect(runOps).to.throw(throws);
-      expect(record).to.eql(outputRecord);
-      return;
-    }
-
-    if (returns !== undefined) {
-      const result = runOps();
-      //debug(`Returns: ${returns} ${result}`);
-      expect(result).to.eql(returns);
-      expect(record).to.eql(outputRecord);
-      return;
-    }
-
-    runOps();
+    checkResults(operations, throws, returns);
     expect(record).to.eql(outputRecord);
 
     return;
+
+    //---------------------------------------------------------------------------
+
+    function checkResults(operations, throws, returns) {
+      //debug(`Returns: ${returns} ${result}`);
+      if (throws) {
+        return expect(runOps).to.throw(throws);
+      }
+      const result = runOps();
+      if (returns === undefined) {
+        return;
+      }
+      expect(result).to.eql(returns);
+
+      function runOps() {
+        return operations.reduce((_, op) => runOperation(op), record);
+      }
+    }
 
     //---------------------------------------------------------------------------
 
@@ -168,10 +172,6 @@ describe('index', () => {
     }
 
     //---------------------------------------------------------------------------
-
-    function runOps() {
-      return operations.reduce((_, op) => runOperation(op), record);
-    }
 
     function runOperation(op) {
       const {name, args} = op;
@@ -207,7 +207,7 @@ describe('index', () => {
 
       //-------------------------------------------------------------------------
       if (name === 'removeField') {
-        const what = (function(args) {
+        const what = (function (args) {
           const {string, field, regexp, index} = args;
 
           if (string || field) {
@@ -218,15 +218,11 @@ describe('index', () => {
             return new RegExp(regexp, 'u');
           }
 
-          if (regexp) {
-            return new RegExp(regexp, 'u');
-          }
-
           if (index) {
             return record.fields[index];
           }
 
-          throw new Error(`No arg for removeField(): ${args}`);
+          throw new Error(`No arg for ${name}(): ${args}`);
         }(args));
 
         expect(record.removeField(what)).to.eql(record);
@@ -235,23 +231,23 @@ describe('index', () => {
 
       //-------------------------------------------------------------------------
       if (name === 'removeFields') {
-        const what = (function(args) {
+        const what = (function (args) {
           const {getRegExp} = args;
 
           if (getRegExp) {
-            return new RegExp(getRegExp, 'u');
+            return record.get(new RegExp(getRegExp, 'u'));
           }
 
-          throw new Error(`No arg for removeFields(): ${args}`);
+          throw new Error(`No arg for ${name}(): ${args}`);
         }(args));
 
-        expect(record.removeFields(record.get(what))).to.eql(record);
+        expect(record.removeFields(what)).to.eql(record);
         return record;
       }
 
       //-------------------------------------------------------------------------
-      if (name === 'get') {
-        const what = (function(args) {
+      if (['get', 'pop'].includes(name)) {
+        const what = (function (args) {
           const {string, regexp} = args;
 
           if (string) {
@@ -261,10 +257,13 @@ describe('index', () => {
             return new RegExp(regexp, 'u');
           }
 
-          throw new Error(`No arg for pop(): ${args}`);
+          throw new Error(`No arg for ${name}(): ${args}`);
         }(args));
 
-        return record.get(what); // eslint-disable-line functional/immutable-data
+        if (name === 'pop') {
+          return record.pop(what); // eslint-disable-line functional/immutable-data
+        }
+        return record.get(what);
       }
 
       //-------------------------------------------------------------------------
@@ -285,24 +284,6 @@ describe('index', () => {
       //-------------------------------------------------------------------------
       if (name === 'setValidationOptions') {
         return MarcRecord.setValidationOptions(args);
-      }
-
-      //-------------------------------------------------------------------------
-      if (name === 'pop') {
-        const what = (function(args) {
-          const {string, regexp} = args;
-
-          if (string) {
-            return string;
-          }
-          if (regexp) {
-            return new RegExp(regexp, 'u');
-          }
-
-          throw new Error(`No arg for pop(): ${args}`);
-        }(args));
-
-        return record.pop(what); // eslint-disable-line functional/immutable-data
       }
 
       //-------------------------------------------------------------------------
@@ -330,7 +311,7 @@ describe('index', () => {
 
       //-------------------------------------------------------------------------
       if (name === 'equalsTo') {
-        const what = (function(args) {
+        const what = (function (args) {
           const {self, clone, string, object} = args;
 
           if (self) {
