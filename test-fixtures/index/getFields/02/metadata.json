@@ -1,6 +1,6 @@
 {
   "description": "#2 Should return control fields with matching tag and value",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

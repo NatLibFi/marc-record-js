@@ -1,6 +1,6 @@
 {
   "description": "#1 Should insert field into the correct location",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

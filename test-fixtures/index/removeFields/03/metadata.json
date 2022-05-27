@@ -1,6 +1,6 @@
 {
   "description": "#3 Should remove fields returned by get regexp",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

@@ -1,7 +1,6 @@
 {
   "description": "#2 Should throw error if removal leads to invalid record?",
-  "disabled": false,
-  "bypass": true,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":
@@ -16,7 +15,6 @@
   "operations": [
     {"name": "removeSubfield", "args": {"field": 4, "subfield": 0}}
   ],
-  "throws": "Record is invalid",
   "result": {
     "leader": "foo",
     "fields":
@@ -24,8 +22,7 @@
       {"tag": "000", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
       {"tag": "001", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
       {"tag": "002", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
-      {"tag": "003", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
-      {"tag": "004", "subfields": []}
+      {"tag": "003", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]}
     ]
   }
 }

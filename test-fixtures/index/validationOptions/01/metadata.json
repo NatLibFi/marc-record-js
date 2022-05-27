@@ -1,6 +1,6 @@
 {
   "description": "#1 Should set and get record validation options",
-  "disabled": false,
+  "skip": false,
   "noinput": true,
   "operations": [
     { "name": "setValidationOptions", "args": {"fields": false}},

@@ -1,6 +1,6 @@
 {
   "description": "#1 toObject()",
-  "disabled": false,
+  "skip": false,
   "validationOptions": { "subfieldValues": false },
   "input": [
     "LDR    foo",

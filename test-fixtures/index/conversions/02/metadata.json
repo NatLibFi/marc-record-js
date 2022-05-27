@@ -1,6 +1,6 @@
 {
   "description": "#1 MarcRecord.toString()",
-  "disabled": false,
+  "skip": false,
   "validationOptions": { "subfieldValues": false },
   "input": {
     "leader": "foo",

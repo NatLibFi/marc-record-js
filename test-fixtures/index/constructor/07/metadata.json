@@ -1,6 +1,6 @@
 {
   "description": "#7 Should create MarcRecord without subfield values",
-  "disabled": false,
+  "skip": false,
   "noinput": true,
   "operations": [
     { "name": "MarcRecord", "args": {

@@ -34,9 +34,9 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
  *
  *      Test description.
  *
- *    disabled: false
+ *    skip: Set true to skip this particular case.
  *
- *      Set to true to disable this particular case.
+ *    only: Set true to run only this case.
  *
  * Specifying input record for test case:
  *
@@ -133,13 +133,6 @@ describe('index', () => {
 
   function doTest(metadata) {
 
-    assert(!metadata.disabled, 'Test disabled.');
-
-    if (metadata.bypass) {
-      debug('Passed case.');
-      return;
-    }
-
     // Get input & expected output
     const {getFixture} = metadata;
     const {input, result, immutable, noinput, validationOptions} = metadata;
@@ -168,7 +161,14 @@ describe('index', () => {
     function checkResults(operations, throws, returns) {
       //debug(`Returns: ${returns} ${result}`);
       if (throws) {
-        return expect(runOps).to.throw(throws);
+        try {
+          return runOps();
+        } catch (e) {
+          expect(e).to.have.property('message');
+          expect(e).to.have.property('validationResults');
+          expect(e.message).to.match(new RegExp(`^${throws}`, 'u'));
+        }
+        return;
       }
       const result = runOps();
       if (returns === undefined) {

@@ -2,6 +2,7 @@
 
 import {fieldOrderComparator} from './marcFieldSort';
 import {clone, validateRecord, validateField} from './utils';
+import MarcRecordError from './error';
 export {default as MarcRecordError} from './error';
 
 const validationOptionsDefaults = {
@@ -13,6 +14,7 @@ const validationOptionsDefaults = {
 let globalValidationOptions = {...validationOptionsDefaults}; // eslint-disable-line functional/no-let
 
 export class MarcRecord {
+
   static setValidationOptions(options) {
     globalValidationOptions = {...validationOptionsDefaults, ...options};
   }
@@ -64,6 +66,10 @@ export class MarcRecord {
   removeField(field) {
     const index = this.fields.indexOf(field);
     if (index !== -1) {
+      const {fields: keepLastField} = {...globalValidationOptions, ...this._validationOptions};
+      if (this.fields.length === 1 && keepLastField) {
+        throw new MarcRecordError('Cannot remove last field');
+      }
       this.fields.splice(index, 1); // eslint-disable-line functional/immutable-data
       return this;
     }
@@ -78,7 +84,7 @@ export class MarcRecord {
   removeSubfield(subfield, field) { // eslint-disable-line class-methods-use-this
     const index = field.subfields.indexOf(subfield);
     field.subfields.splice(index, 1); // eslint-disable-line functional/immutable-data
-    if (!field.subfields.length) {
+    if (field.subfields.length === 0) {
       return this.removeField(field);
     }
     return this;

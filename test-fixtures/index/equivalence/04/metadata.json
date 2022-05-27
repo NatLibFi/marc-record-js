@@ -1,6 +1,6 @@
 {
   "description": "#4 Should return false if records have differing leaders",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

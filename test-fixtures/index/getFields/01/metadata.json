@@ -1,6 +1,6 @@
 {
   "description": "#1 Should return all fields with matching tag",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

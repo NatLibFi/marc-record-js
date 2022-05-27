@@ -31,7 +31,7 @@ describe('utils', () => {
       try {
         Utils.validateRecord(record);
       } catch (err) {
-        expect(err.message).to.match(/^Record is invalid$/u);
+        expect(err.message).to.match(/^Record is invalid/u);
         expect(err).to.have.property('validationResults');
         return;
       }
@@ -73,7 +73,7 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid: \{"tag":"FOO"\}$/u);
+        expect(err.message).to.match(/^Field is invalid: \{"tag":"FOO"\}/u);
         expect(err).to.have.property('validationResults');
         return;
       }

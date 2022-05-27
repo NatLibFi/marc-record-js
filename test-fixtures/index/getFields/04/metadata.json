@@ -1,6 +1,6 @@
 {
   "description": "#4 Should return empty array if no value match",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

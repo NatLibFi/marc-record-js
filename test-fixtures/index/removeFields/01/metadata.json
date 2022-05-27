@@ -1,6 +1,6 @@
 {
   "description": "#1 Should not alter record if remove fails",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

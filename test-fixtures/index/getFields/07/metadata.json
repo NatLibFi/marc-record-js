@@ -1,6 +1,6 @@
 {
   "description": "#6 Should return fields which contain all specified subfields",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

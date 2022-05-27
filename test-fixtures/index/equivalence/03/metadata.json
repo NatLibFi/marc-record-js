@@ -1,6 +1,6 @@
 {
   "description": "#11 Should return true if leader & fields are equal",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

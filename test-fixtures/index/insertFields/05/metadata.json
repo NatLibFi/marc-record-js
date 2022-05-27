@@ -1,6 +1,6 @@
 {
   "description": "#5 Should fail to insert a field",
-  "disabled": false,
+  "skip": false,
   "validationOptions": { "fields": false },
   "input": {
     "leader": "foo",
@@ -9,6 +9,6 @@
   "operations": [
     { "name": "insertField", "args": {"tag": "001"}}
   ],
-  "throws": "Field is invalid: {\"tag\":\"001\"}",
+  "throws": "Field is invalid",
   "immutable": true
 }

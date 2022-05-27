@@ -1,4 +1,4 @@
 {
   "description": "F650 sort by indicators",
-  "disabled": false
+  "skip": false
 }

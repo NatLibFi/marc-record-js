@@ -1,6 +1,6 @@
 {
   "description": "#2 Should append field into the end if its the correct location",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

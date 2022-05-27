@@ -1,6 +1,6 @@
 {
   "description": "#3 Should fail to create record without subfields",
-  "disabled": false,
+  "skip": false,
   "noinput": true,
   "operations": [
     { "name": "MarcRecord", "args": {

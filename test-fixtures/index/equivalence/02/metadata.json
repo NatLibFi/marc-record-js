@@ -1,6 +1,6 @@
 {
   "description": "#2 Should return true when compared to cloned record",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

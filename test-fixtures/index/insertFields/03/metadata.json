@@ -1,6 +1,6 @@
 {
   "description": "#3 Should insert fields from array to correct places",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

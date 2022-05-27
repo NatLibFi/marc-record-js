@@ -1,6 +1,6 @@
 {
   "description": "#2 Should set validation options to defaults",
-  "disabled": false,
+  "skip": false,
   "noinput": true,
   "operations": [
     { "name": "setValidationOptions", "args": {"fields": false}},

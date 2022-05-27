@@ -1,6 +1,6 @@
 {
   "description": "#2 Should fail to create record without leader & fields",
-  "disabled": false,
+  "skip": false,
   "noinput": true,
   "operations": [
     {"name": "MarcRecord", "args": {}}

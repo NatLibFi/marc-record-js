@@ -1,6 +1,6 @@
 {
   "description": "#4 Should insert fields specified as arrays (Incomplete subfields /w custom validation)",
-  "disabled": false,
+  "skip": false,
   "validationOptions": { "subfieldValues": false },
   "input": {
     "leader": "foo",

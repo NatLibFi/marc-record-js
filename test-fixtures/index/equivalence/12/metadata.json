@@ -1,6 +1,6 @@
 {
   "description": "#3 Should return false if records have differing ind1",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

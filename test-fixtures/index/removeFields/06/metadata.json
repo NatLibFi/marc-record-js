@@ -1,6 +1,7 @@
 {
-  "description": "#5 Should throw if removing last field",
+  "description": "#6 Should remove last field if validation options allow it",
   "skip": false,
+  "validationOptions": { "fields": false },
   "input": {
     "leader": "foo",
     "fields":
@@ -11,12 +12,10 @@
   "operations": [
     { "name": "removeField", "args": { "index": 0 }}
   ],
-  "throws": "Cannot remove last field",
   "result": {
     "leader": "foo",
     "fields":
     [
-      {"tag": "000", "value": "bar"}
     ]
   }
 }

@@ -1,6 +1,6 @@
 {
   "description": "#9 Should return false if records have data fields with different number of subfields",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":

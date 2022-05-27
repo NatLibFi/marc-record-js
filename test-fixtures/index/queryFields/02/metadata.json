@@ -1,6 +1,6 @@
 {
   "description": "#2 Should return fields by tags with regexp",
-  "disabled": false,
+  "skip": false,
   "input": {
     "leader": "foo",
     "fields":
