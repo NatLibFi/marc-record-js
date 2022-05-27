@@ -268,6 +268,14 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      if (name === 'removeSubfield') {
+        const field = record.fields[args.field];
+        const subfield = field.subfields[args.subfield];
+        expect(record.removeSubfield(subfield, field) === record);
+        return record;
+      }
+
+      //-------------------------------------------------------------------------
       if (['get', 'pop'].includes(name)) {
         const what = (function (args) {
           const {string, regexp} = args;
@@ -375,13 +383,6 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
-      if (name === 'removeSubfield') {
-        const field = record.fields[args.field];
-        const subfield = field.subfields[args.subfield];
-        return record.removeSubfield(subfield, field);
-      }
-
-      //-------------------------------------------------------------------------
       if (name === 'getFields') {
         const {tag, value} = args;
 
@@ -394,25 +395,4 @@ describe('index', () => {
       throw new Error(`Invalid operation: ${name}`);
     }
   }
-
-  //*****************************************************************************
-  //*****************************************************************************
-
-  /*
-  describe('#containsFieldWithValue', () => {
-    const record = MarcRecord.fromString([
-      'LDR    leader',
-      '001    28474',
-      '003    aaabbb',
-      '100    ‡aTest Author',
-      '245 0  ‡aSome content',
-      '245 0  ‡aTest Title‡bTest field‡cTest content',
-      'STA    ‡aDELETED'
-    ].join('\n'));
-
-    it('throws when called with less than 2 parameters', () => {
-      expect(record.containsFieldWithValue).to.throw; // eslint-disable-line no-unused-expressions
-    });
-  });
-  */
 });

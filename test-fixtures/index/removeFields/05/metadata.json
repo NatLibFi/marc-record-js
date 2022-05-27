@@ -1,7 +1,6 @@
 {
-  "description": "#5 Should throw error if all fields are removed?",
+  "description": "#5 Should remove only field in record",
   "disabled": false,
-  "bypass": true,
   "input": {
     "leader": "foo",
     "fields":
@@ -12,7 +11,6 @@
   "operations": [
     { "name": "removeField", "args": { "index": 0 }}
   ],
-  "throws": "Record is invalid",
   "result": {
     "leader": "foo",
     "fields":

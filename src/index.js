@@ -78,6 +78,9 @@ export class MarcRecord {
   removeSubfield(subfield, field) { // eslint-disable-line class-methods-use-this
     const index = field.subfields.indexOf(subfield);
     field.subfields.splice(index, 1); // eslint-disable-line functional/immutable-data
+    if (!field.subfields.length) {
+      return this.removeField(field);
+    }
     return this;
   }
 
