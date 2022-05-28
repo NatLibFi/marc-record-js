@@ -1,5 +1,5 @@
 {
-  "description": "Should return array of fields that match a datafield",
+  "description": "Should return fields that have matching subfield",
   "skip": false,
   "input": {
     "leader": "foo",

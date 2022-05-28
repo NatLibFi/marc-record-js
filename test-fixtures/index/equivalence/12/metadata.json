@@ -1,5 +1,5 @@
 {
-  "description": "Should return false if records have differing ind1",
+  "description": "Should return false if records have differing ind2",
   "skip": false,
   "input": {
     "leader": "foo",

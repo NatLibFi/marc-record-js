@@ -1,5 +1,5 @@
 {
-  "description": "Should return control fields (fields with value)",
+  "description": "Should return data fields (fields with subfields)",
   "skip": false,
   "input": {
     "leader": "foo",

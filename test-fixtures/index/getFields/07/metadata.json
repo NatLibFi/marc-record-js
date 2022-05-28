@@ -1,5 +1,5 @@
 {
-  "description": "Should return fields which contain all specified subfields",
+  "description": "Should return empty array if no field have matching subfields",
   "skip": false,
   "input": {
     "leader": "foo",
@@ -14,11 +14,8 @@
     ]
   },
   "operations": [
-    { "name": "getFields", "args": {"tag": "245", "value": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}]}}
+    { "name": "getFields", "args": {"tag": "245", "value": [{"code": "a", "value": "A"}, {"code": "b", "value": "C"}]}}
   ],
-  "returns": [
-    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}]},
-    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}, {"code": "c", "value": "C"}]}
-  ],
+  "returns": [],
   "immutable": true
 }

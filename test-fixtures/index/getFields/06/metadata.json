@@ -14,8 +14,11 @@
     ]
   },
   "operations": [
-    { "name": "getFields", "args": {"tag": "245", "value": [{"code": "a", "value": "A"}, {"code": "b", "value": "C"}]}}
+    { "name": "getFields", "args": {"tag": "245", "value": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}]}}
   ],
-  "returns": [],
+  "returns": [
+    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}]},
+    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}, {"code": "c", "value": "C"}]}
+  ],
   "immutable": true
 }
