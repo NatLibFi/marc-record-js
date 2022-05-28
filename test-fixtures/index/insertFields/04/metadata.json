@@ -1,5 +1,5 @@
 {
-  "description": "#4 Should insert fields specified as arrays (Incomplete subfields /w custom validation)",
+  "description": "Should insert fields specified as arrays (Incomplete subfields /w custom validation)",
   "skip": false,
   "validationOptions": { "subfieldValues": false },
   "input": {

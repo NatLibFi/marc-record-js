@@ -1,5 +1,5 @@
 {
-  "description": "#1 Should not alter record if remove fails",
+  "description": "Should not alter record if remove fails",
   "skip": false,
   "input": {
     "leader": "foo",

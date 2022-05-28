@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should set validation options to defaults",
+  "description": "Should set validation options to defaults",
   "skip": false,
   "noinput": true,
   "operations": [

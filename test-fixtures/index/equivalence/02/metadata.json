@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should return true when compared to cloned record",
+  "description": "Should return true when compared to cloned record",
   "skip": false,
   "input": {
     "leader": "foo",

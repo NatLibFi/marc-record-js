@@ -1,5 +1,5 @@
 {
-  "description": "#1 Should insert field into the correct location",
+  "description": "Should insert field into the correct location",
   "skip": false,
   "input": {
     "leader": "foo",

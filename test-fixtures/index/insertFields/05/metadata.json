@@ -1,5 +1,5 @@
 {
-  "description": "#5 Should fail to insert a field",
+  "description": "Should fail to insert a field",
   "skip": false,
   "validationOptions": { "fields": false },
   "input": {

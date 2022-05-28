@@ -1,5 +1,5 @@
 {
-  "description": "#1 MarcRecord.toString()",
+  "description": "MarcRecord.toString()",
   "skip": false,
   "validationOptions": { "subfieldValues": false },
   "input": {

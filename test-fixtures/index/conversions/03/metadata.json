@@ -1,5 +1,5 @@
 {
-  "description": "#1 fromString() -> MarcRecord -> toString()",
+  "description": "fromString() -> MarcRecord -> toString()",
   "skip": false,
   "validationOptions": { "subfieldValues": false },
   "input": [

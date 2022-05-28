@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should fail to create record without leader & fields",
+  "description": "Should fail to create record without leader & fields",
   "skip": false,
   "noinput": true,
   "operations": [

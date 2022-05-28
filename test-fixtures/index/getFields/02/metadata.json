@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should return control fields with matching tag and value",
+  "description": "Should return control fields with matching tag and value",
   "skip": false,
   "input": {
     "leader": "foo",

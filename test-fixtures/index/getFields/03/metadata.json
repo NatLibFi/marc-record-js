@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should return empty array if no tags match",
+  "description": "Should return empty array if no tags match",
   "skip": false,
   "input": {
     "leader": "foo",

@@ -1,5 +1,5 @@
 {
-  "description": "#1 Should return all fields with matching tag",
+  "description": "Should return all fields with matching tag",
   "skip": false,
   "input": {
     "leader": "foo",

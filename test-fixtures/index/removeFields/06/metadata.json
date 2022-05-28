@@ -1,5 +1,5 @@
 {
-  "description": "#6 Should remove last field if validation options allow it",
+  "description": "Should remove last field if validation options allow it",
   "skip": false,
   "validationOptions": { "fields": false },
   "input": {

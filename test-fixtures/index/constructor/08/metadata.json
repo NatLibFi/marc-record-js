@@ -1,5 +1,5 @@
 {
-  "description": "#8 Should create a clone from record",
+  "description": "Should create a clone from record",
   "skip": false,
   "input": {
     "leader": "foo",

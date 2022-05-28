@@ -1,5 +1,5 @@
 {
-  "description": "#1 Should create empty MarcRecord",
+  "description": "Should create empty MarcRecord",
   "skip": false,
   "noinput": true,
   "operations": [

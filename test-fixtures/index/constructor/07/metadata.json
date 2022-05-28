@@ -1,5 +1,5 @@
 {
-  "description": "#7 Should create MarcRecord without subfield values",
+  "description": "Should create MarcRecord without subfield values",
   "skip": false,
   "noinput": true,
   "operations": [

@@ -1,5 +1,5 @@
 {
-  "description": "#1 toObject()",
+  "description": "toObject()",
   "skip": false,
   "validationOptions": { "subfieldValues": false },
   "input": [

@@ -1,5 +1,5 @@
 {
-  "description": "#10 Should return false if records have data fields with subfields in different order",
+  "description": "Should return false if records have data fields with subfields in different order",
   "skip": false,
   "input": {
     "leader": "foo",

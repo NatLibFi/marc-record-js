@@ -1,5 +1,5 @@
 {
-  "description": "#3 Should remove fields returned by get regexp",
+  "description": "Should remove fields returned by get regexp",
   "skip": false,
   "input": {
     "leader": "foo",

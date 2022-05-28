@@ -1,5 +1,5 @@
 {
-  "description": "#1 Should remove subfield",
+  "description": "Should remove subfield",
   "skip": false,
   "input": {
     "leader": "foo",

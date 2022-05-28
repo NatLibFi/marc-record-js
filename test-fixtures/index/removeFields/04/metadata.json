@@ -1,5 +1,5 @@
 {
-  "description": "#4 Should return queried fields and remove them from record",
+  "description": "Should return queried fields and remove them from record",
   "skip": false,
   "input": {
     "leader": "foo",

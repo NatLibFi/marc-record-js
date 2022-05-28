@@ -1,5 +1,5 @@
 {
-  "description": "#6 Should return fields which contain all specified subfields",
+  "description": "Should return fields which contain all specified subfields",
   "skip": false,
   "input": {
     "leader": "foo",

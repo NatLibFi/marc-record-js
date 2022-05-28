@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should throw error if removal leads to invalid record?",
+  "description": "Should remove entire field if last subfield is removed",
   "skip": false,
   "input": {
     "leader": "foo",

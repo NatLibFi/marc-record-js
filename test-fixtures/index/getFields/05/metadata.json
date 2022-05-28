@@ -1,5 +1,5 @@
 {
-  "description": "#5 Should return array of fields that match a datafield",
+  "description": "Should return array of fields that match a datafield",
   "skip": false,
   "input": {
     "leader": "foo",

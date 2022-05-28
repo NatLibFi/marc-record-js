@@ -1,5 +1,5 @@
 {
-  "description": "#1 Should set and get record validation options",
+  "description": "Should set and get record validation options",
   "skip": false,
   "noinput": true,
   "operations": [

@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should append from array to last w/o looking correct place",
+  "description": "Should append from array to last w/o looking correct place",
   "skip": false,
   "input": {
     "leader": "foo",

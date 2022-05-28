@@ -1,5 +1,5 @@
 {
-  "description": "#5 Should throw if removing last field",
+  "description": "Should throw if removing last field",
   "skip": false,
   "input": {
     "leader": "foo",

@@ -1,5 +1,5 @@
 {
-  "description": "#9 Should create a clone from record with custom validation options",
+  "description": "Should create a clone from record with custom validation options",
   "skip": false,
   "input": {
     "leader": "foo",

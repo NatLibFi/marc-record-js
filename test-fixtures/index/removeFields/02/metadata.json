@@ -1,5 +1,5 @@
 {
-  "description": "#2 Should remove fields with direct indexing",
+  "description": "Should remove fields with direct indexing",
   "skip": false,
   "input": {
     "leader": "foo",
