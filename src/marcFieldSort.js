@@ -17,11 +17,11 @@ export function fieldOrderComparator(fieldA, fieldB) {
     function getSortIndex(tag) {
       const sortIndex = {
         LDR: '000',
-        STA: '099.1',
-        SID: '899.1',
-        CAT: '899.2',
-        LOW: '899.3',
-        HLI: '899.4'
+        STA: '009.1',
+        SID: '999.1',
+        LOW: '999.2',
+        CAT: '999.3',
+        HLI: '999.4'
       };
 
       if (isNaN(tag)) {
@@ -96,8 +96,9 @@ export function fieldOrderComparator(fieldA, fieldB) {
       'yso/fin': '0',
       'yso/swe': '1',
       'yso/eng': '2',
-      'kaunokki': '3',
-      'bella': '4'
+      //'slm': '3',
+      'kaunokki': '4',
+      'bella': '5'
     };
 
     // ATM this is not needed.
@@ -111,15 +112,13 @@ export function fieldOrderComparator(fieldA, fieldB) {
       return 0;
     }
 
-    // Do not sort by indicators
-    /*
+    /* Laita neloset viimeiseksi */
     if (fieldA.ind2 > fieldB.ind2) {
       return 1;
     }
     if (fieldA.ind2 < fieldB.ind2) {
       return -1;
     }
-    */
 
     const dictionaryA = selectFirstValue(fieldA, '2');
     const dictionaryB = selectFirstValue(fieldB, '2');

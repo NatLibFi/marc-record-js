@@ -5,12 +5,12 @@
     {"tag": "002", "value": "0"},
     {"tag": "003", "value": "0"},
 
+    {"tag": "STA", "subfields": [{"code": "a", "value": "-"}]},
+
     {"tag": "020", "subfields": [{"code": "a", "value": "-"}]},
     {"tag": "030", "subfields": [{"code": "a", "value": "-"}]},
     {"tag": "040", "subfields": [{"code": "a", "value": "-"}]},
     {"tag": "080", "subfields": [{"code": "a", "value": "-"}]},
-
-    {"tag": "STA", "subfields": [{"code": "a", "value": "-"}]},
 
     {"tag": "100", "subfields": [{"code": "a", "value": "-"}]},
     {"tag": "100", "subfields": [{"code": "a", "value": "-"}]},
@@ -25,19 +25,20 @@
     {"tag": "300", "subfields": [{"code": "a", "value": "-"}]},
     {"tag": "400", "subfields": [{"code": "a", "value": "-"}]},
 
+    {"tag": "900", "subfields": [{"code": "a", "value": "-"}]},
+
     {"tag": "SID", "subfields": [{"code": "b", "value": "a"}]},
     {"tag": "SID", "subfields": [{"code": "b", "value": "b"}]},
     {"tag": "SID", "subfields": [{"code": "b", "value": "c"}]},
     {"tag": "SID", "subfields": [{"code": "b", "value": "d"}]},
-
-    {"tag": "CAT", "subfields": [{"code": "a", "value": "-"}]},
 
     {"tag": "LOW", "subfields": [{"code": "a", "value": "a"}]},
     {"tag": "LOW", "subfields": [{"code": "a", "value": "b"}]},
     {"tag": "LOW", "subfields": [{"code": "a", "value": "c"}]},
     {"tag": "LOW", "subfields": [{"code": "a", "value": "d"}]},
 
-    {"tag": "900", "subfields": [{"code": "a", "value": "-"}]},
+    {"tag": "CAT", "subfields": [{"code": "a", "value": "-"}]},
+
     {"tag": "FOO", "value": "0"}
   ]
 }
