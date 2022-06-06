@@ -1,5 +1,5 @@
 {
-  "description": "Tag sorting (also SID, LOW, ...)",
+  "description": "Tag-based sorting (also SID, LOW, ...)",
   "skip": false,
   "only": false
 }
