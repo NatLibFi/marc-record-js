@@ -1,25 +1,20 @@
 {
-  "leader": "",
+  "leader": "12345cam a22002417i 4500",
   "fields":
   [
-    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<KEEP>"}] },
-    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<DROP>"}] },
-    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<KEEP>"}] },
-    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<DROP>"}] },
-    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<KEEP>"}] },
-    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<DROP>"}] },
-    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<KEEP>"}] },
-    {"tag": "650", "subfields": [{"code": "9", "value": "FENNI<DROP>"}] },
-
-    {"tag": "650", "subfields": [{"code": "a", "value": "A"}] },
-    {"tag": "650", "subfields": [{"code": "a", "value": "B"}] },
-    {"tag": "650", "subfields": [{"code": "a", "value": "A"}] },
-    {"tag": "650", "subfields": [{"code": "a", "value": "B"}] },
-    {"tag": "650", "subfields": [{"code": "a", "value": "A"}] },
-    {"tag": "650", "subfields": [{"code": "a", "value": "B"}] },
-    {"tag": "650", "subfields": [{"code": "a", "value": "A"}] },
-    {"tag": "650", "subfields": [{"code": "a", "value": "B"}] },
-
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "LAST"}]}
+    {"tag": "650", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "a", "value": "toka" },
+      {"code": "9", "value": "FENNI<KEEP>"}
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "a", "value": "neljäs" },
+      {"code": "9", "value": "FENNI<KEEP>"}
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "a", "value": "eka" }
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "a", "value": "kolmas" }
+    ]}
   ]
 }
