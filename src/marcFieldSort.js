@@ -1,7 +1,7 @@
 export function fieldOrderComparator(fieldA, fieldB) {
-
+  const BIG_BAD_NUMBER = 999.99;
   //const sorterFunctions = [sortByTag, sortByLOW, sortBySID, sortByIndexterms, sortAlphabetically];
-  const sorterFunctions = [sortByTag, sortByLOW, sortBySID, sortByIndexterms];
+  const sorterFunctions = [sortByTag, sortByLOW, sortBySID, sortByIndexterms, preferFenniKeep];
 
   for (const sortFn of sorterFunctions) { // eslint-disable-line functional/no-loop-statement
     const result = sortFn(fieldA, fieldB);
@@ -17,15 +17,18 @@ export function fieldOrderComparator(fieldA, fieldB) {
     function getSortIndex(tag) {
       const sortIndex = {
         LDR: '000',
-        STA: '009.1',
+        STA: '001.1', // STA comes now after 001. However 003+001 form a combo, so I'm not sure...
         SID: '999.1',
         LOW: '999.2',
         CAT: '999.3',
         HLI: '999.4'
       };
 
+      if (tag in sortIndex) { // <- this allows weights for numeric values as well (not that we use them yet)
+        return sortIndex[tag];
+      }
       if (isNaN(tag)) {
-        return sortIndex[tag] || '9999';
+        return '999.9';
       }
       return tag;
     }
@@ -92,14 +95,23 @@ export function fieldOrderComparator(fieldA, fieldB) {
       '662'
     ];
 
-    const dictionarySortIndex = {
-      'yso/fin': '0',
-      'yso/swe': '1',
-      'yso/eng': '2',
-      //'slm': '3',
-      'kaunokki': '4',
-      'bella': '5'
-    };
+    function scoreInd2(val) {
+      const ind2Score = {
+        '0': 0,
+        '1': 1,
+        '2': 2,
+        '3': 3,
+        '4': 8,
+        '5': 5,
+        '6': 6,
+        '7': 7
+      };
+
+      if (val in ind2Score) {
+        return ind2Score[val];
+      }
+      return 9;
+    }
 
     // ATM this is not needed.
     // You may need this, if you change compare function order in sorterFunctions
@@ -112,31 +124,59 @@ export function fieldOrderComparator(fieldA, fieldB) {
       return 0;
     }
 
-    /* Laita neloset viimeiseksi */
-    if (fieldA.ind2 > fieldB.ind2) {
+    /* Puts ind2=4 last */
+    if (scoreInd2(fieldA.ind2) > scoreInd2(fieldB.ind2)) {
       return 1;
     }
-    if (fieldA.ind2 < fieldB.ind2) {
+    if (scoreInd2(fieldA.ind2) < scoreInd2(fieldB.ind2)) {
       return -1;
+    }
+
+    function scoreDictionary(dictionary) {
+      const dictionarySortIndex = {
+        'yso/fin': 0,
+        'yso/swe': 1,
+        'yso/eng': 2,
+        'slm/fin': 0.1,
+        'slm/swe': 1.1,
+        'kaunokki': 4,
+        'bella': 5
+      };
+
+      if (dictionary in dictionarySortIndex) {
+        return dictionarySortIndex[dictionary];
+      }
+      return BIG_BAD_NUMBER;
     }
 
     const dictionaryA = selectFirstValue(fieldA, '2');
     const dictionaryB = selectFirstValue(fieldB, '2');
 
-    const orderByDictionaryA = dictionarySortIndex[dictionaryA] || dictionaryA;
-    const orderByDictionaryB = dictionarySortIndex[dictionaryB] || dictionaryB;
-
-    if (orderByDictionaryA > orderByDictionaryB) {
+    const dictScoreA = scoreDictionary(dictionaryA);
+    const dictScoreB = scoreDictionary(dictionaryB);
+    // Use priority order for listed dictionaries:
+    if (dictScoreA > dictScoreB) {
       return 1;
     }
-    if (orderByDictionaryA < orderByDictionaryB) {
+    if (dictScoreA < dictScoreB) {
       return -1;
     }
+    // Unlisted dictionaries: sort $2 value alphabetically:
+    //if (dictScoreA === BIG_BAD_NUMBER) {
+    if (dictionaryA > dictionaryB) {
+      return 1;
+    }
+    if (dictionaryA < dictionaryB) {
+      return -1;
+    }
+    //}
+    return 0;
+  }
 
+  function preferFenniKeep(fieldA, fieldB) {
     const fenniKeepSelector = fieldHasSubfield('9', 'FENNI<KEEP>');
-    const fenniDropSelector = fieldHasSubfield('9', 'FENNI<DROP>');
-    const hasFENNI9A = fenniKeepSelector(fieldA) || fenniDropSelector(fieldA);
-    const hasFENNI9B = fenniKeepSelector(fieldB) || fenniDropSelector(fieldB);
+    const hasFENNI9A = fenniKeepSelector(fieldA);
+    const hasFENNI9B = fenniKeepSelector(fieldB);
 
     if (hasFENNI9A && !hasFENNI9B) {
       return -1;
@@ -145,52 +185,9 @@ export function fieldOrderComparator(fieldA, fieldB) {
       return 1;
     }
 
-    // Do not sort alphabetically
-    /*
-    const valueA = selectFirstValue(fieldA, 'a');
-    const valueB = selectFirstValue(fieldB, 'a');
-
-    if (valueA > valueB) {
-      return 1;
-    }
-    if (valueA < valueB) {
-      return -1;
-    }
-    */
-
-    /*
-    const valueAX = selectFirstValue(fieldA, 'x');
-    const valueBX = selectFirstValue(fieldB, 'x');
-
-    if (valueAX > valueBX) {
-      return 1;
-    }
-    if (valueAX < valueBX) {
-      return -1;
-    }
-
-    const valueAZ = selectFirstValue(fieldA, 'z');
-    const valueBZ = selectFirstValue(fieldB, 'z');
-
-    if (valueAZ > valueBZ) {
-      return 1;
-    }
-    if (valueAZ < valueBZ) {
-      return -1;
-    }
-
-    const valueAY = selectFirstValue(fieldA, 'y');
-    const valueBY = selectFirstValue(fieldB, 'y');
-    if (valueAY > valueBY) {
-      return 1;
-    }
-    if (valueAY < valueBY) {
-      return -1;
-    }
-    */
-
     return 0;
   }
+
 
   /*
   function sortAlphabetically(fieldA, fieldB) {
@@ -216,11 +213,13 @@ export function fieldOrderComparator(fieldA, fieldB) {
 
   //-----------------------------------------------------------------------------
 
+
   function fieldHasSubfield(subcode, value) {
     return (field) => field.subfields
       .filter(subfield => subcode === subfield.code)
       .some(subfield => subfield.value === value);
   }
+
 
   function selectFirstValue(field, subcode) {
     return field.subfields
