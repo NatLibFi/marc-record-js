@@ -1,44 +1,28 @@
 {
-  "leader": "",
+  "leader": "12345cam a22002417i 4500",
   "fields": [
-    {"tag": "001", "value": "0"},
-    {"tag": "002", "value": "0"},
-    {"tag": "003", "value": "0"},
+    {"tag": "001", "value": "000123456"},
+    {"tag": "STA", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "DELETED"}]},
+    {"tag": "003", "value": "(FI-MELINDA)"},
+    {"tag": "005", "value": "20210730133112.0"},
+    {"tag": "020", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "123456789012X"}]},
+    {"tag": "100", "ind1": "1", "ind2": " ", "subfields": [{"code": "a", "value": "Sukunimi, Etunimi"}]},
+    {"tag": "245", "ind1": "1", "ind2": " ", "subfields": [{"code": "a", "value": "Nimeke."}]},
+    {"tag": "300", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "1 nide (123 sivua)"}]},
+    {"tag": "500", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Lorum ipsum."}]},
+    {"tag": "900", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Auel, Jean M."}, {"code": "y", "value": "Untinen-Auel, Jean M."}]},
 
-    {"tag": "STA", "subfields": [{"code": "a", "value": "-"}]},
+    {"tag": "SID", "ind1": " ", "ind2": " ", "subfields": [{"code": "b", "value": "123"}, {"code": "c", "value": "alma"}]},
 
-    {"tag": "020", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "030", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "040", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "080", "subfields": [{"code": "a", "value": "-"}]},
+    {"tag": "LOW", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "ALMA"}]},
 
-    {"tag": "100", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "100", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "100", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "100", "subfields": [{"code": "a", "value": "-"}]},
-
-    {"tag": "200", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "200", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "200", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "200", "subfields": [{"code": "a", "value": "-"}]},
-
-    {"tag": "300", "subfields": [{"code": "a", "value": "-"}]},
-    {"tag": "400", "subfields": [{"code": "a", "value": "-"}]},
-
-    {"tag": "900", "subfields": [{"code": "a", "value": "-"}]},
-
-    {"tag": "SID", "subfields": [{"code": "b", "value": "a"}]},
-    {"tag": "SID", "subfields": [{"code": "b", "value": "b"}]},
-    {"tag": "SID", "subfields": [{"code": "b", "value": "c"}]},
-    {"tag": "SID", "subfields": [{"code": "b", "value": "d"}]},
-
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "a"}]},
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "b"}]},
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "c"}]},
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "d"}]},
-
-    {"tag": "CAT", "subfields": [{"code": "a", "value": "-"}]},
-
-    {"tag": "FOO", "value": "0"}
+    {"tag": "CAT", "subfields": [
+      {"code": "a", "value": "CONV-ISBD"},
+      {"code": "b", "value": "30"},
+      {"code": "c", "value": "20090101"},
+      {"code": "l", "value": "FIN"},
+      {"code": "h", "value": "1205"}
+    ]},
+    {"tag": "FOO", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "BAR"}]}
   ]
 }
