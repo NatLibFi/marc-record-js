@@ -1,18 +1,41 @@
 {
-  "leader": "",
+  "leader": "12345cam a22002417i 4500",
   "fields":
   [
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/fin"}, {"code": "a", "value": "C" }]},
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/fin"}, {"code": "a", "value": "B" }]},
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/fin"}, {"code": "a", "value": "A" }]},
-
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/swe"}, {"code": "a", "value": "C" }]},
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/swe"}, {"code": "a", "value": "B" }]},
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/swe"}, {"code": "a", "value": "A" }]},
-
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "yso/eng"}] },
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "kaunokki"}] },
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "bella"}] },
-    {"tag": "650", "ind1": " ", "ind2": " ", "subfields": [{"code": "2", "value": "external"}] }
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "kirjastot" },
+      {"code": "2", "value": "yso/fin"}, 
+      {"code": "0", "value": "http://www.yso.fi/onto/yso/p2787" }
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "bibliotek"},
+      {"code": "2", "value": "yso/swe"},
+      {"code": "0", "value": "http://www.yso.fi/onto/yso/p2787" }
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "libraries" },
+      {"code": "2", "value": "yso/eng"}, 
+      {"code": "0", "value": "http://www.yso.fi/onto/yso/p2787" }
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "kirjat" },
+      {"code": "2", "value": "kaunokki"}
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "böcker" },
+      {"code": "2", "value": "bella"}
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "unlisted lexicon" },
+      {"code": "2", "value": "helecon"}
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "unlisted lexicon 2" },
+      {"code": "2", "value": "masa"}
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "lorum ipsum" },
+      {"code": "2", "value": "whatever"}
+    ]}
   ]
 }
