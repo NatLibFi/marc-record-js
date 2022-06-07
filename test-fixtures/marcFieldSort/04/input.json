@@ -2,16 +2,12 @@
   "leader": "",
   "fields":
   [
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "A"}, {"code": "#", "value": "1"}] },
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "B"}, {"code": "#", "value": "1"}] },
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "A"}, {"code": "#", "value": "2"}] },
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "B"}, {"code": "#", "value": "2"}] },
+    {"tag": "LOW", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "OULA"}] },
+    {"tag": "LOW", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "FIKKA"}] },
+    {"tag": "LOW", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "FENNI"}] },
+    {"tag": "LOW", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "VIOLA"}] },
 
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "C"}, {"code": "#", "value": "1"}] },
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "D"}, {"code": "#", "value": "1"}] },
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "C"}, {"code": "#", "value": "2"}] },
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "D"}, {"code": "#", "value": "2"}] },
-
-    {"tag": "LOW", "subfields": [{"code": "a", "value": "LAST"}]}
+    {"tag": "LOW", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "ALMA"}] },
+    {"tag": "LOW", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "KOAMK"}] }
   ]
 }
