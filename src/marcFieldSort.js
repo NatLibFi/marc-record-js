@@ -1,10 +1,21 @@
 export function fieldOrderComparator(fieldA, fieldB) {
   const BIG_BAD_NUMBER = 999.99;
-  //const sorterFunctions = [sortByTag, sortByLOW, sortBySID, sortByIndexterms, sortAlphabetically];
-  const sorterFunctions = [sortByTag, sortByLOW, sortBySID, sortByIndexterms, preferFenniKeep];
+  //const sorterFunctions = [sortByTag, sortByLOW, sortBySID, sortByIndexTerms, sortAlphabetically];
+  const sorterFunctions = [sortByTag, /*sortByLOW,*/ /*sortBySID,*/ sortByIndexTerms, sortAlphabetically, preferFenniKeep];
+
+  function fieldToString(f) {
+    if ('subfields' in f) {
+      return `${f.tag} ${f.ind1}${f.ind2} ‡${formatSubfields(f)}`;
+    }
+    return `${f.tag}    ${f.value}`;
+    function formatSubfields(field) {
+      return field.subfields.map(sf => `${sf.code}${sf.value || ''}`).join('‡');
+    }
+  }
 
   for (const sortFn of sorterFunctions) { // eslint-disable-line functional/no-loop-statement
     const result = sortFn(fieldA, fieldB);
+    console.info(`${sortFn.name}: '${fieldToString(fieldA)}' vs '${fieldToString(fieldB)}' ${result}`); // eslint-disable-line no-console
     if (result !== 0) {
       return result;
     }
@@ -46,6 +57,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
     return 0;
   }
 
+  /*
   function sortByLOW(fieldA, fieldB) {
     if (fieldA.tag === 'LOW' && fieldB.tag === 'LOW') {
       const lowA = selectFirstValue(fieldA, 'a');
@@ -59,11 +71,13 @@ export function fieldOrderComparator(fieldA, fieldB) {
     }
     return 0;
   }
+  */
 
+  /*
   function sortBySID(fieldA, fieldB) {
     if (fieldA.tag === 'SID' && fieldB.tag === 'SID') {
-      const sidA = selectFirstValue(fieldA, 'b');
-      const sidB = selectFirstValue(fieldB, 'b');
+      const sidA = selectFirstValue(fieldA, 'c');
+      const sidB = selectFirstValue(fieldB, 'c');
       if (sidA > sidB) {
         return 1;
       }
@@ -73,8 +87,9 @@ export function fieldOrderComparator(fieldA, fieldB) {
     }
     return 0;
   }
+*/
 
-  function sortByIndexterms(fieldA, fieldB) { // eslint-disable-line complexity, max-statements
+  function sortByIndexTerms(fieldA, fieldB) { // eslint-disable-line complexity, max-statements
 
     const indexTermFields = [
       '600',
@@ -188,28 +203,55 @@ export function fieldOrderComparator(fieldA, fieldB) {
     return 0;
   }
 
-
-  /*
   function sortAlphabetically(fieldA, fieldB) {
-    if (fieldA.tag === fieldB.tag) {
+    const tagToSortingSubfields = {
+      // '028': ['b', 'a']?
+      'LOW': ['a'],
+      'SID': ['c']
+    };
 
-      const anySelector = {
-        equals: () => true
-      };
-
-      const valueA = selectFirstValue(fieldA, anySelector);
-      const valueB = selectFirstValue(fieldB, anySelector);
-
-      if (valueA > valueB) {
-        return 1;
+    function scoreSubfieldsAlphabetically(setOfSubfields) {
+      if (setOfSubfields.length === 0) {
+        return 0;
       }
-      if (valueA < valueB) {
+      const [subfieldCode, ...remainingSubfieldCodes] = setOfSubfields;
+      const valA = selectFirstValue(fieldA, subfieldCode);
+      const valB = selectFirstValue(fieldB, subfieldCode);
+      //console.info(`CHECKING SUBFIELD '${subfieldCode}'`); // eslint-disable-line no-console
+      if (!valA) {
+        if (!valB) {
+          return scoreSubfieldsAlphabetically(remainingSubfieldCodes);
+        }
         return -1;
       }
+      if (!valB) {
+        return 1;
+      }
+      console.info(`CHECKING SUBFIELD '${subfieldCode}': '${valA}' vs '${valB}'`); // eslint-disable-line no-console
+
+      if (valA < valB) {
+        return -1;
+      }
+      if (valB < valA) {
+        return 1;
+      }
+      return scoreSubfieldsAlphabetically(remainingSubfieldCodes);
+    }
+
+    if (fieldA.tag === fieldB.tag) {
+      if (!(fieldA.tag in tagToSortingSubfields)) {
+        return 0;
+      }
+
+      const subfieldsToCheck = tagToSortingSubfields[fieldA.tag];
+
+      //console.info(`CHECKING ${subfieldsToCheck.join(', ')}`); // eslint-disable-line no-console
+      const result = scoreSubfieldsAlphabetically(subfieldsToCheck);
+      console.info(`RESULT ${result}`); // eslint-disable-line no-console
+      return result;
     }
     return 0;
   }
-  /**/
 
   //-----------------------------------------------------------------------------
 
