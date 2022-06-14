@@ -137,6 +137,7 @@ describe('index', () => {
     const {getFixture} = metadata;
     const {input, result, immutable, noinput, validationOptions} = metadata;
 
+    // if !noinput and we have input in metadata we use it, otherwise we get it from file input.json
     const inputRecord = noinput ? null : getRecord(input, 'input.json');
     const record = inputRecord ? MarcRecord.clone(inputRecord, validationOptions) : null;
 

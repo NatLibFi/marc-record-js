@@ -1,0 +1,76 @@
+{
+  "_validationOptions": {
+    "subfieldValues": false
+  },
+  "leader": "05628cam a2201477 i 4500",
+  "fields": [
+    {
+      "tag": "001",
+      "value": "000503874"
+    },
+    {
+      "tag": "003",
+      "value": "FI-MELINDA"
+    },
+    {
+      "tag": "005",
+      "value": "20190703210808.0"
+    },
+    {
+      "tag": "008",
+      "value": "080117s2008    fi |||||||||||||||||fin| "
+    },
+    {
+      "tag": "020",
+      "ind1": " ",
+      "ind2": " ",
+      "subfields": [
+        {
+          "code": "a",
+          "value": "978-951-692-678-3"
+        },
+        {
+          "code": "q",
+          "value": "sidottu"
+        }
+      ]
+    },
+    {
+      "tag": "041",
+      "ind1": "0",
+      "ind2": " ",
+      "subfields": [
+        {
+          "code": "a",
+          "value": "fin"
+        }
+      ]
+    },
+    {
+      "tag": "100",
+      "ind1": "1",
+      "ind2": " ",
+      "subfields": [
+        {
+          "code": "a",
+          "value": "Koski, Johanna."
+        }
+      ]
+    },
+    {
+      "tag": "245",
+      "ind1": "1",
+      "ind2": "0",
+      "subfields": [
+        {
+          "code": "a",
+          "value": "Punokset puikoille /"
+        },
+        {
+          "code": "c",
+          "value": "Johanna Koski ja Kristel Nyberg ; [neulekuvaus: Vuokko Nyberg ja Pörrö Sahlberg]."
+        }
+      ]
+    }
+  ]
+}
