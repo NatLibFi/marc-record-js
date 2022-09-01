@@ -2,7 +2,6 @@
 /* eslint-disable max-statements */
 /* eslint-disable complexity */
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
 
 import generateTests from '@natlibfi/fixugen';
 import {READERS} from '@natlibfi/fixura';

@@ -1,13 +1,12 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
-
 import generateTests from '@natlibfi/fixugen';
 import {READERS} from '@natlibfi/fixura';
 import {expect} from 'chai';
-import createDebugLogger from 'debug';
+//import createDebugLogger from 'debug';
 import {MarcRecord} from '.';
 
-const debug = createDebugLogger('@natlibfi/marc-record/marcFieldSort.spec.js'); // <---
+//const debug = createDebugLogger('@natlibfi:marc-record:marcFieldSort:test);
+//const debugData = debug.extend('data');
+
 
 generateTests({
   callback,

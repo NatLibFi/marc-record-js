@@ -1,3 +1,8 @@
+import createDebugLogger from 'debug';
+
+const debug = createDebugLogger('@natlibfi/marc-record:marcFieldSort');
+//const debugData = debug.extend('data');
+
 export function fieldOrderComparator(fieldA, fieldB) {
   const BIG_BAD_NUMBER = 999.99;
   //const sorterFunctions = [sortByTag, sortByLOW, sortBySID, sortByIndexTerms, sortAlphabetically];
@@ -15,7 +20,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
 
   for (const sortFn of sorterFunctions) { // eslint-disable-line functional/no-loop-statement
     const result = sortFn(fieldA, fieldB);
-    console.info(`${sortFn.name}: '${fieldToString(fieldA)}' vs '${fieldToString(fieldB)}' ${result}`); // eslint-disable-line no-console
+    debug(`${sortFn.name}: '${fieldToString(fieldA)}' vs '${fieldToString(fieldB)}' ${result}`);
     if (result !== 0) {
       return result;
     }
@@ -217,7 +222,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
       const [subfieldCode, ...remainingSubfieldCodes] = setOfSubfields;
       const valA = selectFirstValue(fieldA, subfieldCode);
       const valB = selectFirstValue(fieldB, subfieldCode);
-      //console.info(`CHECKING SUBFIELD '${subfieldCode}'`); // eslint-disable-line no-console
+      //debug(`CHECKING SUBFIELD '${subfieldCode}'`);
       if (!valA) {
         if (!valB) {
           return scoreSubfieldsAlphabetically(remainingSubfieldCodes);
@@ -227,7 +232,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
       if (!valB) {
         return 1;
       }
-      console.info(`CHECKING SUBFIELD '${subfieldCode}': '${valA}' vs '${valB}'`); // eslint-disable-line no-console
+      debug(`CHECKING SUBFIELD '${subfieldCode}': '${valA}' vs '${valB}'`);
 
       if (valA < valB) {
         return -1;
@@ -245,9 +250,9 @@ export function fieldOrderComparator(fieldA, fieldB) {
 
       const subfieldsToCheck = tagToSortingSubfields[fieldA.tag];
 
-      //console.info(`CHECKING ${subfieldsToCheck.join(', ')}`); // eslint-disable-line no-console
+      //debug(`CHECKING ${subfieldsToCheck.join(', ')}`);
       const result = scoreSubfieldsAlphabetically(subfieldsToCheck);
-      console.info(`RESULT ${result}`); // eslint-disable-line no-console
+      debug(`RESULT ${result}`);
       return result;
     }
     return 0;
