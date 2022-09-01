@@ -1,6 +1,6 @@
 {
   "description": "Clone should be able to use validationOptions from the inputRecord",
-  "skip": false,
+  "skip": true,
   "immutable": true,
   "only": false,
   "operations": [
