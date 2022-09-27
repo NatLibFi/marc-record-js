@@ -111,7 +111,7 @@ recordA.equalsTo(recordB);
 
 ### Querying for fields
 
-**get()** returns records which tags match the specified pattern:
+**get()** returns fields which tags match the specified pattern:
 
 ```js
 record.get("776")         // Return fields with tag 776
