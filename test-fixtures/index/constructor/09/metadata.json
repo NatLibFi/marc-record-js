@@ -1,0 +1,31 @@
+{
+  "description": "Should create a clone from record with custom validation options",
+  "skip": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
+      {"tag": "003", "value": "bar"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "002", "value": "foo"},
+      {"tag": "005", "value": "bar"}
+    ]
+  },
+  "operations": [{ "name": "clone", "args": { "validationOptions": {"subfields": false}}}],
+  "returns": {
+    "_validationOptions": {"subfields": false},
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
+      {"tag": "003", "value": "bar"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "002", "value": "foo"},
+      {"tag": "005", "value": "bar"}
+    ]
+  },
+  "immutable": true
+}

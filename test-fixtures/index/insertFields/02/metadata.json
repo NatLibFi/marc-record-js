@@ -1,0 +1,30 @@
+{
+  "description": "Should insert field into the end if its the correct location",
+  "skip": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
+      {"tag": "003", "value": "bar"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "005", "value": "bar"}
+    ]
+  },
+  "operations": [
+    { "name": "insertField", "args": {"tag": "006", "value": "bar"}}
+  ],
+  "result": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
+      {"tag": "003", "value": "bar"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "005", "value": "bar"},
+      {"tag": "006", "value": "bar"}
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "leader": "12345cam a22002417i 4500",
+  "fields": [
+    {"tag": "001", "value": "000123456"},
+    {"tag": "003", "value": "(FI-MELINDA)"},
+    {"tag": "005", "value": "20210730133112.0"},
+    {"tag": "020", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "123456789012X"}]},
+    {"tag": "100", "ind1": "1", "ind2": " ", "subfields": [{"code": "a", "value": "Sukunimi, Etunimi"}]},
+    {"tag": "245", "ind1": "1", "ind2": " ", "subfields": [{"code": "a", "value": "Nimeke."}]},
+    {"tag": "500", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Lorum ipsum."}]},
+    {"tag": "300", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "1 nide (123 sivua)"}]},
+    {"tag": "FOO", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "BAR"}]},
+    {"tag": "900", "ind1": " ", "ind2": " ", "subfields": [
+      {"code": "a", "value": "Auel, Jean M."},
+      {"code": "y", "value": "Untinen-Auel, Jean M."}
+    ]},
+
+    {"tag": "STA", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "DELETED"}]},
+
+    {"tag": "SID", "ind1": " ", "ind2": " ", "subfields": [{"code": "b", "value": "123"}, {"code": "c", "value": "alma"}]},
+
+    {"tag": "LOW", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "ALMA"}]},
+
+    {"tag": "CAT", "subfields": [
+      {"code": "a", "value": "CONV-ISBD"},
+      {"code": "b", "value": "30"},
+      {"code": "c", "value": "20090101"},
+      {"code": "l", "value": "FIN"},
+      {"code": "h", "value": "1205"}
+    ]}
+  ]
+}

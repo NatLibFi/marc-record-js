@@ -1,0 +1,10 @@
+{
+  "description": "Should fail to create record without leader & fields",
+  "skip": false,
+  "noinput": true,
+  "operations": [
+    {"name": "MarcRecord", "args": {}}
+  ],
+  "throws": "Record is invalid",
+  "immutable": true
+}

@@ -1,0 +1,33 @@
+{
+  "description": "Should return queried fields and remove them from record",
+  "skip": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
+      {"tag": "003", "value": "bar"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "002", "value": "foo"},
+      {"tag": "005", "value": "bar"}
+    ]
+  },
+  "operations": [
+    { "name": "pop", "args": { "regexp": "002|003" }}
+  ],
+  "returns": [
+    {"tag": "002", "value": "bar"},
+    {"tag": "003", "value": "bar"},
+    {"tag": "002", "value": "foo"}
+  ],
+  "result": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "005", "value": "bar"}
+    ]
+  }
+}

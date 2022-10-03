@@ -1,0 +1,16 @@
+{
+  "description": "Should set and get record validation options",
+  "skip": false,
+  "noinput": true,
+  "operations": [
+    { "name": "setValidationOptions", "args": {"fields": false}},
+    { "name": "MarcRecord", "args": { "leader": "foo" }},
+    { "name": "getValidationOptions" }
+  ],
+  "returns": {
+    "fields": false,
+    "subfields": true,
+    "subfieldValues": true
+  },
+  "immutable": true
+}

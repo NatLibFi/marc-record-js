@@ -1,0 +1,31 @@
+{
+  "description": "Should return false if records have differing ind2",
+  "skip": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "002", "subfields": [{"code": "a", "value": "b"}]},
+      {"tag": "003", "ind1": "1", "subfields": [{"code": "a", "value": "b"}]},
+      {"tag": "003", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]},
+      {"tag": "003", "ind2": "2", "subfields": [{"code": "a", "value": "b"}, {"code": "c", "value": "d"}]}
+    ]
+  },
+  "operations": [
+    { "name": "equalsTo", "args": {
+        "leader": "foo",
+        "fields":
+        [
+          {"tag": "001", "value": "bar"},
+          {"tag": "002", "subfields": [{"code": "a", "value": "b"}]},
+          {"tag": "003", "ind1": "1", "subfields": [{"code": "a", "value": "b"}]},
+          {"tag": "003", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]},
+          {"tag": "003", "ind2": "X", "subfields": [{"code": "a", "value": "b"}, {"code": "c", "value": "d"}]}
+        ]
+      }
+    }
+  ],
+  "returns": false,
+  "immutable": true
+}

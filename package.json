@@ -25,7 +25,7 @@
 		"url": "git@github.com:natlibfi/marc-record-js.git"
 	},
 	"license": "MIT",
-	"version": "7.0.0",
+	"version": "7.2.0-alpha.1",
 	"main": "./dist/index.js",
 	"engines": {
 		"node": ">=14"
@@ -37,31 +37,36 @@
 		"prepare": "npm run build",
 		"lint": "eslint src",
 		"lint:dev": "eslint --fix src",
-		"test:base": "cross-env NODE_ENV=test nyc mocha --require @babel/register",
-		"test": "npm run lint && npm run test:base -- src/*.spec.js && npm run coverage",
-		"test:dev": "npm run lint:dev && npm run test:base -- src/*.spec.js && npm run coverage",
-		"coverage": "nyc check-coverage --per-file",
+		"test:base": "cross-env NODE_ENV=test mocha --require @babel/register --reporter-option maxDiffSize=15000 src/*.spec.js",
+		"test": "npm run lint && npm run test:base",
+		"test:dev": "clear && npm run lint:dev && npm run coverage",
+		"coverage": "npm run coverage:unit && npm run coverage:report",
+		"coverage:unit": "nyc --silent npm run test:base",
+		"coverage:report": "nyc report --reporter=text",
 		"build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist",
-		"watch:test": "cross-env DEBUG=1 NODE_ENV=test nodemon -w src -w test-fixtures --exec 'npm run test:dev'"
+		"dev:test": "cross-env DEBUG=@natlibfi/* NODE_ENV=test nodemon -w src -w test-fixtures --exec 'npm run test:dev'"
 	},
 	"dependencies": {
-		"jsonschema": "^1.4.0"
+		"debug": "^4.3.4",
+		"jsonschema": "^1.4.1"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.15.7",
-		"@babel/core": "^7.15.8",
-		"@babel/eslint-parser": "7.15.8",
-		"@babel/node": "^7.15.8",
-		"@babel/plugin-transform-runtime": "^7.15.8",
-		"@babel/preset-env": "^7.15.8",
-		"@babel/register": "^7.15.3",
-		"@natlibfi/eslint-config-melinda-backend": "^1.1.1",
+		"@natlibfi/fixugen": "^1.1.0",
+		"@natlibfi/fixura": "^2.2.1",
+		"@babel/cli": "^7.18.10",
+		"@babel/core": "^7.18.13",
+		"@babel/eslint-parser": "7.18.9",
+		"@babel/node": "^7.18.10",
+		"@babel/plugin-transform-runtime": "^7.18.0",
+		"@babel/preset-env": "^7.18.0",
+		"@babel/register": "^7.18.9",
+		"@natlibfi/eslint-config-melinda-backend": "^2.0.0",
 		"babel-plugin-istanbul": "^6.1.1",
-		"chai": "^4.3.4",
+		"chai": "^4.3.6",
 		"cross-env": "^7.0.3",
-		"eslint": "^7.32.0",
-		"mocha": "^9.1.3",
-		"nodemon": "^2.0.14",
+		"eslint": "^8.23.0",
+		"mocha": "^10.0.0",
+		"nodemon": "^2.0.19",
 		"nyc": "^15.1.0"
 	},
 	"eslintConfig": {

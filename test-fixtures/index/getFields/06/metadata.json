@@ -1,0 +1,24 @@
+{
+  "description": "Should return fields which contain all specified subfields",
+  "skip": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "ind1": " ", "ind2": " ", "value": "A"},
+      {"tag": "001", "ind1": " ", "ind2": " ", "value": "B"},
+      {"tag": "003", "ind1": " ", "ind2": " ", "value": "A"},
+      {"tag": "100", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}]},
+      {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}]},
+      {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}, {"code": "c", "value": "C"}]}
+    ]
+  },
+  "operations": [
+    { "name": "getFields", "args": {"tag": "245", "value": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}]}}
+  ],
+  "returns": [
+    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}]},
+    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}, {"code": "c", "value": "C"}]}
+  ],
+  "immutable": true
+}

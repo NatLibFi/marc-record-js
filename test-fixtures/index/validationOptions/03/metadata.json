@@ -1,0 +1,9 @@
+{
+  "description": "Clone should clone also validationOptions (FIX TEST)",
+  "skip": true,
+  "operations": [
+    {
+      "name": "clone"
+    }
+  ]
+}

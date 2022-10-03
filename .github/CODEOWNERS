@@ -1,0 +1,9 @@
+# With this line @NatLibFi/melinda-js-lead owns any files in the /.github/
+# directory at the root of the repository and any of its
+# subdirectories.
+/.github/ @NatLibFi/melinda-js-lead
+
+# With this line @NatLibFi/melinda-js-lead owns any files in the /src/
+# directory at the root of the repository and any of its
+# subdirectories.
+/src/ @NatLibFi/melinda-js-lead

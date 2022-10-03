@@ -1,0 +1,23 @@
+{
+  "description": "Should not alter record if remove fails",
+  "skip": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
+      {"tag": "003", "value": "bar"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "002", "value": "foo"},
+      {"tag": "005", "value": "bar"}
+    ]
+  },
+  "operations": [
+    { "name": "removeField", "args": { "string": "002"}},
+    { "name": "removeField", "args": { "regexp": "002|003"}},
+    { "name": "removeField", "args": { "field": { "tag": "002", "value": "bar"}} },
+    { "name": "removeField", "args": { "index": 999}}
+  ],
+  "immutable": true
+}

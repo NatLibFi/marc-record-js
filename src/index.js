@@ -1,22 +1,8 @@
-/**
-*
-* @licstart  The following is the entire license notice for the JavaScript code in this file.
-*
-* Copyright 2014-2017 Pasi Tuominen
-* Copyright 2018-2020 University Of Helsinki (The National Library Of Finland)
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*
-* @licend  The above is the entire license notice
-* for the JavaScript code in this file.
-*
-*/
+/* eslint-disable functional/no-this-expression */
 
+import {fieldOrderComparator} from './marcFieldSort';
 import {clone, validateRecord, validateField} from './utils';
+import MarcRecordError from './error';
 export {default as MarcRecordError} from './error';
 
 const validationOptionsDefaults = {
@@ -28,6 +14,7 @@ const validationOptionsDefaults = {
 let globalValidationOptions = {...validationOptionsDefaults}; // eslint-disable-line functional/no-let
 
 export class MarcRecord {
+
   static setValidationOptions(options) {
     globalValidationOptions = {...validationOptionsDefaults, ...options};
   }
@@ -37,7 +24,7 @@ export class MarcRecord {
   }
 
   constructor(record, validationOptions = {}) {
-    this._validationOptions = validationOptions; // eslint-disable-line functional/no-this-expression
+    this._validationOptions = validationOptions;
 
     if (record) {
       const recordClone = clone(record);
@@ -51,39 +38,75 @@ export class MarcRecord {
           field.ind2 = field.ind2 || ' ';
         });
 
-      validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions}); // eslint-disable-line functional/no-this-expression
-      this.leader = recordClone.leader; // eslint-disable-line functional/no-this-expression
-      this.fields = recordClone.fields; // eslint-disable-line functional/no-this-expression
+      validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions});
+      this.leader = recordClone.leader;
+      this.fields = recordClone.fields;
       return;
     }
 
-    this.leader = ''; // eslint-disable-line functional/no-this-expression
-    this.fields = []; // eslint-disable-line functional/no-this-expression
+    this.leader = '';
+    this.fields = [];
   }
 
   get(query) {
-    return this.fields.filter(field => field.tag.match(query)); // eslint-disable-line functional/no-this-expression
+    return this.fields.filter(field => field.tag.match(query));
+  }
+
+  pop(query) {
+    const fields = this.get(query);
+    this.removeFields(fields);
+    return fields;
+  }
+
+  sortFields() {
+    this.fields.sort(fieldOrderComparator); // eslint-disable-line functional/immutable-data
+    return this;
   }
 
   removeField(field) {
-    this.fields.splice(this.fields.indexOf(field), 1); // eslint-disable-line functional/no-this-expression, functional/immutable-data
+    const index = this.fields.indexOf(field);
+    if (index !== -1) {
+      const {fields: keepLastField} = {...globalValidationOptions, ...this._validationOptions};
+      if (this.fields.length === 1 && keepLastField) {
+        throw new MarcRecordError('Cannot remove last field');
+      }
+      this.fields.splice(index, 1); // eslint-disable-line functional/immutable-data
+      return this;
+    }
+    return this;
+  }
+
+  removeFields(fields) {
+    fields.forEach(f => this.removeField(f));
+    return this;
   }
 
   removeSubfield(subfield, field) { // eslint-disable-line class-methods-use-this
     const index = field.subfields.indexOf(subfield);
     field.subfields.splice(index, 1); // eslint-disable-line functional/immutable-data
+    if (field.subfields.length === 0) {
+      return this.removeField(field);
+    }
+    return this;
   }
 
   appendField(field) {
-    this.insertField(field, this.fields.length); // eslint-disable-line functional/no-this-expression
+    this.insertField(field, this.fields.length);
+    return this;
+  }
+
+  appendFields(fields) {
+    fields.forEach(f => this.appendField(f));
+    return this;
   }
 
   insertField(field, index) {
     const newField = Array.isArray(field) ? format(convertFromArray(field)) : format(field);
 
-    validateField(newField, {...globalValidationOptions, ...this._validationOptions}); // eslint-disable-line functional/no-this-expression
+    validateField(newField, {...globalValidationOptions, ...this._validationOptions});
 
-    this.fields.splice(index ?? this.findPosition(newField.tag), 0, newField); // eslint-disable-line functional/no-this-expression, functional/immutable-data
+    this.fields.splice(index ?? this.findPosition(newField), 0, newField); //eslint-disable-line functional/immutable-data
+    return this;
 
     function format(field) {
       const cloned = clone(field);
@@ -122,21 +145,26 @@ export class MarcRecord {
     }
   }
 
-  findPosition(tag) {
-    const index = this.fields.findIndex(({tag: fieldTag}) => fieldTag > tag); // eslint-disable-line functional/no-this-expression
-    return index < 0 ? this.fields.length : index; // eslint-disable-line functional/no-this-expression
+  insertFields(fields) {
+    fields.forEach(f => this.insertField(f));
+    return this;
+  }
+
+  findPosition(fieldA) {
+    const index = this.fields.findIndex((fieldB) => fieldOrderComparator(fieldB, fieldA) > 0);
+    return index < 0 ? this.fields.length : index;
   }
 
   getControlfields() {
-    return this.fields.filter(field => 'value' in field); // eslint-disable-line functional/no-this-expression
+    return this.fields.filter(field => 'value' in field);
   }
 
   getDatafields() {
-    return this.fields.filter(field => 'subfields' in field); // eslint-disable-line functional/no-this-expression
+    return this.fields.filter(field => 'subfields' in field);
   }
 
   getFields(tag, query) {
-    const fields = this.fields.filter(f => f.tag === tag); // eslint-disable-line functional/no-this-expression
+    const fields = this.fields.filter(f => f.tag === tag);
     if (typeof query === 'string') {
       return fields.filter(f => f.value === query);
     }
@@ -149,18 +177,18 @@ export class MarcRecord {
   }
 
   containsFieldWithValue(tag, query) {
-    return this.getFields(tag, query).length > 0; // eslint-disable-line functional/no-this-expression
+    return this.getFields(tag, query).length > 0;
   }
 
   equalsTo(record) {
-    return MarcRecord.isEqual(this, record); // eslint-disable-line functional/no-this-expression
+    return MarcRecord.isEqual(this, record);
   }
 
   toString() {
     return [].concat(
-      `LDR    ${this.leader}`, // eslint-disable-line functional/no-this-expression
-      this.getControlfields().map(f => `${f.tag}    ${f.value}`), // eslint-disable-line functional/no-this-expression
-      this.getDatafields().map(mapDatafield) // eslint-disable-line functional/no-this-expression
+      `LDR    ${this.leader}`,
+      this.getControlfields().map(f => `${f.tag}    ${f.value}`),
+      this.getDatafields().map(mapDatafield)
     ).join('\n');
 
     function mapDatafield(f) {
@@ -173,7 +201,7 @@ export class MarcRecord {
   }
 
   toObject() {
-    return Object.entries(clone(this)) // eslint-disable-line functional/no-this-expression
+    return Object.entries(clone(this))
       .filter(([k]) => k.startsWith('_') === false)
       .reduce((acc, [k, v]) => ({...acc, [k]: v}), {});
   }

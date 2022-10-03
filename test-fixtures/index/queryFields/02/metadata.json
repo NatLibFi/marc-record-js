@@ -1,0 +1,25 @@
+{
+  "description": "Should return fields by tags with regexp",
+  "skip": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "002", "value": "bar"},
+      {"tag": "003", "value": "bar"},
+      {"tag": "004", "value": "bar"},
+      {"tag": "002", "value": "foo"},
+      {"tag": "005", "value": "bar"}
+    ]
+  },
+  "operations": [
+    { "name": "get", "args": { "regexp": "002|004" }}
+  ],
+  "returns": [
+    {"tag": "002", "value": "bar"},
+    {"tag": "004", "value": "bar"},
+    {"tag": "002", "value": "foo"}
+  ],
+  "immutable": true
+}

@@ -1,0 +1,22 @@
+{
+  "description": "Should throw if removing last field",
+  "skip": false,
+  "input": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "000", "value": "bar"}
+    ]
+  },
+  "operations": [
+    { "name": "removeField", "args": { "index": 0 }}
+  ],
+  "throws": "Cannot remove last field",
+  "result": {
+    "leader": "foo",
+    "fields":
+    [
+      {"tag": "000", "value": "bar"}
+    ]
+  }
+}
