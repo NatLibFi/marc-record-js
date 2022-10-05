@@ -15,7 +15,9 @@
       [
         {"tag": "004", "value": "bar"},
         {"tag": "002", "value": "bar"},
-        {"tag": "006", "value": "bar"}
+        {"tag": "006", "value": "bar"},
+        {"tag": "007", "value": "t|"},
+        {"tag": "007", "value": "qu"}
       ]
     }
   ],
