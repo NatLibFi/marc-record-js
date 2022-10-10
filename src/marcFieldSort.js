@@ -193,19 +193,23 @@ export function fieldOrderComparator(fieldA, fieldB) {
     return 0;
   }
 
-  function preferFenniKeep(fieldA, fieldB) {
-    const fenniKeepSelector = fieldHasSubfield('9', 'FENNI<KEEP>');
-    const hasFENNI9A = fenniKeepSelector(fieldA);
-    const hasFENNI9B = fenniKeepSelector(fieldB);
+  function preferKeep(fieldA, fieldB, keepOwner = 'FENNI') {
+    const keepSelector = fieldHasSubfield('9', `${keepOwner}<KEEP>`);
+    const hasKeepA = keepSelector(fieldA);
+    const hasKeepB = keepSelector(fieldB);
 
-    if (hasFENNI9A && !hasFENNI9B) {
+    if (hasKeepA && !hasKeepB) {
       return -1;
     }
-    if (!hasFENNI9A && hasFENNI9B) {
+    if (!hasKeepA && hasKeepB) {
       return 1;
     }
 
     return 0;
+  }
+
+  function preferFenniKeep(fieldA, fieldB) {
+    return preferKeep(fieldA, fieldB, 'FENNI');
   }
 
   function sortAlphabetically(fieldA, fieldB) {
@@ -262,10 +266,17 @@ export function fieldOrderComparator(fieldA, fieldB) {
 
 
   function fieldHasSubfield(subcode, value) {
+
+    /*
     return (field) => field.subfields && field.subfields
       .filter(subfield => subcode === subfield.code)
       .some(subfield => subfield.value === value);
+      */
+    return (field) => field.subfields && field.subfields
+      .some(subfield => subcode === subfield.code && subfield.value === value);
+
   }
+  //return (field) => field.subfields && field.subfields.filter(subfield => subcode === subfield.code && subfield.value === value);
 
 
   function selectFirstValue(field, subcode) {
