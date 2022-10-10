@@ -209,7 +209,15 @@ export function fieldOrderComparator(fieldA, fieldB) {
   }
 
   function preferFenniKeep(fieldA, fieldB) {
-    return preferKeep(fieldA, fieldB, 'FENNI');
+    const fenniPreference = preferKeep(fieldA, fieldB, 'FENNI');
+    if (fenniPreference !== 0) {
+      return fenniPreference;
+    }
+    const violaPreference = preferKeep(fieldA, fieldB, 'VIOLA');
+    if (violaPreference !== 0) {
+      return violaPreference;
+    }
+    return preferKeep(fieldA, fieldB, 'FIKKA');
   }
 
   function sortAlphabetically(fieldA, fieldB) {
