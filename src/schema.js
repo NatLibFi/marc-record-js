@@ -1,4 +1,5 @@
-export default function ({fields = true, subfields = true, subfieldValues = true}) {
+/* eslint-disable no-nested-ternary */
+export default function ({fields = true, subfields = true, subfieldValues = true, allowNonBreakingSpace = true, allowSubfieldValuesEndingWhitespace = true}) {
   return {
     type: 'object',
     properties: {
@@ -19,7 +20,12 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                 },
                 value: {
                   type: 'string',
-                  minLength: 1
+                  minLength: 1,
+                  pattern: allowNonBreakingSpace && allowSubfieldValuesEndingWhitespace
+                    ? /.*/u : allowSubfieldValuesEndingWhitespace
+                      ? /^(?!.*"\u00A0")/u : allowNonBreakingSpace
+                        ? /[^\s]+$/u
+                        : /^(?!.*"\u00A0")|[^\s]+$/u
                 }
               },
               required: [
@@ -56,7 +62,12 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                       },
                       value: {
                         type: 'string',
-                        minLength: subfieldValues ? 1 : 0
+                        minLength: subfieldValues ? 1 : 0,
+                        pattern: allowNonBreakingSpace && allowSubfieldValuesEndingWhitespace
+                          ? /.*/u : allowSubfieldValuesEndingWhitespace
+                            ? /^(?!.*"\u00A0")/u : allowNonBreakingSpace
+                              ? /[^\s]+$/u
+                              : /^(?!.*"\u00A0")|[^\s]+$/u
                       }
                     },
                     required: subfieldValues ? ['code', 'value'] : ['code']
@@ -77,3 +88,4 @@ export default function ({fields = true, subfields = true, subfieldValues = true
     required: ['leader', 'fields']
   };
 }
+/* eslint-enable no-nested-ternary */

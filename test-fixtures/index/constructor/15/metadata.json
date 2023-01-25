@@ -1,0 +1,16 @@
+{
+  "description": "Should fail to create record with subfield value containing non-breaking space if allowSubfieldValuesEndingWhitespace and allowNonBreakingSpace are false",
+  "skip": false,
+  "noinput": true,
+  "operations": [
+    { "name": "MarcRecord", "args": {
+      "validationOptions": {"allowNonBreakingSpace": false, "allowSubfieldValuesEndingWhitespace": false},
+      "leader": "foo",
+      "fields": [
+        {"tag": "001", "subfields": [{"code": "a", "value": "foo\u00A0foo"}]}
+      ]
+    }}
+  ],
+  "throws": "Record is invalid",
+  "immutable": true
+}

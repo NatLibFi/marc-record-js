@@ -8,7 +8,9 @@ export {default as MarcRecordError} from './error';
 const validationOptionsDefaults = {
   fields: true,
   subfields: true,
-  subfieldValues: true
+  subfieldValues: true,
+  allowNonBreakingSpace: true,
+  allowSubfieldValuesEndingWhitespace: true
 };
 
 let globalValidationOptions = {...validationOptionsDefaults}; // eslint-disable-line functional/no-let

@@ -1,0 +1,21 @@
+{
+  "description": "Should allow to create record with subfield value ending with whitespace by default",
+  "skip": false,
+  "noinput": true,
+  "operations": [
+    { "name": "MarcRecord", "args": {
+      "leader": "foo",
+      "fields": [
+        {"tag": "001", "subfields": [{"code": "a", "value": "foo "}]}
+      ]
+    }}
+  ],
+  "returns": {
+    "_validationOptions": {},
+    "leader": "foo",
+    "fields": [
+      {"tag": "001", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "foo "}]}
+    ]
+  },
+  "immutable": true
+}

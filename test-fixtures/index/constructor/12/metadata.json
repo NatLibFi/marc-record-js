@@ -1,0 +1,16 @@
+{
+  "description": "Should fail to create record with subfield containing subfield ending with whitespace if allowSubfieldValuesEndingWhitespace is false ",
+  "skip": false,
+  "noinput": true,
+  "operations": [
+    { "name": "MarcRecord", "args": {
+      "validationOptions": {"allowSubfieldValuesEndingWhitespace": false},
+      "leader": "foo",
+      "fields": [
+        {"tag": "001", "subfields": [{"code": "a", "value": "foo "}]}
+      ]
+    }}
+  ],
+  "throws": "Record is invalid",
+  "immutable": true
+}

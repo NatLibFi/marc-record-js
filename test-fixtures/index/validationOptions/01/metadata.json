@@ -10,7 +10,9 @@
   "returns": {
     "fields": false,
     "subfields": true,
-    "subfieldValues": true
+    "subfieldValues": true,
+    "allowNonBreakingSpace": true,
+    "allowSubfieldValuesEndingWhitespace": true
   },
   "immutable": true
 }

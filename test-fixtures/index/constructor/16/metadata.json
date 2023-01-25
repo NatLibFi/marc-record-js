@@ -1,0 +1,22 @@
+{
+  "description": "Should allow to create record with valid subfield value when allowNonBreakingSpace and allowSubfieldValuesEndingWhitespace are false",
+  "skip": false,
+  "noinput": true,
+  "operations": [
+    { "name": "MarcRecord", "args": {
+      "validationOptions": {"allowNonBreakingSpace": false, "allowSubfieldValuesEndingWhitespace": false},
+      "leader": "foo",
+      "fields": [
+        {"tag": "001", "subfields": [{"code": "a", "value": "foo"}]}
+      ]
+    }}
+  ],
+  "returns": {
+    "_validationOptions": {"allowNonBreakingSpace": false, "allowSubfieldValuesEndingWhitespace": false},
+    "leader": "foo",
+    "fields": [
+      {"tag": "001", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "foo"}]}
+    ]
+  },
+  "immutable": true
+}
