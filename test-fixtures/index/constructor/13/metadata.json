@@ -6,7 +6,7 @@
     { "name": "MarcRecord", "args": {
       "leader": "foo",
       "fields": [
-        {"tag": "001", "subfields": [{"code": "a", "value": "foo "}]}
+        {"tag": "500", "subfields": [{"code": "a", "value": "foo "}]}
       ]
     }}
   ],
@@ -14,7 +14,7 @@
     "_validationOptions": {},
     "leader": "foo",
     "fields": [
-      {"tag": "001", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "foo "}]}
+      {"tag": "500", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "foo "}]}
     ]
   },
   "immutable": true

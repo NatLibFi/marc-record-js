@@ -7,7 +7,7 @@
       "validationOptions": {"allowNonBreakingSpace": false, "allowSubfieldValuesEndingWhitespace": false},
       "leader": "foo",
       "fields": [
-        {"tag": "001", "subfields": [{"code": "a", "value": "foo\u00A0foo"}]}
+        {"tag": "500", "subfields": [{"code": "a", "value": "foo\u00A0foo"}]}
       ]
     }}
   ],
