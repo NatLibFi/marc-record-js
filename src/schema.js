@@ -24,8 +24,8 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                   pattern: allowNonBreakingSpace && allowSubfieldValuesEndingWhitespace
                     ? /.*/u : allowSubfieldValuesEndingWhitespace
                       ? /^(?!.*\u00A0)/u : allowNonBreakingSpace
-                        ? /[^\s]*$/u
-                        : /^(?!.*\u00A0)|[^\s]*$/u
+                        ? /[^\s]$/u
+                        : /^(?!.*\u00A0)|[^\s]$/u
                 }
               },
               required: [
@@ -66,8 +66,8 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                         pattern: allowNonBreakingSpace && allowSubfieldValuesEndingWhitespace
                           ? /.*/u : allowSubfieldValuesEndingWhitespace
                             ? /^(?!.*\u00A0)/u : allowNonBreakingSpace
-                              ? /[^\s]*$/u
-                              : /^(?!.*\u00A0)|[^\s]*$/u
+                              ? /[^\s]$/u
+                              : /^(?!.*\u00A0)|[^\s]$/u
                       }
                     },
                     required: subfieldValues ? ['code', 'value'] : ['code']
