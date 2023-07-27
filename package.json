@@ -60,7 +60,7 @@
 		"@babel/plugin-transform-runtime": "^7.22.9",
 		"@babel/preset-env": "^7.22.9",
 		"@babel/register": "^7.22.5",
-		"@natlibfi/eslint-config-melinda-backend": "^2.0.0",
+		"@natlibfi/eslint-config-melinda-backend": "^3.0.0",
 		"babel-plugin-istanbul": "^6.1.1",
 		"chai": "^4.3.7",
 		"cross-env": "^7.0.3",
