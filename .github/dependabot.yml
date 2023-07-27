@@ -10,7 +10,7 @@ updates:
       interval: "daily"
       time: "06:30"
       timezone: "Europe/Helsinki"
-    target: "dependencies"
+    target-branch: "dependencies"
 
 
   # Minor updates to npm production dependencies daily
@@ -23,7 +23,7 @@ updates:
     versioning-strategy: lockfile-only
     allow:
       - dependency-type: "production"
-    target: "dependencies"
+    target-branch: "dependencies"
 
   # Major updates to npm dependencies weekly @tuesday
   # Not possible yet https://github.com/dependabot/dependabot-core/issues/1778
