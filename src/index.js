@@ -1,4 +1,4 @@
-/* eslint-disable functional/no-this-expression */
+/* eslint-disable functional/no-this-expressions */
 
 import {fieldOrderComparator} from './marcFieldSort';
 import {clone, validateRecord, validateField} from './utils';
