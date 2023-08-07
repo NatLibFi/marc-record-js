@@ -511,7 +511,7 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it('Should consider the field invalid (non alpha-numercic/blank indicator)', () => {
+      it('Should consider the field invalid (non alpha-numeric/blank indicator)', () => {
         const field = {'tag': 'CAT', 'ind1': '#', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
