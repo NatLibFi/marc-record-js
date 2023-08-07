@@ -39,7 +39,8 @@ export default function ({fields = true, subfields = true, subfieldValues = true
               required: [
                 'tag',
                 'value'
-              ]
+              ],
+              additionalProperties: false
             },
             {
               type: 'object',
@@ -91,7 +92,8 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                 'ind1',
                 'ind2',
                 'subfields'
-              ]
+              ],
+              additionalProperties: false
             }
           ]
         }

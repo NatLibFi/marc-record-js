@@ -113,7 +113,7 @@ describe('utils', () => {
     // https://www.loc.gov/marc/specifications/specrecstruc.html:
     // ... Indicators are not used in control fields ...
 
-    it.skip('Should consider the field invalid (tag, indicators and value)', () => {
+    it('Should consider the field invalid (tag, indicators and value)', () => {
       const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'value': '20150121'};
 
       try {
