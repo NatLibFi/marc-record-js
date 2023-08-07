@@ -6,9 +6,9 @@
     "fields":
     [
       {"tag": "001", "value": "bar"},
-      {"tag": "002", "subfields": [{"code": "a", "value": "b"}]},
-      {"tag": "003", "ind1": "1", "subfields": [{"code": "a", "value": "b"}]},
-      {"tag": "003", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]}
+      {"tag": "502", "subfields": [{"code": "a", "value": "b"}]},
+      {"tag": "503", "ind1": "1", "ind2": "5", "subfields": [{"code": "a", "value": "b"}]},
+      {"tag": "503", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]}
     ]
   },
   "operations": [

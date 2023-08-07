@@ -8,18 +8,18 @@
       {"tag": "001", "value": "bar"},
       {"tag": "002", "value": "bar"},
       {"tag": "003", "value": "bar"},
-      {"tag": "004", "subfields": [{"code": "a", "value": "bar"}]},
-      {"tag": "002", "subfields": [{"code": "a", "value": "bar"}]},
-      {"tag": "006", "subfields": [{"code": "a", "value": "bar"}]}
+      {"tag": "504", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "bar"}]},
+      {"tag": "502", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "bar"}]},
+      {"tag": "506", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "bar"}]}
     ]
   },
   "operations": [
     { "name": "getDatafields" }
   ],
   "returns": [
-    {"tag": "004", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "bar"}]},
-    {"tag": "002", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "bar"}]},
-    {"tag": "006", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "bar"}]}
+    {"tag": "504", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "bar"}]},
+    {"tag": "502", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "bar"}]},
+    {"tag": "506", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "bar"}]}
   ],
   "immutable": true
 }

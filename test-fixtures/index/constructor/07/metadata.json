@@ -6,7 +6,7 @@
     { "name": "MarcRecord", "args": {
         "leader": "02848ccm a22005894i 4500",
         "fields": [
-          {"tag": "001", "subfields": [{"code": "a"}]}
+          {"tag": "501", "subfields": [{"code": "a"}]}
         ],
         "validationOptions": { "subfieldValues": false }
       }
@@ -16,7 +16,7 @@
     "_validationOptions": { "subfieldValues": false },
     "leader": "02848ccm a22005894i 4500",
     "fields": [
-      {"tag": "001", "ind1": " ", "ind2": " ", "subfields": [{"code": "a"}]}
+      {"tag": "501", "ind1": " ", "ind2": " ", "subfields": [{"code": "a"}]}
     ]
   },
   "immutable": true
