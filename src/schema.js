@@ -7,7 +7,8 @@ export default function ({fields = true, subfields = true, subfieldValues = true
     properties: {
       leader: {
         type: 'string',
-        minLength: 24
+        minLength: 24,
+        maxLength: 24
       },
       fields: {
         type: 'array',
@@ -19,10 +20,8 @@ export default function ({fields = true, subfields = true, subfieldValues = true
               properties: {
                 tag: {
                   type: 'string',
-                  //minLength: 1
                   minLength: 3,
                   maxLength: 3,
-                  // pattern: controlFieldTag
                   pattern: tagPattern
                 },
                 value: {
@@ -43,18 +42,15 @@ export default function ({fields = true, subfields = true, subfieldValues = true
               properties: {
                 tag: {
                   type: 'string',
-                  //minLength: 1
                   minLength: 3,
                   maxLength: 3,
                   pattern: tagPattern
                   // pattern: notControlFieldTag
-                  // pattern: tagCharacters
                 },
                 ind1: {
                   type: 'string',
                   minLength: 1,
                   maxLength: 1,
-                  //pattern: /^[0-9 ]$/u
                   pattern: indicatorPattern
                 },
                 ind2: {
@@ -62,7 +58,6 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                   minLength: 1,
                   maxLength: 1,
                   pattern: /^[0-9 ]$/u
-                  // pattern: indicatorCharacters
                 },
                 subfields: {
                   type: 'array',
