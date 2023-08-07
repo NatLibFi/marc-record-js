@@ -127,7 +127,7 @@ describe('utils', () => {
       throw new Error('Should throw');
     });
 
-    it.skip('Should consider the field invalid (tag, indicators and both value and subfields)', () => {
+    it('Should consider the field invalid (tag, indicators and both value and subfields)', () => {
       const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'value': '20150121', 'subfields': [{'code': 'b', 'value': '39'}, {'code': 'c', 'value': '20150121'}]};
 
       try {
@@ -141,7 +141,7 @@ describe('utils', () => {
       throw new Error('Should throw');
     });
 
-    it.skip('Should consider the field invalid (tag, value and subfields)', () => {
+    it('Should consider the field invalid (tag, value and subfields)', () => {
       const field = {'tag': 'CAT', 'value': '20150121', 'subfields': [{'code': 'b', 'value': '39'}, {'code': 'c', 'value': '20150121'}]};
 
       try {
@@ -191,7 +191,7 @@ describe('utils', () => {
       // Control fields are assigned tags beginning with two zeroes. Control fields with fixed length data elements are restricted to ASCII graphics.
       // NOTE: Aleph uses also some other controlfields with non-numeric tags (FMT, LDR if its handled as a controlfield)
 
-      it.skip('Should consider the field invalid (numeric controlfield tag not beginning with 00)', () => {
+      it('Should consider the field invalid (numeric controlfield tag not beginning with 00)', () => {
         const field = {'tag': '500', 'value': '123456'};
 
         try {
@@ -205,7 +205,7 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it.skip('Should consider the field invalid (controlfield with non-ASCII content)', () => {
+      it('Should consider the field invalid (controlfield with non-ASCII content)', () => {
         const field = {'tag': '003', 'value': 'ÅÖÖ'};
 
         try {
@@ -223,7 +223,7 @@ describe('utils', () => {
       // data field. A variable field containing bibliographic or other data. Data fields are assigned tags beginning with characters other than two zeroes.
       // Data fields contain data in any MARC 21 character set unless a field-specific restriction applies.
 
-      it.skip('Should consider the field invalid (datafield tag beginning with 00)', () => {
+      it('Should consider the field invalid (datafield tag beginning with 00)', () => {
         const field = {'tag': '004', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
@@ -360,7 +360,7 @@ describe('utils', () => {
           throw new Error('Should throw');
         });
 
-        it.skip('Should consider the field invalid (subfield with empty code)', () => {
+        it('Should consider the field invalid (subfield with empty code)', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': ' ', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
 
           try {
@@ -374,7 +374,7 @@ describe('utils', () => {
           throw new Error('Should throw');
         });
 
-        it.skip('Should consider the field invalid (subfield with two-character code)', () => {
+        it('Should consider the field invalid (subfield with two-character code)', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'aa', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
 
           try {
@@ -388,7 +388,7 @@ describe('utils', () => {
           throw new Error('Should throw');
         });
 
-        it.skip('Should consider the field invalid (subfield with uppercase code)', () => {
+        it('Should consider the field invalid (subfield with uppercase code)', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'A', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
 
           try {
@@ -402,7 +402,7 @@ describe('utils', () => {
           throw new Error('Should throw');
         });
 
-        it.skip('Should consider the field invalid (subfield with non-ASCII code)', () => {
+        it('Should consider the field invalid (subfield with non-ASCII code)', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'Ä', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
 
           try {
@@ -497,7 +497,7 @@ describe('utils', () => {
       // https://www.loc.gov/marc/specifications/specrecstruc.html:
       // ... An indicator may be any ASCII lowercase alphabetic, numeric, or blank .
 
-      it.skip('Should consider the field invalid (uppercase indicator)', () => {
+      it('Should consider the field invalid (uppercase indicator)', () => {
         const field = {'tag': 'CAT', 'ind1': 'A', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
@@ -511,7 +511,7 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it.skip('Should consider the field invalid (non alpha-numercic/blank indicator)', () => {
+      it('Should consider the field invalid (non alpha-numercic/blank indicator)', () => {
         const field = {'tag': 'CAT', 'ind1': '#', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
@@ -525,7 +525,7 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it.skip('Should consider the field invalid (non-ASCII indicator)', () => {
+      it('Should consider the field invalid (non-ASCII indicator)', () => {
         const field = {'tag': 'CAT', 'ind1': 'Ä', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {

@@ -27,7 +27,7 @@
           {"tag": "503", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]},
           {"tag": "503", "ind1": "1", "ind2": "2", "subfields": [
             {"code": "a", "value": "b"},
-            {"code": "X", "value": "d"}
+            {"code": "x", "value": "d"}
           ]
           }
         ]
