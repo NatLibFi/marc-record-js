@@ -2,7 +2,7 @@
   "description": "Should return queried fields and remove them from record",
   "skip": false,
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "001", "value": "bar"},
@@ -22,7 +22,7 @@
     {"tag": "002", "value": "foo"}
   ],
   "result": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "001", "value": "bar"},

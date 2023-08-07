@@ -2,7 +2,7 @@
   "description": "Should remove subfield",
   "skip": false,
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "000", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
@@ -17,7 +17,7 @@
     {"name": "removeSubfield", "args": {"field": 2, "subfield": 0}}
   ],
   "result": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "000", "subfields": [{"code": "0", "value": "x"}]},

@@ -4,14 +4,14 @@
   "noinput": true,
   "operations": [
     { "name": "MarcRecord", "args": {
-        "leader": "foo",
+        "leader": "02848ccm a22005894i 4500",
         "validationOptions": {"fields": false}
       }
     }
   ],
   "returns": {
     "_validationOptions": {"fields": false},
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields": []
   },
   "immutable": true

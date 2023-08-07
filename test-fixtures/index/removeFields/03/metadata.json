@@ -2,7 +2,7 @@
   "description": "Should remove fields returned by get regexp",
   "skip": false,
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "001", "value": "bar"},
@@ -17,7 +17,7 @@
     { "name": "removeFields", "args": { "getRegExp": "002|003" }}
   ],
   "result": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "001", "value": "bar"},

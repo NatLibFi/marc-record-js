@@ -2,7 +2,7 @@
   "description": "Should return true when compared to itself",
   "skip": false,
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "001", "value": "bar"},

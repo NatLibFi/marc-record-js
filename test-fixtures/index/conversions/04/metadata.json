@@ -3,7 +3,7 @@
   "skip": false,
   "validationOptions": { "subfieldValues": false },
   "input": [
-    "LDR    foo",
+    "LDR    02848ccm a22005894i 4500",
     "001    28474",
     "100    ‡aTest Author",
     "245 0  ‡aTest Title",
@@ -14,7 +14,7 @@
     { "name": "toObject" }
   ],
   "returns": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields": [
       { "tag": "001", "value": "28474" },
       { "tag": "100", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "Test Author"}] },

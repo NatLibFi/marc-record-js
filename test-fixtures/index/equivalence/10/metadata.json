@@ -2,7 +2,7 @@
   "description": "Should return false if records have data fields with subfields in different order",
   "skip": false,
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "001", "value": "bar"},
@@ -18,7 +18,7 @@
   },
   "operations": [
     { "name": "equalsTo", "args": {
-        "leader": "foo",
+        "leader": "02848ccm a22005894i 4500",
         "fields":
         [
           {"tag": "001", "value": "bar"},

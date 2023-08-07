@@ -3,7 +3,7 @@
   "skip": false,
   "validationOptions": { "fields": false },
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields": []
   },
   "operations": [

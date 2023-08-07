@@ -7,8 +7,7 @@ export default function ({fields = true, subfields = true, subfieldValues = true
     properties: {
       leader: {
         type: 'string'
-        // maxLength: 24,
-        // minLength: 24
+        //minLength: 1
       },
       fields: {
         type: 'array',

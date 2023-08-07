@@ -4,7 +4,7 @@
   "noinput": true,
   "operations": [
     { "name": "MarcRecord", "args": {
-        "leader": "foo",
+        "leader": "02848ccm a22005894i 4500",
         "fields": [
           {"tag": "001", "subfields": []}
         ],
@@ -14,7 +14,7 @@
   ],
   "returns": {
     "_validationOptions": { "subfields": false },
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields": [
       {"tag": "001", "ind1": " ", "ind2": " ", "subfields": []}
     ]
