@@ -21,7 +21,7 @@
           {"tag": "002", "subfields": [{"code": "a", "value": "b"}]},
           {"tag": "003", "ind1": "1", "subfields": [{"code": "a", "value": "b"}]},
           {"tag": "003", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]},
-          {"tag": "003", "ind2": "X", "subfields": [{"code": "a", "value": "b"}, {"code": "c", "value": "d"}]}
+          {"tag": "003", "ind2": "9", "subfields": [{"code": "a", "value": "b"}, {"code": "c", "value": "d"}]}
         ]
       }
     }

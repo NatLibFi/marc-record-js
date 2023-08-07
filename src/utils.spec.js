@@ -246,7 +246,7 @@ describe('utils', () => {
       // tag. A three character string used to identify or label an associated variable field.
       // The tag may consist of ASCII numeric characters (decimal integers 0-9) and/or ASCII alphabetic characters (uppercase or lowercase, but not both).
 
-      it.skip('Should consider the field invalid (4 character tag)', () => {
+      it('Should consider the field invalid (4 character tag)', () => {
         const field = {'tag': '4444', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
@@ -260,7 +260,7 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it.skip('Should consider the field invalid (2 character tag)', () => {
+      it('Should consider the field invalid (2 character tag)', () => {
         const field = {'tag': '44', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
@@ -274,8 +274,8 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it.skip('Should consider the field invalid (empty tag)', () => {
-        const field = {'tag': '44', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
+      it('Should consider the field invalid (empty tag)', () => {
+        const field = {'tag': '', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
           Utils.validateField(field);
@@ -288,7 +288,7 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it.skip('Should consider the field invalid (tag with non-alphanumeric character)', () => {
+      it('Should consider the field invalid (tag with non-alphanumeric character)', () => {
         const field = {'tag': '#44', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
@@ -302,7 +302,7 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it.skip('Should consider the field invalid (tag with mixed case characters)', () => {
+      it('Should consider the field invalid (tag with mixed case characters)', () => {
         const field = {'tag': 'AaA', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
@@ -316,7 +316,7 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it.skip('Should consider the field invalid (tag with non-ASCII characters)', () => {
+      it('Should consider the field invalid (tag with non-ASCII characters)', () => {
         const field = {'tag': 'ÄÄÄ', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
