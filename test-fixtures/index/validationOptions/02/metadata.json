@@ -10,6 +10,8 @@
   ],
   "returns": {
     "fields": true,
+    "noAdditionalProperties": false,
+    "noControlCharacters": false,
     "subfields": true,
     "subfieldValues": true
   },
