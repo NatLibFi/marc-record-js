@@ -1,21 +1,35 @@
 import {validate} from 'jsonschema';
 import createSchema from './schema';
 import MarcRecordError from './error';
+import createDebugLogger from 'debug';
+//import {inspect} from 'util';
 
 export function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
+const debug = createDebugLogger('@natlibfi/marc-record:utils');
+const debugData = debug.extend('data');
+//const debugDev = debug.extend('dev');
+
 
 export function validateRecord(record, options = {}) {
-  const validationResults = validate(record, createSchema(options));
+  const validationResults = validate(record, createSchema(options), {nestedErrors: true});
+  debugData(JSON.stringify(record));
+  //debugDev(inspect(validationResults), {depth: 3});
+  //debugDev(inspect(validationResults.errors));
   if (validationResults.errors.length > 0) { // eslint-disable-line functional/no-conditional-statements
+    debugData(validationResults.toString());
     throw new MarcRecordError('Record is invalid', validationResults);
   }
 }
 
 export function validateField(field, options = {}) {
-  const validationResults = validate(field, createSchema(options).properties.fields.items);
+  const validationResults = validate(field, createSchema(options).properties.fields.items, {nestedErrors: true});
+  debugData(JSON.stringify(field));
+  //debugDev(inspect(validationResults));
+  //debugDev(inspect(validationResults.errors));
   if (validationResults.errors.length > 0) { // eslint-disable-line functional/no-conditional-statements
+    debugData(validationResults.toString());
     throw new MarcRecordError(`Field is invalid: ${JSON.stringify(field)}`, validationResults);
   }
 }
