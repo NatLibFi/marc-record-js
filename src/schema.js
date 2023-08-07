@@ -1,6 +1,22 @@
-//const tagPattern = /^[0-9A-Z]{3}$/u;
-const controlFieldTagPattern = /^[0A-Z][0A-Z][0-9A-Z]$/u;
-const dataFieldTagPattern = /^(?:(?:[1-9A-Z][0-9A-Z])|(?:[0-9A-Z][1-9A-Z]))[0-9A-Z]$/u;
+// https://www.loc.gov/marc/specifications/specrecstruc.html
+// tag. A three character string used to identify or label an associated variable field.
+// The tag may consist of ASCII numeric characters (decimal integers 0-9) and/or ASCII alphabetic characters (uppercase or lowercase, but not both).
+
+//  https://www.loc.gov/marc/specifications/specrecstruc.html
+// control field. A variable field containing information useful or required for the processing of the record.
+// Control fields are assigned tags beginning with two zeroes. Control fields with fixed length data elements are restricted to ASCII graphics.
+// NOTE: Aleph uses also some other controlfields with non-numeric tags (FMT, LDR if its handled as a controlfield)
+
+// ASCII - all printable/graphic: 32-126 (\x20 - \x7E)
+
+const controlFieldTagPattern = /^(?:[0A-Z][0A-Z][0-9A-Z])|(?:[0a-z][0a-z][0-9a-z])$/u;
+const controlFieldValuePattern = /^[\x20-\x7E]*$/u;
+
+// https://www.loc.gov/marc/specifications/specrecstruc.html
+// data field. A variable field containing bibliographic or other data. Data fields are assigned tags beginning with characters other than two zeroes.
+// Data fields contain data in any MARC 21 character set unless a field-specific restriction applies.
+
+const dataFieldTagPattern = /^(?:(?:(?:[1-9A-Z][0-9A-Z])|(?:[0-9A-Z][1-9A-Z]))[0-9A-Z])|(?:(?:(?:[1-9a-z][0-9a-z])|(?:[0-9a-z][1-9a-z]))[0-9a-z])$/u;
 
 // https://www.loc.gov/marc/specifications/specrecstruc.html
 // data element identifier: A one-character code used to identify individual data elements within a variable field.
@@ -22,16 +38,30 @@ const subfieldCodePattern = /^[\x21-\x40\x5B-\x7E]$/u;
 
 const indicatorPattern = /^[0-9a-z ]$/u;
 
-const controlFieldValuePattern = /^[ -~]*$/u;
+// Option to not allow ASCII control characters in subfield values
 
-export default function ({fields = true, subfields = true, subfieldValues = true}) {
+// eslint-disable-next-line no-control-regex
+const dataFieldValuePatternNoControlCharacters = /^[^\x00-\x1F\x7F]*$/u;
+// Match anything - no restrictions
+const dataFieldValuePattern = /.*/u;
+
+// https://www.loc.gov/marc/specifications/specrecstruc.html
+// ... MARC 21 sets the length of the length of field portion of the entry at four characters, thus a field may contain a maximum of 9999 octets.
+// Note: We're limiting controlField value length and sibfieldValue length with this parameter, records can be too long before single field hitting
+// this restriction
+const maximumFieldLength = 9999;
+
+export default function ({fields = true, subfields = true, subfieldValues = true, noControlCharacters = false, noAdditionalFieldProperties = false}) {
+  // eslint-disable-next-line no-console
+  //console.log(noControlCharacters);
   return {
     type: 'object',
     properties: {
       leader: {
         type: 'string',
         minLength: 24,
-        maxLength: 24
+        maxLength: 24,
+        maxOccurence: 1
       },
       fields: {
         type: 'array',
@@ -50,17 +80,18 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                 value: {
                   type: 'string',
                   minLength: 1,
+                  maxLength: maximumFieldLength,
                   pattern: controlFieldValuePattern
-                  // maxLength: maximumFieldLength
-                  // lengths depending on tag
-                  // pattern controlFieldValueCharacters
-                }
+                },
+                ind1: false,
+                ind2: false,
+                subfields: false
               },
               required: [
                 'tag',
                 'value'
               ],
-              additionalProperties: false
+              additionalProperties: !noAdditionalFieldProperties
             },
             {
               type: 'object',
@@ -70,7 +101,6 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                   minLength: 3,
                   maxLength: 3,
                   pattern: dataFieldTagPattern
-                  // pattern: notControlFieldTag
                 },
                 ind1: {
                   type: 'string',
@@ -82,7 +112,7 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                   type: 'string',
                   minLength: 1,
                   maxLength: 1,
-                  pattern: /^[0-9 ]$/u
+                  pattern: indicatorPattern
                 },
                 subfields: {
                   type: 'array',
@@ -98,14 +128,15 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                       },
                       value: {
                         type: 'string',
-                        minLength: subfieldValues ? 1 : 0
-                        // maxLength: maximumFieldLength
-                        // pattern: dataFieldValueCharacters
+                        maxLength: maximumFieldLength,
+                        minLength: subfieldValues ? 1 : 0,
+                        pattern: noControlCharacters ? dataFieldValuePatternNoControlCharacters : dataFieldValuePattern
                       }
                     },
                     required: subfieldValues ? ['code', 'value'] : ['code']
                   }
-                }
+                },
+                value: false
               },
               required: [
                 'tag',
@@ -113,7 +144,7 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                 'ind2',
                 'subfields'
               ],
-              additionalProperties: false
+              additionalProperties: !noAdditionalFieldProperties
             }
           ]
         }
