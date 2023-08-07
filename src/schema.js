@@ -1,5 +1,5 @@
-//const tagCharacters = '^[0-9A-Z]{3}$';
-const indicatorCharacters = /^[0-9 ]$/u;
+const tagPattern = /^[0-9A-Z]{3}$/u;
+const indicatorPattern = /^[0-9 ]$/u;
 
 export default function ({fields = true, subfields = true, subfieldValues = true}) {
   return {
@@ -23,7 +23,7 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                   minLength: 3,
                   maxLength: 3,
                   // pattern: controlFieldTag
-                  pattern: /^[0-9A-Z]{3}$/u
+                  pattern: tagPattern
                 },
                 value: {
                   type: 'string',
@@ -46,7 +46,7 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                   //minLength: 1
                   minLength: 3,
                   maxLength: 3,
-                  pattern: /^[0-9A-Z]{3}$/u
+                  pattern: tagPattern
                   // pattern: notControlFieldTag
                   // pattern: tagCharacters
                 },
@@ -55,7 +55,7 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                   minLength: 1,
                   maxLength: 1,
                   //pattern: /^[0-9 ]$/u
-                  pattern: indicatorCharacters
+                  pattern: indicatorPattern
                 },
                 ind2: {
                   type: 'string',
