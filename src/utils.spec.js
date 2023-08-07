@@ -16,7 +16,7 @@ describe('utils', () => {
   describe('#validateRecord', () => {
     it('Should consider the record valid', () => {
       const record = {
-        leader: 'foo',
+        leader: '02848ccm a22005894i 4500',
         fields: [{tag: 'FOO', value: 'bar'}]
       };
 
@@ -25,7 +25,7 @@ describe('utils', () => {
 
     it('Should consider the record invalid', () => {
       const record = {
-        leader: 'foo'
+        leader: '02848ccm a22005894i 4500'
       };
 
       try {

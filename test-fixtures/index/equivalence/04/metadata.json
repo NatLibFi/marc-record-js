@@ -14,7 +14,7 @@
   },
   "operations": [
     { "name": "equalsTo", "args": {
-        "leader": "DIFFERENT",
+        "leader": "11111ccm a22005894i 4500",
         "fields":
         [
           {"tag": "001", "value": "bar"},

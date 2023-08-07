@@ -6,8 +6,8 @@ export default function ({fields = true, subfields = true, subfieldValues = true
     type: 'object',
     properties: {
       leader: {
-        type: 'string'
-        //minLength: 1
+        type: 'string',
+        minLength: 24
       },
       fields: {
         type: 'array',
