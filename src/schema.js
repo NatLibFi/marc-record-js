@@ -51,6 +51,30 @@ const dataFieldValuePattern = /.*/u;
 // this restriction
 const maximumFieldLength = 9999;
 
+// DEVELOP: Can we somehow check actual field length in addition to single field/subfield value
+// 9999 includes indicators + subfield separators + subfield coded in datafields, these could be subtracted
+
+// DEVELOP: Can we check the record length (maximum 99999 octets) ?
+// https://www.loc.gov/marc/specifications/specrecstruc.html
+// Record length (character positions 00-04), contains a five-character ASCII numeric string equal to the length of the entire record,
+// including itself and the record terminator. The five-character numeric string is right justified and unused positions contain zeroes (zero fill).
+// The maximum length of a record is 99999 octets.
+
+// DEVELOP: We could add a checker for MARC21 hardcoded codes in leader
+
+// https://www.loc.gov/marc/specifications/specrecstruc.html#leader
+// ...
+// * Indicator count (character position 10), contains one ASCII numeric character specifying the number of indicators
+// occurring in each variable data field. In MARC 21 records, the indicator count is always 2.
+// * Subfield code length (character position 11), contains one ASCII numeric character specifying the sum of the lengths
+// of the delimiter and the data element identifier used in the record. In MARC 21 records,
+// the subfield code length is always 2. The ANSI Z39.2 and ISO 2709 name for this data element is identifier length .
+// * Entry map (character positions 20-23), contains four single digit ASCII numeric characters that specify the structure of the entries in the directory.
+// ** Length of length-of-field (character position 20): specifies the length of that part of each directory entry; in MARC 21 records, it is always set to 4.
+// ** Length of starting-character-position (character position 21): specifies the length of that part of each directory entry; in MARC 21 records, it is always set to 5.
+// ** Length of implementation-defined (character position 22): specifies that part of each directory entry; in MARC 21 records, a directory entry does not contain an implementation-defined portion, therefore this position is always set to 0.
+// ** Undefined (character position 23): this character position is undefined; it is always set to 0.
+
 export default function ({fields = true, subfields = true, subfieldValues = true, noControlCharacters = false, noAdditionalFieldProperties = false}) {
   // eslint-disable-next-line no-console
   //console.log(noControlCharacters);
