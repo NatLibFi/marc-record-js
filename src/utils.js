@@ -13,7 +13,7 @@ const debugData = debug.extend('data');
 
 
 export function validateRecord(record, options = {}) {
-  const validationResults = validate(record, createSchema(options), {nestedErrors: true});
+  const validationResults = validate(record, createSchema(options), {nestedErrors: false});
   debugData(JSON.stringify(record));
   //debugDev(inspect(validationResults), {depth: 3});
   //debugDev(inspect(validationResults.errors));
@@ -24,7 +24,7 @@ export function validateRecord(record, options = {}) {
 }
 
 export function validateField(field, options = {}) {
-  const validationResults = validate(field, createSchema(options).properties.fields.items, {nestedErrors: true});
+  const validationResults = validate(field, createSchema(options).properties.fields.items, {nestedErrors: false});
   debugData(JSON.stringify(field));
   //debugDev(inspect(validationResults));
   //debugDev(inspect(validationResults.errors));

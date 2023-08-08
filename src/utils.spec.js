@@ -39,6 +39,26 @@ describe('utils', () => {
 
       throw new Error('Should throw');
     });
+
+    it('Should consider the record invalid (control character in subfield value, noControlCharacters: true)', () => {
+      const record = {'leader': '12345cam a22002417i 4500',
+        'fields': [
+          {'tag': '001', 'value': '000123456'},
+          {'tag': '100', 'ind1': '1', 'ind2': ' ', 'subfields': [{'code': 'a', 'value': '\tSukunimi, Etunimi'}]},
+          {'tag': '245', 'ind1': '1', 'ind2': ' ', 'subfields': [{'code': 'a', 'value': 'Nimeke.'}]}
+        ]};
+
+      try {
+        Utils.validateRecord(record, {noControlCharacters: true});
+      } catch (err) {
+        expect(err.message).to.match(/^Record is invalid/u);
+        expect(err).to.have.property('validationResults');
+        return;
+      }
+
+      throw new Error('Should throw');
+    });
+
   });
 
   describe('#validateField', () => {
