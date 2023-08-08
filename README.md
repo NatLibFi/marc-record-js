@@ -46,7 +46,7 @@ MarcRecord.setValidationOptions(
     fields: true,          // Do not allow record without fields
     subfields: true,       // Do not allow empty subfields
     subfieldsValues: true, // Do not allow subfields without value
-    noControlCharacters: false   // Do not allow ASCII control characters in field values
+    noControlCharacters: false,   // Do not allow ASCII control characters in field/subfield values
     noAdditionalProperties: false // Do not allow additional properties in fields
   }
 );
@@ -64,7 +64,7 @@ MarcRecord.setValidationOptions({});
 ```js
 const record = new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
     fields: []
   },
   {fields: false} // Allow empty fields
@@ -79,7 +79,7 @@ The following examples demonstrate the invalid records, when default validation 
 // Error: fields[] is empty. Validation option: fields
 new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
     fields: []
   }
 );
@@ -87,9 +87,9 @@ new MarcRecord(
 // Error: subfields[] is empty. Validation option: subfields
 new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
     fields: [
-      {tag: "021", subfields: []}
+      {tag: "509", , ind1: " ", ind2: " ", subfields: []}
     ]
   }
 );
@@ -97,9 +97,9 @@ new MarcRecord(
 // Error: subfield has no value. Validation option: subfieldValues
 new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
     fields: [
-      {tag: "021", subfields: [{code: "a", value: ""}]}
+      {tag: "509", ind1: " ", ind2: " ", subfields: [{code: "a", value: ""}]}
     ]
   }
 );
@@ -231,7 +231,7 @@ Failing examples:
 // Example record
 const record = new MarcRecord(
 {
-  leader: "foo",
+  leader: "02848ccm a22005894i 4500",
   fields: [
     {tag: "001", value: "bar"}
   ]
