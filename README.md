@@ -36,9 +36,9 @@ const recordB = MarcRecord.clone(recordA)
 When constructing or modifying the record, validation checks are run. You may need to alter these checks to work with incomplete intermediate records.
 
 **strict**
+
 validationOption `strict: true` sets all the other validationOptions as true regardless of if they are defined
 validationOption `strict: false` sets other validationOptions as they are defined or as default
-
 
 **Global validation options:**
 
