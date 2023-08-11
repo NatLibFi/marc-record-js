@@ -77,7 +77,27 @@ const maximumFieldLength = 9999;
 // ** Length of implementation-defined (character position 22): specifies that part of each directory entry; in MARC 21 records, a directory entry does not contain an implementation-defined portion, therefore this position is always set to 0.
 // ** Undefined (character position 23): this character position is undefined; it is always set to 0.
 
-export default function ({fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalFieldProperties = false}) {
+
+// Default setting for validationOptions:
+//
+// fields: true,                  // Do not allow record without fields
+// subfields: true,               // Do not allow empty subfields
+// subfieldValues: true,          // Do not allow subfields without value
+// controlFieldValues: true       // Do not allow controlFields without value
+// leader: false,                 // Do not allow record without leader, with empty leader or with leader with length != 24
+// characters: false              // Do not allow erronous characters in tags, indicators and subfield codes
+// noControlCharacters: false,    // Do not allow ASCII control characters in field/subfield values
+// noAdditionalProperties: false  // Do not allow additional properties in fields
+
+
+export default function ({strict = false, fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalFieldProperties = false}) {
+  if (strict) {
+    return schema({fields: true, subfields: true, subfieldValues: true, controlFieldValues: true, leader: true, characters: true, noControlCharacters: true, noAdditionalFieldProperties: true});
+  }
+  return schema({fields, subfields, subfieldValues, controlFieldValues, leader, characters, noControlCharacters, noAdditionalFieldProperties});
+}
+
+function schema({fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalFieldProperties = false}) {
   return {
     type: 'object',
     properties: {
