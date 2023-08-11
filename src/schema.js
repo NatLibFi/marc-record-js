@@ -1,3 +1,5 @@
+const anythingPattern = /[\s\S]*/su;
+
 // https://www.loc.gov/marc/specifications/specrecstruc.html
 // tag. A three character string used to identify or label an associated variable field.
 // The tag may consist of ASCII numeric characters (decimal integers 0-9) and/or ASCII alphabetic characters (uppercase or lowercase, but not both).
@@ -75,16 +77,14 @@ const maximumFieldLength = 9999;
 // ** Length of implementation-defined (character position 22): specifies that part of each directory entry; in MARC 21 records, a directory entry does not contain an implementation-defined portion, therefore this position is always set to 0.
 // ** Undefined (character position 23): this character position is undefined; it is always set to 0.
 
-export default function ({fields = true, subfields = true, subfieldValues = true, noControlCharacters = false, noAdditionalFieldProperties = false}) {
-  // eslint-disable-next-line no-console
-  //console.log(noControlCharacters);
+export default function ({fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalFieldProperties = false}) {
   return {
     type: 'object',
     properties: {
       leader: {
         type: 'string',
-        minLength: 24,
-        maxLength: 24,
+        minLength: leader ? 24 : 0,
+        maxLength: leader ? 24 : maximumFieldLength,
         maxOccurence: 1
       },
       fields: {
@@ -99,22 +99,19 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                   type: 'string',
                   minLength: 3,
                   maxLength: 3,
-                  pattern: controlFieldTagPattern
+                  pattern: characters ? controlFieldTagPattern : anythingPattern
                 },
                 value: {
                   type: 'string',
-                  minLength: 1,
+                  minLength: controlFieldValues ? 1 : 0,
                   maxLength: maximumFieldLength,
-                  pattern: controlFieldValuePattern
+                  pattern: characters ? controlFieldValuePattern : anythingPattern
                 },
                 ind1: false,
                 ind2: false,
                 subfields: false
               },
-              required: [
-                'tag',
-                'value'
-              ],
+              required: controlFieldValues ? ['tag', 'value'] : ['tag'],
               additionalProperties: !noAdditionalFieldProperties
             },
             {
@@ -124,19 +121,19 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                   type: 'string',
                   minLength: 3,
                   maxLength: 3,
-                  pattern: dataFieldTagPattern
+                  pattern: characters ? dataFieldTagPattern : anythingPattern
                 },
                 ind1: {
                   type: 'string',
                   minLength: 1,
                   maxLength: 1,
-                  pattern: indicatorPattern
+                  pattern: characters ? indicatorPattern : anythingPattern
                 },
                 ind2: {
                   type: 'string',
                   minLength: 1,
                   maxLength: 1,
-                  pattern: indicatorPattern
+                  pattern: characters ? indicatorPattern : anythingPattern
                 },
                 subfields: {
                   type: 'array',
@@ -148,7 +145,7 @@ export default function ({fields = true, subfields = true, subfieldValues = true
                         type: 'string',
                         minLength: 1,
                         maxLength: 1,
-                        pattern: subfieldCodePattern
+                        pattern: characters ? subfieldCodePattern : anythingPattern
                       },
                       value: {
                         type: 'string',
@@ -174,6 +171,6 @@ export default function ({fields = true, subfields = true, subfieldValues = true
         }
       }
     },
-    required: ['leader', 'fields']
+    required: leader ? ['leader', 'fields'] : ['fields']
   };
 }

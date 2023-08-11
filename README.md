@@ -43,11 +43,14 @@ MarcRecord.getValidationOptions();
 // Default settings
 MarcRecord.setValidationOptions(
   {
-    fields: true,          // Do not allow record without fields
-    subfields: true,       // Do not allow empty subfields
-    subfieldsValues: true, // Do not allow subfields without value
-    noControlCharacters: false,   // Do not allow ASCII control characters in field/subfield values
-    noAdditionalProperties: false // Do not allow additional properties in fields
+    fields: true,                  // Do not allow record without fields
+    subfields: true,               // Do not allow empty subfields
+    subfieldValues: true,          // Do not allow subfields without value
+    controlFieldValues: true       // Do not allow controlFields without value
+    leader: false,                 // Do not allow record without leader, with empty leader or with wrong length leader
+    characters: false              // Do not allow erronous characters in tags, indicators and subfield codes
+    noControlCharacters: false,    // Do not allow ASCII control characters in field/subfield values
+    noAdditionalProperties: false  // Do not allow additional properties in fields
   }
 );
 ```

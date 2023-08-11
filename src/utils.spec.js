@@ -92,7 +92,7 @@ describe('utils', () => {
       const field = {tag: 'FOO'};
 
       try {
-        Utils.validateField(field);
+        Utils.validateField(field, {controlFieldValues: true});
       } catch (err) {
         expect(err.message).to.match(/^Field is invalid: \{"tag":"FOO"\}/u);
         expect(err).to.have.property('validationResults');
@@ -212,11 +212,11 @@ describe('utils', () => {
       // Control fields are assigned tags beginning with two zeroes. Control fields with fixed length data elements are restricted to ASCII graphics.
       // NOTE: Aleph uses also some other controlfields with non-numeric tags (FMT, LDR if its handled as a controlfield)
 
-      it('Should consider the field invalid (numeric controlfield tag not beginning with 00)', () => {
+      it('Should consider the field invalid (numeric controlfield tag not beginning with 00), characters: true', () => {
         const field = {'tag': '500', 'value': '123456'};
 
         try {
-          Utils.validateField(field);
+          Utils.validateField(field, {characters: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid:/u);
           expect(err).to.have.property('validationResults');
@@ -226,11 +226,11 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it('Should consider the field invalid (controlfield with non-ASCII content)', () => {
+      it('Should consider the field invalid (controlfield with non-ASCII content), characters: true', () => {
         const field = {'tag': '003', 'value': 'ÅÖÖ'};
 
         try {
-          Utils.validateField(field);
+          Utils.validateField(field, {characters: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid:/u);
           expect(err).to.have.property('validationResults');
@@ -244,11 +244,11 @@ describe('utils', () => {
       // data field. A variable field containing bibliographic or other data. Data fields are assigned tags beginning with characters other than two zeroes.
       // Data fields contain data in any MARC 21 character set unless a field-specific restriction applies.
 
-      it('Should consider the field invalid (datafield tag beginning with 00)', () => {
+      it('Should consider the field invalid (datafield tag beginning with 00), characters: true', () => {
         const field = {'tag': '004', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
-          Utils.validateField(field);
+          Utils.validateField(field, {characters: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid:/u);
           expect(err).to.have.property('validationResults');
@@ -309,11 +309,11 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it('Should consider the field invalid (tag with non-alphanumeric character)', () => {
+      it('Should consider the field invalid (tag with non-alphanumeric character), characters: true', () => {
         const field = {'tag': '#44', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
-          Utils.validateField(field);
+          Utils.validateField(field, {characters: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid: /u);
           expect(err).to.have.property('validationResults');
@@ -323,11 +323,11 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it('Should consider the field invalid (tag with mixed case characters)', () => {
+      it('Should consider the field invalid (tag with mixed case characters), characters: true', () => {
         const field = {'tag': 'AaA', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
-          Utils.validateField(field);
+          Utils.validateField(field, {characters: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid: /u);
           expect(err).to.have.property('validationResults');
@@ -337,11 +337,11 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it('Should consider the field invalid (tag with non-ASCII characters)', () => {
+      it('Should consider the field invalid (tag with non-ASCII characters), characters: true', () => {
         const field = {'tag': 'ÄÄÄ', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
-          Utils.validateField(field);
+          Utils.validateField(field, {characters: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid: /u);
           expect(err).to.have.property('validationResults');
@@ -380,11 +380,11 @@ describe('utils', () => {
           throw new Error('Should throw');
         });
 
-        it('Should consider the field invalid (subfield with empty code)', () => {
+        it('Should consider the field invalid (subfield with empty code), characters: true', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': ' ', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
 
           try {
-            Utils.validateField(field);
+            Utils.validateField(field, {characters: true});
           } catch (err) {
             expect(err.message).to.match(/^Field is invalid: /u);
             expect(err).to.have.property('validationResults');
@@ -408,11 +408,11 @@ describe('utils', () => {
           throw new Error('Should throw');
         });
 
-        it('Should consider the field invalid (subfield with uppercase code)', () => {
+        it('Should consider the field invalid (subfield with uppercase code), characters: true', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'A', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
 
           try {
-            Utils.validateField(field);
+            Utils.validateField(field, {characters: true});
           } catch (err) {
             expect(err.message).to.match(/^Field is invalid: /u);
             expect(err).to.have.property('validationResults');
@@ -422,11 +422,11 @@ describe('utils', () => {
           throw new Error('Should throw');
         });
 
-        it('Should consider the field invalid (subfield with non-ASCII code)', () => {
+        it('Should consider the field invalid (subfield with non-ASCII code), characters: true', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'Ä', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
 
           try {
-            Utils.validateField(field);
+            Utils.validateField(field, {characters: true});
           } catch (err) {
             expect(err.message).to.match(/^Field is invalid: /u);
             expect(err).to.have.property('validationResults');
@@ -540,11 +540,11 @@ describe('utils', () => {
       // https://www.loc.gov/marc/specifications/specrecstruc.html:
       // ... An indicator may be any ASCII lowercase alphabetic, numeric, or blank .
 
-      it('Should consider the field invalid (uppercase indicator)', () => {
+      it('Should consider the field invalid (uppercase indicator), characters: true', () => {
         const field = {'tag': 'CAT', 'ind1': 'A', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
-          Utils.validateField(field);
+          Utils.validateField(field, {characters: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid: /u);
           expect(err).to.have.property('validationResults');
@@ -554,11 +554,11 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it('Should consider the field invalid (non alpha-numeric/blank indicator)', () => {
+      it('Should consider the field invalid (non alpha-numeric/blank indicator), characters: true', () => {
         const field = {'tag': 'CAT', 'ind1': '#', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
-          Utils.validateField(field);
+          Utils.validateField(field, {characters: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid: /u);
           expect(err).to.have.property('validationResults');
@@ -568,11 +568,11 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it('Should consider the field invalid (non-ASCII indicator)', () => {
+      it('Should consider the field invalid (non-ASCII indicator), characters: true', () => {
         const field = {'tag': 'CAT', 'ind1': 'Ä', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
         try {
-          Utils.validateField(field);
+          Utils.validateField(field, {characters: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid: /u);
           expect(err).to.have.property('validationResults');
