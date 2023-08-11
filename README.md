@@ -33,9 +33,11 @@ const recordB = MarcRecord.clone(recordA)
 
 ### Record validation
 
-When constructing or modifying the record, validation checks are run. You may need to alter these checks to work with incomplete intermediate records. 
-NOTE: validationOption `strict: true` sets all the other validationOptions as true regardless of if they are defined
-      validationOption `strict: false` sets other validationOptions as they are defined or as default
+When constructing or modifying the record, validation checks are run. You may need to alter these checks to work with incomplete intermediate records.
+
+NOTE:
+validationOption `strict: true` sets all the other validationOptions as true regardless of if they are defined
+validationOption `strict: false` sets other validationOptions as they are defined or as default
 
 
 **Global validation options:**
@@ -49,11 +51,11 @@ MarcRecord.setValidationOptions(
     fields: true,                  // Do not allow record without fields
     subfields: true,               // Do not allow empty subfields
     subfieldValues: true,          // Do not allow subfields without value
-    controlFieldValues: true       // Do not allow controlFields without value
+    controlFieldValues: true,      // Do not allow controlFields without value
     leader: false,                 // Do not allow record without leader, with empty leader or with leader with length != 24
-    characters: false              // Do not allow erronous characters in tags, indicators and subfield codes
+    characters: false,             // Do not allow erronous characters in tags, indicators and subfield codes
     noControlCharacters: false,    // Do not allow ASCII control characters in field/subfield values
-    noAdditionalProperties: false  // Do not allow additional properties in fields
+    noAdditionalProperties: false, // Do not allow additional properties in fields
 
     strict: false                  // If true, set all validationOptions to true
   }
