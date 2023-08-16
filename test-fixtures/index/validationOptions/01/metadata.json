@@ -8,11 +8,15 @@
     { "name": "getValidationOptions" }
   ],
   "returns": {
+    "characters": false,
+    "controlFieldValues": true,
     "fields": false,
+    "leader": false,
     "noAdditionalProperties": false,
     "noControlCharacters": false,
     "subfields": true,
-    "subfieldValues": true
+    "subfieldValues": true,
+    "strict": false
   },
   "immutable": true
 }

@@ -24,7 +24,7 @@ const validationOptionsDefaults = {
   fields: true,
   subfields: true,
   subfieldValues: true,
-  constrolFieldValues: true,
+  controlFieldValues: true,
   leader: false,
   characters: false,
   noControlCharacters: false,
