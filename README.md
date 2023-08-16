@@ -46,6 +46,8 @@ validationOption `strict: false` sets other validationOptions as they are define
 MarcRecord.getValidationOptions();
 
 // Default settings
+// These default validationOptions are (mostly) backwards compatible with marc-record-js < 7.3.0
+
 MarcRecord.setValidationOptions(
   {
     fields: true,                  // Do not allow record without fields
@@ -68,6 +70,14 @@ You can reset global validation options to default with empty object:
 // Reset to default
 MarcRecord.setValidationOptions({});
 ```
+
+You can set all global validation options to true with validationOption strict: true:
+
+```js
+// Set all validationOptions to true with strict: true
+MarcRecord.setValidationOptions({strict: true});
+```
+
 
 **Record specific validation options** can be given when constructing:
 

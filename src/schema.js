@@ -79,6 +79,7 @@ const maximumFieldLength = 9999;
 
 
 // Default setting for validationOptions:
+// strict: false                  // All validationOptions below are set to true
 //
 // fields: true,                  // Do not allow record without fields
 // subfields: true,               // Do not allow empty subfields
