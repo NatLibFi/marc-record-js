@@ -91,14 +91,14 @@ const maximumFieldLength = 9999;
 // noAdditionalProperties: false  // Do not allow additional properties in fields
 
 
-export default function ({strict = false, fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalFieldProperties = false}) {
+export default function ({strict = false, fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalProperties = false}) {
   if (strict) {
-    return schema({fields: true, subfields: true, subfieldValues: true, controlFieldValues: true, leader: true, characters: true, noControlCharacters: true, noAdditionalFieldProperties: true});
+    return schema({fields: true, subfields: true, subfieldValues: true, controlFieldValues: true, leader: true, characters: true, noControlCharacters: true, noAdditionalProperties: true});
   }
-  return schema({fields, subfields, subfieldValues, controlFieldValues, leader, characters, noControlCharacters, noAdditionalFieldProperties});
+  return schema({fields, subfields, subfieldValues, controlFieldValues, leader, characters, noControlCharacters, noAdditionalProperties});
 }
 
-function schema({fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalFieldProperties = false}) {
+function schema({fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalProperties = false}) {
   return {
     type: 'object',
     properties: {
@@ -106,6 +106,7 @@ function schema({fields = true, subfields = true, subfieldValues = true, control
         type: 'string',
         minLength: leader ? 24 : 0,
         maxLength: leader ? 24 : maximumFieldLength,
+        pattern: characters ? controlFieldTagPattern : anythingPattern,
         maxOccurence: 1
       },
       fields: {
@@ -133,7 +134,7 @@ function schema({fields = true, subfields = true, subfieldValues = true, control
                 subfields: false
               },
               required: controlFieldValues ? ['tag', 'value'] : ['tag'],
-              additionalProperties: !noAdditionalFieldProperties
+              additionalProperties: !noAdditionalProperties
             },
             {
               type: 'object',
@@ -175,10 +176,12 @@ function schema({fields = true, subfields = true, subfieldValues = true, control
                         pattern: noControlCharacters ? dataFieldValuePatternNoControlCharacters : dataFieldValuePattern
                       }
                     },
-                    required: subfieldValues ? ['code', 'value'] : ['code']
+                    required: subfieldValues ? ['code', 'value'] : ['code'],
+                    additionalProperties: !noAdditionalProperties
                   }
                 },
-                value: false
+                value: false,
+                additionalProperties: !noAdditionalProperties
               },
               required: [
                 'tag',
@@ -186,7 +189,7 @@ function schema({fields = true, subfields = true, subfieldValues = true, control
                 'ind2',
                 'subfields'
               ],
-              additionalProperties: !noAdditionalFieldProperties
+              additionalProperties: !noAdditionalProperties
             }
           ]
         }

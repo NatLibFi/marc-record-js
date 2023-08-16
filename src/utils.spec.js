@@ -663,11 +663,11 @@ describe('utils', () => {
 
 
     describe('additionalProperties', () => {
-      it('Should consider the field with additional properties invalid, noAdditionalFieldProperties: true', () => {
+      it('Should consider the field with additional properties invalid, noAdditionalProperties: true', () => {
         const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': `20150121124`}], 'foo': 'bar'};
 
         try {
-          Utils.validateField(field, {noAdditionalFieldProperties: true});
+          Utils.validateField(field, {noAdditionalProperties: true});
         } catch (err) {
           expect(err.message).to.match(/^Field is invalid: /u);
           expect(err).to.have.property('validationResults');
@@ -677,11 +677,11 @@ describe('utils', () => {
         throw new Error('Should throw');
       });
 
-      it('Should consider the field with additional properties valid, noAdditionalFieldProperties: false', () => {
+      it('Should consider the field with additional properties valid, noAdditionalProperties: false', () => {
         const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': `20150121124`}], 'foo': 'bar'};
 
         // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {noAdditionalFieldProperties: false})).not.to.throw;
+        expect(Utils.validateField(field, {noAdditionalProperties: false})).not.to.throw;
 
       });
 
