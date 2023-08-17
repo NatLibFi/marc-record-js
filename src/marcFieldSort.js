@@ -2,6 +2,8 @@ import createDebugLogger from 'debug';
 
 const debug = createDebugLogger('@natlibfi/marc-record:marcFieldSort');
 //const debugData = debug.extend('data');
+const debugDev = debug.extend('dev');
+
 
 export function fieldOrderComparator(fieldA, fieldB) {
   const BIG_BAD_NUMBER = 999.99;
@@ -20,7 +22,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
 
   for (const sortFn of sorterFunctions) { // eslint-disable-line functional/no-loop-statements
     const result = sortFn(fieldA, fieldB);
-    debug(`${sortFn.name}: '${fieldToString(fieldA)}' vs '${fieldToString(fieldB)}' ${result}`);
+    debugDev(`${sortFn.name}: '${fieldToString(fieldA)}' vs '${fieldToString(fieldB)}' ${result}`);
     if (result !== 0) {
       return result;
     }
@@ -234,7 +236,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
       const [subfieldCode, ...remainingSubfieldCodes] = setOfSubfields;
       const valA = selectFirstValue(fieldA, subfieldCode);
       const valB = selectFirstValue(fieldB, subfieldCode);
-      //debug(`CHECKING SUBFIELD '${subfieldCode}'`);
+      //debugDev(`CHECKING SUBFIELD '${subfieldCode}'`);
       if (!valA) {
         if (!valB) {
           return scoreSubfieldsAlphabetically(remainingSubfieldCodes);
@@ -244,7 +246,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
       if (!valB) {
         return 1;
       }
-      debug(`CHECKING SUBFIELD '${subfieldCode}': '${valA}' vs '${valB}'`);
+      debugDev(`CHECKING SUBFIELD '${subfieldCode}': '${valA}' vs '${valB}'`);
 
       if (valA < valB) {
         return -1;
@@ -262,9 +264,9 @@ export function fieldOrderComparator(fieldA, fieldB) {
 
       const subfieldsToCheck = tagToSortingSubfields[fieldA.tag];
 
-      //debug(`CHECKING ${subfieldsToCheck.join(', ')}`);
+      //debugDev(`CHECKING ${subfieldsToCheck.join(', ')}`);
       const result = scoreSubfieldsAlphabetically(subfieldsToCheck);
-      debug(`RESULT ${result}`);
+      debugDev(`RESULT ${result}`);
       return result;
     }
     return 0;

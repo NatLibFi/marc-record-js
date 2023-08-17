@@ -3,7 +3,7 @@
   "skip": false,
   "validationOptions": { "fields": false },
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "000", "value": "bar"}
@@ -13,7 +13,7 @@
     { "name": "removeField", "args": { "index": 0 }}
   ],
   "result": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
     ]

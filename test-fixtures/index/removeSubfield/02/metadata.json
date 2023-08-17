@@ -2,27 +2,27 @@
   "description": "Should remove entire field if last subfield is removed",
   "skip": false,
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
-      {"tag": "000", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
-      {"tag": "001", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
-      {"tag": "002", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
-      {"tag": "003", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
-      {"tag": "004", "subfields": [{"code": "0", "value": "x"}]}
+      {"tag": "500", "ind1": " ", "ind2": " ", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
+      {"tag": "501", "ind1": " ", "ind2": " ", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
+      {"tag": "502", "ind1": " ", "ind2": " ", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
+      {"tag": "503", "ind1": " ", "ind2": " ", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
+      {"tag": "504", "ind1": " ", "ind2": " ", "subfields": [{"code": "0", "value": "x"}]}
     ]
   },
   "operations": [
     {"name": "removeSubfield", "args": {"field": 4, "subfield": 0}}
   ],
   "result": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
-      {"tag": "000", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
-      {"tag": "001", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
-      {"tag": "002", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
-      {"tag": "003", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]}
+      {"tag": "500", "ind1": " ", "ind2": " ", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
+      {"tag": "501", "ind1": " ", "ind2": " ", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
+      {"tag": "502", "ind1": " ", "ind2": " ", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]},
+      {"tag": "503", "ind1": " ", "ind2": " ", "subfields": [{"code": "0", "value": "x"}, {"code": "1", "value": "x"}]}
     ]
   }
 }

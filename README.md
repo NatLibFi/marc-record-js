@@ -17,7 +17,8 @@ const record = new MarcRecord();
 ```js
 const record = new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
+',
     fields: [
       {tag: '001', value: 'foo'},
       {tag: '002', value: 'bar'},
@@ -35,17 +36,31 @@ const recordB = MarcRecord.clone(recordA)
 
 When constructing or modifying the record, validation checks are run. You may need to alter these checks to work with incomplete intermediate records.
 
+**strict**
+
+validationOption `strict: true` sets all the other validationOptions as true regardless of if they are defined
+validationOption `strict: false` sets other validationOptions as they are defined or as default
+
 **Global validation options:**
 
 ```js
 MarcRecord.getValidationOptions();
 
 // Default settings
+// These default validationOptions are (mostly) backwards compatible with marc-record-js < 7.3.0
+
 MarcRecord.setValidationOptions(
   {
-    fields: true,          // Do not allow record without fields
-    subfields: true,       // Do not allow empty subfields
-    subfieldsValues: true, // Do not allow subfields without value
+    fields: true,                  // Do not allow record without fields
+    subfields: true,               // Do not allow empty subfields
+    subfieldValues: true,          // Do not allow subfields without value
+    controlFieldValues: true,      // Do not allow controlFields without value
+    leader: false,                 // Do not allow record without leader, with empty leader or with leader with length != 24
+    characters: false,             // Do not allow erronous characters in tags, indicators and subfield codes
+    noControlCharacters: false,    // Do not allow ASCII control characters in field/subfield values
+    noAdditionalProperties: false, // Do not allow additional properties in fields
+
+    strict: false                  // If true, set all validationOptions to true
   }
 );
 ```
@@ -57,12 +72,20 @@ You can reset global validation options to default with empty object:
 MarcRecord.setValidationOptions({});
 ```
 
+You can set all global validation options to true with validationOption strict: true:
+
+```js
+// Set all validationOptions to true with strict: true
+MarcRecord.setValidationOptions({strict: true});
+```
+
+
 **Record specific validation options** can be given when constructing:
 
 ```js
 const record = new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
     fields: []
   },
   {fields: false} // Allow empty fields
@@ -77,7 +100,7 @@ The following examples demonstrate the invalid records, when default validation 
 // Error: fields[] is empty. Validation option: fields
 new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
     fields: []
   }
 );
@@ -85,9 +108,9 @@ new MarcRecord(
 // Error: subfields[] is empty. Validation option: subfields
 new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
     fields: [
-      {tag: "021", subfields: []}
+      {tag: "509", , ind1: " ", ind2: " ", subfields: []}
     ]
   }
 );
@@ -95,9 +118,9 @@ new MarcRecord(
 // Error: subfield has no value. Validation option: subfieldValues
 new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
     fields: [
-      {tag: "021", subfields: [{code: "a", value: ""}]}
+      {tag: "509", ind1: " ", ind2: " ", subfields: [{code: "a", value: ""}]}
     ]
   }
 );
@@ -229,7 +252,7 @@ Failing examples:
 // Example record
 const record = new MarcRecord(
 {
-  leader: "foo",
+  leader: "02848ccm a22005894i 4500",
   fields: [
     {tag: "001", value: "bar"}
   ]
@@ -304,6 +327,6 @@ To serialize and unserialize MARC records, see [marc-record-serializers](https:/
 
 Copyright (c) 2014-2017 **Pasi Tuominen <pasi.tuominen@gmail.com>**
 
-Copyright (c) 2018 **University Of Helsinki (The National Library Of Finland)**
+Copyright (c) 2018-2023 **University Of Helsinki (The National Library Of Finland)**
 
 This project's source code is licensed under the terms of **MIT License** or any later version.

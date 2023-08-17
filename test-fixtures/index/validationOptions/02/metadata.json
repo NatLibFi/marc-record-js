@@ -3,15 +3,21 @@
   "skip": false,
   "noinput": true,
   "operations": [
-    { "name": "setValidationOptions", "args": {"fields": false}},
-    { "name": "MarcRecord", "args": {"leader": "foo"}},
+    { "name": "setValidationOptions", "args": {}},
+    { "name": "MarcRecord", "args": {"leader": "02848ccm a22005894i 4500", "fields": [{"tag": "001", "value": "foo"}]}},
     { "name": "setValidationOptions", "args": {}},
     { "name": "getValidationOptions" }
   ],
   "returns": {
+    "characters": false,
+    "controlFieldValues": true,
     "fields": true,
+    "leader": false,
+    "noAdditionalProperties": false,
+    "noControlCharacters": false,
     "subfields": true,
-    "subfieldValues": true
+    "subfieldValues": true,
+    "strict": false
   },
   "immutable": true
 }

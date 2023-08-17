@@ -2,12 +2,12 @@
   "description": "Should return fields that have matching subfield",
   "skip": false,
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
-      {"tag": "001", "ind1": " ", "ind2": " ", "value": "A"},
-      {"tag": "001", "ind1": " ", "ind2": " ", "value": "B"},
-      {"tag": "003", "ind1": " ", "ind2": " ", "value": "A"},
+      {"tag": "001", "value": "A"},
+      {"tag": "001", "value": "B"},
+      {"tag": "003", "value": "A"},
       {"tag": "100", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}]},
       {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}]},
       {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}, {"code": "b", "value": "B"}, {"code": "c", "value": "C"}]}

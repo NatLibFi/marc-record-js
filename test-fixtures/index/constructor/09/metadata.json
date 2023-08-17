@@ -2,7 +2,7 @@
   "description": "Should create a clone from record with custom validation options",
   "skip": false,
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "001", "value": "bar"},
@@ -16,7 +16,7 @@
   "operations": [{ "name": "clone", "args": { "validationOptions": {"subfields": false}}}],
   "returns": {
     "_validationOptions": {"subfields": false},
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "001", "value": "bar"},

@@ -2,26 +2,26 @@
   "description": "Should return true if leader & fields are equal",
   "skip": false,
   "input": {
-    "leader": "foo",
+    "leader": "02848ccm a22005894i 4500",
     "fields":
     [
       {"tag": "001", "value": "bar"},
-      {"tag": "002", "subfields": [{"code": "a", "value": "b"}]},
-      {"tag": "003", "ind1": "1", "subfields": [{"code": "a", "value": "b"}]},
-      {"tag": "003", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]},
-      {"tag": "003", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}, {"code": "c", "value": "d"}]}
+      {"tag": "502", "subfields": [{"code": "a", "value": "b"}]},
+      {"tag": "503", "ind1": "1", "subfields": [{"code": "a", "value": "b"}]},
+      {"tag": "503", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]},
+      {"tag": "503", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}, {"code": "c", "value": "d"}]}
     ]
   },
   "operations": [
     { "name": "equalsTo", "args": {
-        "leader": "foo",
+        "leader": "02848ccm a22005894i 4500",
         "fields":
         [
           {"tag": "001", "value": "bar"},
-          {"tag": "002", "subfields": [{"code": "a", "value": "b"}]},
-          {"tag": "003", "ind1": "1", "subfields": [{"code": "a", "value": "b"}]},
-          {"tag": "003", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]},
-          {"tag": "003", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}, {"code": "c", "value": "d"}]}
+          {"tag": "502", "subfields": [{"code": "a", "value": "b"}]},
+          {"tag": "503", "ind1": "1", "subfields": [{"code": "a", "value": "b"}]},
+          {"tag": "503", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}]},
+          {"tag": "503", "ind1": "1", "ind2": "2", "subfields": [{"code": "a", "value": "b"}, {"code": "c", "value": "d"}]}
         ]
       }
     }

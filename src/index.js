@@ -5,10 +5,30 @@ import {clone, validateRecord, validateField} from './utils';
 import MarcRecordError from './error';
 export {default as MarcRecordError} from './error';
 
+// Default setting for validationOptions:
+// These default validationOptions are (mostly) backwards compatible with marc-record-js < 7.3.0
+//
+// strict: false                  // All validationOptions below are set to true
+//
+// fields: true,                  // Do not allow record without fields
+// subfields: true,               // Do not allow empty subfields
+// subfieldValues: true,          // Do not allow subfields without value
+// controlFieldValues: true       // Do not allow controlFields without value
+// leader: false,                 // Do not allow record without leader, with empty leader or with leader with length != 24
+// characters: false              // Do not allow erronous characters in tags, indicators and subfield codes
+// noControlCharacters: false,    // Do not allow ASCII control characters in field/subfield values
+// noAdditionalProperties: false  // Do not allow additional properties in fields
+
 const validationOptionsDefaults = {
+  strict: false,
   fields: true,
   subfields: true,
-  subfieldValues: true
+  subfieldValues: true,
+  controlFieldValues: true,
+  leader: false,
+  characters: false,
+  noControlCharacters: false,
+  noAdditionalProperties: false
 };
 
 let globalValidationOptions = {...validationOptionsDefaults}; // eslint-disable-line functional/no-let
