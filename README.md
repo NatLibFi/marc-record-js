@@ -17,7 +17,8 @@ const record = new MarcRecord();
 ```js
 const record = new MarcRecord(
   {
-    leader: 'foo',
+    leader: '02848ccm a22005894i 4500',
+',
     fields: [
       {tag: '001', value: 'foo'},
       {tag: '002', value: 'bar'},
