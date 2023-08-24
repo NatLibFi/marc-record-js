@@ -24,6 +24,16 @@ describe('utils', () => {
       expect(Utils.validateRecord(record)).to.not.throw; // eslint-disable-line no-unused-expressions
     });
 
+    it('Should consider the record valid, strict: true', () => {
+      const record = {
+        leader: '02848ccm a22005894i 4500',
+        fields: [{tag: 'FOO', value: 'bar'}]
+      };
+
+      expect(Utils.validateRecord(record, {strict: true})).to.not.throw; // eslint-disable-line no-unused-expressions
+    });
+
+
     it('Should consider the record invalid', () => {
       const record = {
         leader: '02848ccm a22005894i 4500'
