@@ -106,7 +106,7 @@ function schema({fields = true, subfields = true, subfieldValues = true, control
         type: 'string',
         minLength: leader ? 24 : 0,
         maxLength: leader ? 24 : maximumFieldLength,
-        pattern: characters ? controlFieldTagPattern : anythingPattern,
+        pattern: characters ? controlFieldValuePattern : anythingPattern,
         maxOccurence: 1
       },
       fields: {
