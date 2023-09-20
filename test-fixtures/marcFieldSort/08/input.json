@@ -1,0 +1,29 @@
+{
+  "leader": "12345cam a22002417i 4500",
+  "fields":
+  [
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "a", "value": "Sukunimi, Sisko," },
+      {"code": "e", "value": "sovittaja."}
+    ]},
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "a", "value": "Sukunimi, Sen Veli," },
+      {"code": "e", "value": "sovittaja."}
+    ]},
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "a", "value": "Laulaja, Random," },
+      {"code": "e", "value": "esittäjä."}
+    ]},
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "a", "value": "Family, Raising My," },
+      {"code": "e", "value": "säveltäjä."}
+    ]},
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "a", "value": "Family, Raising My," },
+      {"code": "e", "value": "säveltäjä,"},
+      {"code": "e", "value": "sovittaja."}
+    ]}
+
+
+  ]
+}
