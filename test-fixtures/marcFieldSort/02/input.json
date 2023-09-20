@@ -28,6 +28,14 @@
       {"code": "2", "value": "masa"}
     ]},
     {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "bättre-än-kaunokki" },
+      {"code": "2", "value": "kauno/swe"}
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
+      {"code": "a", "value": "parempi-kuin-kauno-swe" },
+      {"code": "2", "value": "kauno/fin"}
+    ]},
+    {"tag": "650", "ind1": " ", "ind2": "7", "subfields": [
       {"code": "a", "value": "kirjastot" },
       {"code": "2", "value": "yso/fin"}, 
       {"code": "0", "value": "http://www.yso.fi/onto/yso/p2787" }
