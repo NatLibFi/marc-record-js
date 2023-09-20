@@ -24,7 +24,7 @@ const relatorTermScore = { // Here bigger is better
 export function fieldOrderComparator(fieldA, fieldB) {
   const BIG_BAD_NUMBER = 999.99;
 
-  const sorterFunctions = [sortByTag, sortByIndexTerms, sortAlphabetically, sortByRelatorTerm, preferFenniKeep];
+  const sorterFunctions = [sortByTag, sortByIndexTerms, sortAlphabetically, sortByRelatorTerm, sortByOccurrenceNumber, preferFenniKeep];
 
   for (const sortFn of sorterFunctions) { // eslint-disable-line functional/no-loop-statements
     const result = sortFn(fieldA, fieldB);
@@ -206,6 +206,59 @@ export function fieldOrderComparator(fieldA, fieldB) {
       return -1;
     }
     return 0;
+  }
+
+  function sortByOccurrenceNumber(fieldA, fieldB) {
+    // Must of this is copypasted from marc-record-validators-melinda src/subfield6Utils.js
+    function isValidSubfield6(subfield) {
+      const sf6Regexp = /^[0-9][0-9][0-9]-(?:[0-9][0-9]|[1-9][0-9]+)(?:[^0-9].*)?$/u;
+      if (subfield.code !== '6') {
+        return false;
+      }
+      return subfield.value.match(sf6Regexp);
+    }
+
+    function subfield6GetOccurrenceNumber(subfield) {
+      if (isValidSubfield6(subfield)) {
+        // Skip "TAG-" prefix. 2023-02-20: removed 2-digit requirement from here...
+        return subfield.value.substring(4).replace(/\D.*$/u, '');
+      }
+      return undefined;
+    }
+
+    function fieldGetOccurrenceNumber(field) {
+      if (!field.subfields) {
+        return 0;
+      }
+      const subfield6 = field.subfields.find(sf => isValidSubfield6(sf));
+      if (subfield6 === undefined) {
+        return 0;
+      }
+      return parseInt(subfield6GetOccurrenceNumber(subfield6), 10);
+    }
+
+    if (fieldA.tag !== '880') {
+      return 0;
+    }
+    const scoreA = fieldGetOccurrenceNumber(fieldA);
+    const scoreB = fieldGetOccurrenceNumber(fieldB);
+
+    debugDev(`A: '${fieldToString(fieldA)}: ${scoreA}`);
+    debugDev(`B: '${fieldToString(fieldB)}: ${scoreB}`);
+
+    if (scoreA === scoreB) {
+      return 0;
+    }
+    if (scoreB === 0) {
+      return -1;
+    }
+    if (scoreA === 0) {
+      return 1;
+    }
+    if (scoreA > scoreB) { // smaller is better
+      return 1;
+    }
+    return -1;
   }
 
   function sortAlphabetically(fieldA, fieldB) {
