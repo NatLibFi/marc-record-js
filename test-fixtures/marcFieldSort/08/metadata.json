@@ -1,5 +1,5 @@
 {
   "description": "Sort by relator terms",
   "skip": false,
-  "only": true
+  "only": false
 }
