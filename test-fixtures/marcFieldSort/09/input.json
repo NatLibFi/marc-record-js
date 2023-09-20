@@ -1,0 +1,41 @@
+{
+  "leader": "12345cam a22002417i 4500",
+  "fields":
+  [
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "6", "value": "880-03" },
+      {"code": "a", "value": "Sukunimi, Sisko." }
+    ]},
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "a", "value": "Sukunimi, Sen Veli." }
+    ]},
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "6", "value": "880-02" },
+      {"code": "a", "value": "Laulaja, Random." }
+    ]},
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "6", "value": "880-01" },
+      {"code": "a", "value": "Ache, Head." }
+    ]},
+    {"tag": "700", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "a", "value": "Family, Raising My." }
+    ]},
+    {"tag": "880", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "6", "value": "700-03" },
+      {"code": "a", "value": "Foreign-Sukunimi, Sisko." }
+    ]},
+    {"tag": "880", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "6", "value": "700-00" },
+      {"code": "a", "value": "Foreign-Vastineeton, Joku." }
+    ]},
+    {"tag": "880", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "6", "value": "700-02" },
+      {"code": "a", "value": "Foreign-Laulaja, Random." }
+    ]},
+    {"tag": "880", "ind1": "1", "ind2": " ", "subfields": [
+      {"code": "6", "value": "700-01" },
+      {"code": "a", "value": "Foreign-Ache, Head." }
+    ]}
+
+  ]
+}
