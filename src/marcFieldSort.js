@@ -5,11 +5,26 @@ const debug = createDebugLogger('@natlibfi/marc-record:marcFieldSort');
 //const debugData = debug.extend('data');
 const debugDev = debug.extend('dev');
 
+const relatorTermScore = { // Here bigger is better
+  // We should 1) check the order of these, and 2) add translations (support Swedish at the very least)
+  'säveltäjä': 100,
+  'kirjoittaja': 99,
+  'sarjakuvantekijä': 99,
+  'sanoittaja': 90,
+  'käsikirjoittaja': 90,
+  'toimittaja': 85,
+  'kuvittaja': 84,
+  'sovittaja': 80,
+  'kääntäjä': 80,
+  'editointi': 70, // for music, toimittjaja is another thins
+  'esittäjä': 60,
+  'johtaja': 50 // orkesterinjohtaja
+};
 
 export function fieldOrderComparator(fieldA, fieldB) {
   const BIG_BAD_NUMBER = 999.99;
-  //const sorterFunctions = [sortByTag, sortByLOW, sortBySID, sortByIndexTerms, sortAlphabetically];
-  const sorterFunctions = [sortByTag, /*sortByLOW,*/ /*sortBySID,*/ sortByIndexTerms, sortAlphabetically, preferFenniKeep];
+
+  const sorterFunctions = [sortByTag, sortByIndexTerms, sortAlphabetically, sortByRelatorTerm, preferFenniKeep];
 
   for (const sortFn of sorterFunctions) { // eslint-disable-line functional/no-loop-statements
     const result = sortFn(fieldA, fieldB);
@@ -55,53 +70,12 @@ export function fieldOrderComparator(fieldA, fieldB) {
     return 0;
   }
 
-  /*
-  function sortByLOW(fieldA, fieldB) {
-    if (fieldA.tag === 'LOW' && fieldB.tag === 'LOW') {
-      const lowA = selectFirstValue(fieldA, 'a');
-      const lowB = selectFirstValue(fieldB, 'a');
-      if (lowA > lowB) {
-        return 1;
-      }
-      if (lowA < lowB) {
-        return -1;
-      }
-    }
-    return 0;
-  }
-  */
-
-  /*
-  function sortBySID(fieldA, fieldB) {
-    if (fieldA.tag === 'SID' && fieldB.tag === 'SID') {
-      const sidA = selectFirstValue(fieldA, 'c');
-      const sidB = selectFirstValue(fieldB, 'c');
-      if (sidA > sidB) {
-        return 1;
-      }
-      if (sidA < sidB) {
-        return -1;
-      }
-    }
-    return 0;
-  }
-*/
-
   function sortByIndexTerms(fieldA, fieldB) { // eslint-disable-line complexity, max-statements
 
     const indexTermFields = ['600', '610', '611', '630', '648', '650', '651', '652', '653', '654', '655', '656', '657', '658', '659', '662'];
 
     function scoreInd2(val) {
-      const ind2Score = {
-        '0': 0,
-        '1': 1,
-        '2': 2,
-        '3': 3,
-        '4': 8,
-        '5': 5,
-        '6': 6,
-        '7': 7
-      };
+      const ind2Score = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 8, '5': 5, '6': 6, '7': 7};
 
       if (val in ind2Score) {
         return ind2Score[val];
@@ -196,6 +170,38 @@ export function fieldOrderComparator(fieldA, fieldB) {
       return violaPreference;
     }
     return preferKeep(fieldA, fieldB, 'FIKKA');
+  }
+
+  function sortByRelatorTerm(fieldA, fieldB) {
+
+    function scoreRelatorTerm(value) {
+      const normValue = value.replace(/[.,]+$/u, '');
+      if (normValue in relatorTermScore) {
+        return relatorTermScore[normValue];
+      }
+      return 0;
+    }
+
+    function fieldGetMaxRelatorTermScore(field) {
+      if (!field.subfields) {
+        return 0;
+      }
+      const e = field.subfields.filter(sf => sf.code === 'e');
+      const scores = e.map(sf => scoreRelatorTerm(sf.value));
+      debugDev(`RELATOR SCORE FOR '${fieldToString(field)}': ${scores.join(', ')}`);
+      return Math.max(...scores);
+    }
+
+    const scoreA = fieldGetMaxRelatorTermScore(fieldA);
+    const scoreB = fieldGetMaxRelatorTermScore(fieldB);
+
+    if (scoreA < scoreB) {
+      return 1;
+    }
+    if (scoreA > scoreB) {
+      return -1;
+    }
+    return 0;
   }
 
   function sortAlphabetically(fieldA, fieldB) {
