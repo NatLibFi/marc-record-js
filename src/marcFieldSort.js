@@ -173,6 +173,10 @@ export function fieldOrderComparator(fieldA, fieldB) {
   }
 
   function sortByRelatorTerm(fieldA, fieldB) {
+    // Should this be done to 6XX and 8XX fields as well? Does $t affect sorting?
+    if (!['700', '710', '711', '730'].includes(fieldA.tag)) {
+      return 0;
+    }
 
     function scoreRelatorTerm(value) {
       const normValue = value.replace(/[.,]+$/u, '');
