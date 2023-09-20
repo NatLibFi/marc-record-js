@@ -1,4 +1,5 @@
 import createDebugLogger from 'debug';
+import {fieldToString} from './utils';
 
 const debug = createDebugLogger('@natlibfi/marc-record:marcFieldSort');
 //const debugData = debug.extend('data');
@@ -9,16 +10,6 @@ export function fieldOrderComparator(fieldA, fieldB) {
   const BIG_BAD_NUMBER = 999.99;
   //const sorterFunctions = [sortByTag, sortByLOW, sortBySID, sortByIndexTerms, sortAlphabetically];
   const sorterFunctions = [sortByTag, /*sortByLOW,*/ /*sortBySID,*/ sortByIndexTerms, sortAlphabetically, preferFenniKeep];
-
-  function fieldToString(f) {
-    if ('subfields' in f) {
-      return `${f.tag} ${f.ind1}${f.ind2} ‡${formatSubfields(f)}`;
-    }
-    return `${f.tag}    ${f.value}`;
-    function formatSubfields(field) {
-      return field.subfields.map(sf => `${sf.code}${sf.value || ''}`).join('‡');
-    }
-  }
 
   for (const sortFn of sorterFunctions) { // eslint-disable-line functional/no-loop-statements
     const result = sortFn(fieldA, fieldB);
