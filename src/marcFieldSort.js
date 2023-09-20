@@ -89,24 +89,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
 
   function sortByIndexTerms(fieldA, fieldB) { // eslint-disable-line complexity, max-statements
 
-    const indexTermFields = [
-      '600',
-      '610',
-      '611',
-      '630',
-      '648',
-      '650',
-      '651',
-      '652',
-      '653',
-      '654',
-      '655',
-      '656',
-      '657',
-      '658',
-      '659',
-      '662'
-    ];
+    const indexTermFields = ['600', '610', '611', '630', '648', '650', '651', '652', '653', '654', '655', '656', '657', '658', '659', '662'];
 
     function scoreInd2(val) {
       const ind2Score = {
@@ -152,6 +135,8 @@ export function fieldOrderComparator(fieldA, fieldB) {
         'yso/eng': 2,
         'slm/fin': 0.1,
         'slm/swe': 1.1,
+        'kauno/fin': 2.1,
+        'kauno/swe': 2.2,
         'kaunokki': 4,
         'bella': 5
       };
