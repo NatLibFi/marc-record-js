@@ -1,0 +1,54 @@
+{
+  "leader": "12345cam a22002417i 4500",
+  "fields":
+  [
+    {"tag": "520", "ind1": " ", "ind2": " ", "subfields": [
+      {"code": "8", "value": "3.1\\x" },
+      {"code": "a", "value": "lorum" }
+    ]},
+    {"tag": "520", "ind1": " ", "ind2": " ", "subfields": [
+      {"code": "8", "value": "3.4\\x" },
+      {"code": "a", "value": "bar" }
+    ]},
+    {"tag": "520", "ind1": " ", "ind2": " ", "subfields": [
+      {"code": "8", "value": "3.3\\x" },
+      {"code": "a", "value": "foo" }
+    ]},
+    {"tag": "520", "ind1": " ", "ind2": " ", "subfields": [
+      {"code": "8", "value": "3.2\\x" },
+      {"code": "a", "value": "ipsum" }
+    ]},
+
+
+    {"tag": "648", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "8", "value": "1\\u" },
+      {"code": "a", "value": "1901" }
+    ]},
+    {"tag": "648", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "8", "value": "2\\u" },
+      {"code": "a", "value": "1902" }
+    ]},
+    {"tag": "651", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "8", "value": "2\\u" },
+      {"code": "a", "value": "Saksa" }
+    ]},
+    {"tag": "651", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "8", "value": "2\\u" },
+      {"code": "a", "value": "Itävältä" }
+    ]},
+    {"tag": "651", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "8", "value": "1\\u" },
+      {"code": "a", "value": "Suomi" }
+    ]},
+
+    {"tag": "651", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "a", "value": "Wien" }
+    ]},
+    {"tag": "651", "ind1": " ", "ind2": "4", "subfields": [
+      {"code": "a", "value": "Helsinki" },
+      {"code": "9", "value": "FENNI<KEEP>" }
+    ]}
+
+
+  ]
+}

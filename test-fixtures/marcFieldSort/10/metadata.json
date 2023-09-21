@@ -1,0 +1,5 @@
+{
+  "description": "Sort by link and sequence number (= subfield $8)",
+  "skip": false,
+  "only": false
+}
