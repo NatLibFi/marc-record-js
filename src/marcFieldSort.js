@@ -6,20 +6,40 @@ const debug = createDebugLogger('@natlibfi/marc-record:marcFieldSort');
 const debugDev = debug.extend('dev');
 
 const relatorTermScore = { // Here bigger is better
+  // The list should be similar to the one for field internal $e sorting in marc-record-validators-js
+  // validator  osrtRelatorTerms.js. Validators should use this list eventually...
+  // More abstract, the earlier it appears.
+  // Note that terms with same abstraction level might also have order preferences
   // We should 1) check the order of these, and 2) add translations (support Swedish at the very least)
-  'säveltäjä': 100,
-  'kirjoittaja': 99,
+  // work/teos > expression/ekspressio > manifestation/manifestaatio
+  'säveltäjä': 100, 'composer': 100,
+  'kirjoittaja': 99, 'author': 100,
   'sarjakuvantekijä': 99,
+  'taiteilija': 98,
   'sanoittaja': 90,
   'käsikirjoittaja': 90,
-  'toimittaja': 85,
-  'kuvittaja': 84,
-  'sovittaja': 80,
-  'kääntäjä': 80,
-  'editointi': 70, // for music, toimittjaja is another thins
+  // expression:
+  'toimittaja': 80, 'editor': 80,
+  'sovittaja': 80, 'arranger': 80,
+  'kuvittaja': 75,
+  'editointi': 71, // for music, editor/toimittaja is another thing
+  'kääntäjä': 70,
+  'lukija': 61,
+  // Manifestation level
   'esittäjä': 60,
-  'johtaja': 50 // orkesterinjohtaja
+  'johtaja': 50, // orkesterinjohtaja
+  'kustantaja': 41,
+  'julkaisija': 40
+
 };
+
+export function scoreRelatorTerm(value) { // sortRelatorTerms.js validator should call this on future version
+  const normValue = value.replace(/[.,]+$/u, '');
+  if (normValue in relatorTermScore) {
+    return relatorTermScore[normValue];
+  }
+  return 0;
+}
 
 export function fieldOrderComparator(fieldA, fieldB) {
   const BIG_BAD_NUMBER = 999.99;
@@ -178,13 +198,6 @@ export function fieldOrderComparator(fieldA, fieldB) {
       return 0;
     }
 
-    function scoreRelatorTerm(value) {
-      const normValue = value.replace(/[.,]+$/u, '');
-      if (normValue in relatorTermScore) {
-        return relatorTermScore[normValue];
-      }
-      return 0;
-    }
 
     function fieldGetMaxRelatorTermScore(field) {
       if (!field.subfields) {
