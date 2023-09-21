@@ -5,6 +5,9 @@ const debug = createDebugLogger('@natlibfi/marc-record:marcFieldSort');
 //const debugData = debug.extend('data');
 const debugDev = debug.extend('dev');
 
+const sf6Regexp = /^[0-9][0-9][0-9]-(?:[0-9][0-9]|[1-9][0-9]+)(?:[^0-9].*)?$/u;
+const sf8Regexp = /^([1-9][0-9]*)(?:\.[0-9]+)?(?:\\[acprux])?$/u; // eslint-disable-line prefer-named-capture-group
+
 const relatorTermScore = { // Here bigger is better
   // The list should be similar to the one for field internal $e sorting in marc-record-validators-js
   // validator  osrtRelatorTerms.js. Validators should use this list eventually...
@@ -33,6 +36,14 @@ const relatorTermScore = { // Here bigger is better
 
 };
 
+export function isValidSubfield8(subfield) {
+  if (subfield.code !== '8') {
+    return false;
+  }
+  const match = subfield.value.match(sf8Regexp);
+  return match && match.length > 0;
+}
+
 export function scoreRelatorTerm(value) { // sortRelatorTerms.js validator should call this on future version
   const normValue = value.replace(/[.,]+$/u, '');
   if (normValue in relatorTermScore) {
@@ -44,7 +55,7 @@ export function scoreRelatorTerm(value) { // sortRelatorTerms.js validator shoul
 export function fieldOrderComparator(fieldA, fieldB) {
   const BIG_BAD_NUMBER = 999.99;
 
-  const sorterFunctions = [sortByTag, sortByIndexTerms, sortAlphabetically, sortByRelatorTerm, sortByOccurrenceNumber, preferFenniKeep];
+  const sorterFunctions = [sortByTag, sortByIndexTerms, sortAlphabetically, sortByRelatorTerm, sortByOccurrenceNumber, preferFenniKeep, sortByFieldLinkAndSequenceNumber];
 
   for (const sortFn of sorterFunctions) { // eslint-disable-line functional/no-loop-statements
     const result = sortFn(fieldA, fieldB);
@@ -221,17 +232,49 @@ export function fieldOrderComparator(fieldA, fieldB) {
     return 0;
   }
 
-  function sortByOccurrenceNumber(fieldA, fieldB) {
+  function fieldGetMinLinkAndSequenceNumber(field) {
+    if (!field.subfields) {
+      return BIG_BAD_NUMBER;
+    }
+    const relevantSubfields = field.subfields.filter(sf => isValidSubfield8(sf));
+    // If val is something like "1.2\x" parseFloat() would give a syntax erro because of hex-like escape sequnce (at least on Chrome). Thus remove tail:
+    const scores = relevantSubfields.map(sf => parseFloat(sf.value.replace(/\\.*$/u, '')));
+    if (scores.length === 0) {
+      return BIG_BAD_NUMBER;
+    }
+    return Math.min(...scores);
+  }
+
+  function sortByFieldLinkAndSequenceNumber(fieldA, fieldB) { // Sort by subfield $8 that is...
+    const scoreA = fieldGetMinLinkAndSequenceNumber(fieldA);
+    const scoreB = fieldGetMinLinkAndSequenceNumber(fieldB);
+    debugDev(`sf-8-A-score for '${fieldToString(fieldA)}: ${scoreA}`);
+    debugDev(`sf-8-B-score for '${fieldToString(fieldB)}: ${scoreB}`);
+    if (scoreA === scoreB) {
+      return 0;
+    }
+    if (scoreB === 0) {
+      return 1;
+    }
+    if (scoreA === 0) {
+      return -1;
+    }
+    if (scoreA > scoreB) { // smaller is better
+      return 1;
+    }
+    return -1;
+  }
+
+  function sortByOccurrenceNumber(fieldA, fieldB) { // Sort by subfield $6
     // Must of this is copypasted from marc-record-validators-melinda src/subfield6Utils.js
-    function isValidSubfield6(subfield) {
-      const sf6Regexp = /^[0-9][0-9][0-9]-(?:[0-9][0-9]|[1-9][0-9]+)(?:[^0-9].*)?$/u;
+    function isValidSubfield6(subfield) { // should this function be exported? (copypasted from validator sortRelatorFields.js)
       if (subfield.code !== '6') {
         return false;
       }
       return subfield.value.match(sf6Regexp);
     }
 
-    function subfield6GetOccurrenceNumber(subfield) {
+    function subfield6GetOccurrenceNumber(subfield) { // should this function be exported? (copypasted from validator sortRelatorFields.js)
       if (isValidSubfield6(subfield)) {
         // Skip "TAG-" prefix. 2023-02-20: removed 2-digit requirement from here...
         return subfield.value.substring(4).replace(/\D.*$/u, '');
@@ -239,7 +282,7 @@ export function fieldOrderComparator(fieldA, fieldB) {
       return undefined;
     }
 
-    function fieldGetOccurrenceNumber(field) {
+    function fieldGetOccurrenceNumber(field) { // should this function be exported? (based on validator sortRelatorFields.js)
       if (!field.subfields) {
         return 0;
       }
