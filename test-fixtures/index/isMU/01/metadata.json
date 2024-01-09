@@ -1,0 +1,17 @@
+{
+  "description": "isMU: true",
+  "skip": false,
+  "input": {
+    "leader": "01234cjm a22005894i 4500",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"}
+    ]
+  },
+  "operations": [
+    { "name": "isTypeOfMaterial", "args": {"self": true, "target": "MU"}}
+  ],
+  "returns": true,
+  "immutable": true,
+  "only": false
+}

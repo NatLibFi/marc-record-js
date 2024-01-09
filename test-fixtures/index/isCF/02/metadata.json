@@ -1,0 +1,19 @@
+{
+  "description": "isCF: false since LDR/07 and no 006/01=s",
+  "skip": false,
+  "input": {
+    "leader": "01234cab a22005894i 4500",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "006", "value": "e|||||||||||||||||"},
+      {"tag": "006", "value": "t|||||||||||||||||"}
+    ]
+  },
+  "operations": [
+    { "name": "isTypeOfMaterial", "args": {"self": true, "target": "CF"}}
+  ],
+  "returns": false,
+  "immutable": true,
+  "only": false
+}
