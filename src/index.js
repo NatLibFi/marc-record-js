@@ -268,6 +268,31 @@ export class MarcRecord {
     return this._containsField006FormOfMaterialS();
   }
 
+  getTypeOfMaterial() {
+    if (this.isBK()) {
+      return 'BK';
+    }
+    if (this.isCF()) {
+      return 'CF';
+    }
+    if (this.isCR()) {
+      return 'CR';
+    }
+    if (this.isMP()) {
+      return 'MP';
+    }
+    if (this.isMU()) {
+      return 'MU';
+    }
+    if (this.isMX()) {
+      return 'MX';
+    }
+    if (this.isVM()) {
+      return 'VM';
+    }
+    return false;
+  }
+
   _bibliographicLevelIsBis() {
     return ['b', 'i', 's'].includes(this.getBibliograpicLevel());
   }
