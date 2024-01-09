@@ -422,6 +422,11 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      if (name === 'getTypeOfMaterial') {
+        return record.getTypeOfMaterial();
+      }
+
+      //-------------------------------------------------------------------------
       throw new Error(`Invalid operation: ${name}`);
     }
   }
