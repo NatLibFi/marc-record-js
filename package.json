@@ -25,7 +25,7 @@
 		"url": "git@github.com:natlibfi/marc-record-js.git"
 	},
 	"license": "MIT",
-	"version": "8.0.2",
+	"version": "8.1.0-alpha.3",
 	"main": "./dist/index.js",
 	"engines": {
 		"node": ">=14"
@@ -52,18 +52,18 @@
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.23.0",
-		"@babel/core": "^7.23.2",
+		"@babel/core": "^7.23.7",
 		"@babel/node": "^7.22.19",
-		"@babel/plugin-transform-runtime": "^7.23.2",
-		"@babel/preset-env": "^7.23.2",
-		"@babel/register": "^7.22.15",
+		"@babel/plugin-transform-runtime": "^7.23.7",
+		"@babel/preset-env": "^7.23.8",
+		"@babel/register": "^7.23.7",
 		"@natlibfi/eslint-config-melinda-backend": "^3.0.2",
-		"@natlibfi/fixugen": "^2.0.2",
-		"@natlibfi/fixura": "^3.0.2",
+		"@natlibfi/fixugen": "^2.0.4",
+		"@natlibfi/fixura": "^3.0.4",
 		"babel-plugin-istanbul": "^6.1.1",
-		"chai": "^4.3.10",
+		"chai": "^4.4.0",
 		"cross-env": "^7.0.3",
-		"eslint": "^8.51.0",
+		"eslint": "^8.56.0",
 		"mocha": "^10.2.0",
 		"nodemon": "^3.0.1",
 		"nyc": "^15.1.0"

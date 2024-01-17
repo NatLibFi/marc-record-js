@@ -392,6 +392,41 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      if (name === 'isTypeOfMaterial') {
+        const {target} = args;
+
+        // console.info(`TARGET: '${target}'\n${record.toString()}`); // eslint-disable-line no-console
+        if (target === 'BK') { // Book
+          return record.isBK();
+        }
+        if (target === 'CF') { // Computer File
+          return record.isCF();
+        }
+        if (target === 'CR') { // Continuing Resource
+          return record.isCR();
+        }
+        if (target === 'MP') { // Map
+          return record.isMP();
+        }
+        if (target === 'MU') { // Music
+          return record.isMU();
+        }
+        if (target === 'MX') { // Mixed
+          return record.isMX();
+        }
+        if (target === 'VM') { // Visual Material
+          return record.isVM();
+        }
+
+        return false;
+      }
+
+      //-------------------------------------------------------------------------
+      if (name === 'getTypeOfMaterial') {
+        return record.getTypeOfMaterial();
+      }
+
+      //-------------------------------------------------------------------------
       throw new Error(`Invalid operation: ${name}`);
     }
   }

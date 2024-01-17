@@ -1,0 +1,17 @@
+{
+  "description": "isMP: false since LDR/07 and no 006/01=s",
+  "skip": false,
+  "input": {
+    "leader": "01234cei a22005894i 4500",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"}
+    ]
+  },
+  "operations": [
+    { "name": "isTypeOfMaterial", "args": {"self": true, "target": "MP"}}
+  ],
+  "returns": false,
+  "immutable": true,
+  "only": false
+}

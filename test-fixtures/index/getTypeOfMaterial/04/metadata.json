@@ -1,0 +1,18 @@
+{
+  "description": "fail to determine the type of material (illegal LDR/06)",
+  "skip": false,
+  "input": {
+    "leader": "01234czb a22005894i 4500",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "006", "value": "s|||||||||||||||||"}
+    ]
+  },
+  "operations": [
+    { "name": "getTypeOfMaterial", "args": {"self": true}}
+  ],
+  "returns": false,
+  "immutable": true,
+  "only": false
+}

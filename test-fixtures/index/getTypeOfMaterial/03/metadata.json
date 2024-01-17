@@ -1,0 +1,18 @@
+{
+  "description": "identify record as MU",
+  "skip": false,
+  "input": {
+    "leader": "01234cji a22005894i 4500",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "006", "value": "s|||||||||||||||||"}
+    ]
+  },
+  "operations": [
+    { "name": "getTypeOfMaterial", "args": {"self": true}}
+  ],
+  "returns": "MU",
+  "immutable": true,
+  "only": false
+}
