@@ -1,0 +1,18 @@
+{
+  "description": "fail to determine the type of material (LDR/07+006/00 combo)",
+  "skip": false,
+  "input": {
+    "leader": "01234cki a22005894i 4500",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"},
+      {"tag": "006", "value": "a|||||||||||||||||"}
+    ]
+  },
+  "operations": [
+    { "name": "getTypeOfMaterial", "args": {"self": true }}
+  ],
+  "returns": false,
+  "immutable": true,
+  "only": false
+}

@@ -200,6 +200,108 @@ export class MarcRecord {
     return this.getFields(tag, query).length > 0;
   }
 
+  getTypeOfRecord() {
+    return this.leader[6];
+  }
+
+  getBibliograpicLevel() {
+    return this.leader[7];
+  }
+
+  isBK() {
+    return ['a', 't'].includes(this.getTypeOfRecord()) && !this._bibliographicLevelIsBis();
+  }
+
+  isCF() {
+    if (this.getTypeOfRecord() !== 'm') {
+      return false;
+    }
+    if (!this._bibliographicLevelIsBis()) {
+      return true;
+    }
+
+    return this._containsField006FormOfMaterialS();
+  }
+
+  isCR() {
+    return ['a', 't'].includes(this.getTypeOfRecord()) && this._bibliographicLevelIsBis();
+  }
+
+  isMP() {
+    if (!['e', 'f'].includes(this.getTypeOfRecord())) {
+      return false;
+    }
+    if (!this._bibliographicLevelIsBis()) {
+      return true;
+    }
+    return this._containsField006FormOfMaterialS();
+  }
+
+  isMU() {
+    if (!['c', 'd', 'i', 'j'].includes(this.getTypeOfRecord())) {
+      return false;
+    }
+    if (!this._bibliographicLevelIsBis()) {
+      return true;
+    }
+    return this._containsField006FormOfMaterialS();
+  }
+
+  isMX() {
+    if (this.getTypeOfRecord() !== 'p') {
+      return false;
+    }
+    if (!this._bibliographicLevelIsBis(this)) {
+      return true;
+    }
+    return this._containsField006FormOfMaterialS();
+  }
+
+  isVM() {
+    if (!['g', 'k', 'o', 'r'].includes(this.getTypeOfRecord())) {
+      return false;
+    }
+
+    if (!this._bibliographicLevelIsBis()) {
+      return true;
+    }
+    return this._containsField006FormOfMaterialS();
+  }
+
+  getTypeOfMaterial() {
+    if (this.isBK()) {
+      return 'BK';
+    }
+    if (this.isCF()) {
+      return 'CF';
+    }
+    if (this.isCR()) {
+      return 'CR';
+    }
+    if (this.isMP()) {
+      return 'MP';
+    }
+    if (this.isMU()) {
+      return 'MU';
+    }
+    if (this.isMX()) {
+      return 'MX';
+    }
+    if (this.isVM()) {
+      return 'VM';
+    }
+    return false;
+  }
+
+  _bibliographicLevelIsBis() {
+    return ['b', 'i', 's'].includes(this.getBibliograpicLevel());
+  }
+
+  _containsField006FormOfMaterialS() {
+    const fields006 = this.get('006');
+    return fields006.some(field => field.value[0] === 's');
+  }
+
   equalsTo(record) {
     return MarcRecord.isEqual(this, record);
   }

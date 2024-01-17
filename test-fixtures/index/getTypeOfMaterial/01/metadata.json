@@ -1,0 +1,17 @@
+{
+  "description": "identify record as VM",
+  "skip": false,
+  "input": {
+    "leader": "01234ckm a22005894i 4500",
+    "fields":
+    [
+      {"tag": "001", "value": "bar"}
+    ]
+  },
+  "operations": [
+    { "name": "getTypeOfMaterial", "args": {"self": true} }
+  ],
+  "returns": "VM",
+  "immutable": true,
+  "only": false
+}

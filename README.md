@@ -299,6 +299,22 @@ record.insertFields(fields)
 // Result: Record tags: [001, 001, 002, 003, 003, 004, 005, 006]
 ```
 
+### Type of Material detection
+
+Type of material (BK/Book, CF/Computer File, CR/Continuing Resource, MP/Map, MU/Music, MX/Mixed Material, VM/Visual Material) of a given record can be queried in two ways:
+
+```js
+// 1) Ask if record belong to a certain type
+if (record.isBK()) {
+  // Do something
+}
+
+// 2) Ask for record type:
+if (record.getTypeOfMaterial() === 'MU') { // NB! Failure returns false
+  // Do something else
+}
+```
+
 ## Sorting fields
 
 ```js
@@ -318,6 +334,8 @@ record
 // Note: In this case, there is no need for sort, as insert puts the field to
 // correct place. It is there just as an example.
 ```
+
+
 
 ## See also
 To serialize and unserialize MARC records, see [marc-record-serializers](https://github.com/natlibfi/marc-record-serializers)
