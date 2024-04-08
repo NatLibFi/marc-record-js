@@ -213,14 +213,7 @@ export class MarcRecord {
   }
 
   isCF() {
-    if (this.getTypeOfRecord() !== 'm') {
-      return false;
-    }
-    if (!this._bibliographicLevelIsBis()) {
-      return true;
-    }
-
-    return this._containsField006FormOfMaterialS();
+    return this.getTypeOfRecord() === 'm';
   }
 
   isCR() {
@@ -228,44 +221,19 @@ export class MarcRecord {
   }
 
   isMP() {
-    if (!['e', 'f'].includes(this.getTypeOfRecord())) {
-      return false;
-    }
-    if (!this._bibliographicLevelIsBis()) {
-      return true;
-    }
-    return this._containsField006FormOfMaterialS();
+    return ['e', 'f'].includes(this.getTypeOfRecord());
   }
 
   isMU() {
-    if (!['c', 'd', 'i', 'j'].includes(this.getTypeOfRecord())) {
-      return false;
-    }
-    if (!this._bibliographicLevelIsBis()) {
-      return true;
-    }
-    return this._containsField006FormOfMaterialS();
+    return ['c', 'd', 'i', 'j'].includes(this.getTypeOfRecord());
   }
 
   isMX() {
-    if (this.getTypeOfRecord() !== 'p') {
-      return false;
-    }
-    if (!this._bibliographicLevelIsBis(this)) {
-      return true;
-    }
-    return this._containsField006FormOfMaterialS();
+    return this.getTypeOfRecord() === 'p';
   }
 
   isVM() {
-    if (!['g', 'k', 'o', 'r'].includes(this.getTypeOfRecord())) {
-      return false;
-    }
-
-    if (!this._bibliographicLevelIsBis()) {
-      return true;
-    }
-    return this._containsField006FormOfMaterialS();
+    return ['g', 'k', 'o', 'r'].includes(this.getTypeOfRecord());
   }
 
   getTypeOfMaterial() {
@@ -295,11 +263,6 @@ export class MarcRecord {
 
   _bibliographicLevelIsBis() {
     return ['b', 'i', 's'].includes(this.getBibliograpicLevel());
-  }
-
-  _containsField006FormOfMaterialS() {
-    const fields006 = this.get('006');
-    return fields006.some(field => field.value[0] === 's');
   }
 
   equalsTo(record) {
