@@ -345,6 +345,6 @@ To serialize and unserialize MARC records, see [marc-record-serializers](https:/
 
 Copyright (c) 2014-2017 **Pasi Tuominen <pasi.tuominen@gmail.com>**
 
-Copyright (c) 2018-2023 **University Of Helsinki (The National Library Of Finland)**
+Copyright (c) 2018-2024 **University Of Helsinki (The National Library Of Finland)**
 
 This project's source code is licensed under the terms of **MIT License** or any later version.
