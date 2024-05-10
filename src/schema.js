@@ -11,14 +11,14 @@ const anythingPattern = /[\s\S]*/su;
 
 // ASCII - all printable/graphic: 32-126 (\x20 - \x7E)
 
-const controlFieldTagPattern = /^(?:[0A-Z][0A-Z][0-9A-Z])|(?:[0a-z][0a-z][0-9a-z])$/u;
+const controlFieldTagPattern = /^(?:[0A-Z][0A-Z][0-9A-Z]|[0a-z][0a-z][0-9a-z])$/u;
 const controlFieldValuePattern = /^[\x20-\x7E]*$/u;
 
 // https://www.loc.gov/marc/specifications/specrecstruc.html
 // data field. A variable field containing bibliographic or other data. Data fields are assigned tags beginning with characters other than two zeroes.
 // Data fields contain data in any MARC 21 character set unless a field-specific restriction applies.
 
-const dataFieldTagPattern = /^(?:(?:(?:[1-9A-Z][0-9A-Z])|(?:[0-9A-Z][1-9A-Z]))[0-9A-Z])|(?:(?:(?:[1-9a-z][0-9a-z])|(?:[0-9a-z][1-9a-z]))[0-9a-z])$/u;
+const dataFieldTagPattern = /^(?:[1-9A-Z][0-9A-Z][0-9A-Z]|[0-9A-Z][1-9A-Z][0-9A-Z]|[1-9a-z][0-9a-z][0-9a-z]|[0-9a-z][1-9a-z][0-9a-z])$/u;
 
 // https://www.loc.gov/marc/specifications/specrecstruc.html
 // data element identifier: A one-character code used to identify individual data elements within a variable field.
