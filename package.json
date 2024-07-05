@@ -28,7 +28,7 @@
 	"version": "8.1.4-alpha.1",
 	"main": "./dist/index.js",
 	"engines": {
-		"node": ">=14"
+		"node": ">=18"
 	},
 	"publishConfig": {
 		"access": "public"
