@@ -60,13 +60,13 @@
 		"@natlibfi/eslint-config-melinda-backend": "^3.0.5",
 		"@natlibfi/fixugen": "^2.0.9",
 		"@natlibfi/fixura": "^3.0.8",
-		"babel-plugin-istanbul": "^6.1.1",
+		"babel-plugin-istanbul": "^7.0.0",
 		"chai": "^4.5.0",
 		"cross-env": "^7.0.3",
 		"eslint": "^8.57.0",
 		"mocha": "^10.7.3",
 		"nodemon": "^3.1.4",
-		"nyc": "^15.1.0"
+		"nyc": "^17.0.0"
 	},
 	"eslintConfig": {
 		"extends": "@natlibfi/melinda-backend"
