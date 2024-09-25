@@ -3,24 +3,24 @@
   "fields":
   [
     {"tag": "SID", "ind1": " ", "ind2": " ", "subfields": [
-      {"code": "c", "value": "alli"},
-      {"code": "b", "value": "4"}
+      {"code": "c", "value": "4"},
+      {"code": "b", "value": "alli"}
     ]},
     {"tag": "SID", "ind1": " ", "ind2": " ", "subfields": [
-        {"code": "c", "value": "hanna"},
-        {"code": "b", "value": "30"}
+      {"code": "c", "value": "30"},
+      {"code": "b", "value": "hanna"}
     ]},
     {"tag": "SID", "ind1": " ", "ind2": " ", "subfields": [
-        {"code": "c", "value": "helka"},
-        {"code": "b", "value": "4"}
+        {"code": "c", "value": "4"},
+        {"code": "b", "value": "helka"}
     ]},
     {"tag": "SID", "ind1": " ", "ind2": " ", "subfields": [
-      {"code": "c", "value": "taist"},
-      {"code": "b", "value": "999999999"}
+      {"code": "c", "value": "999999999"},
+      {"code": "b", "value": "taist"}
     ]},
     {"tag": "SID", "ind1": " ", "ind2": " ", "subfields": [
-        {"code": "c", "value": "wilma"},
-        {"code": "b", "value": "666"}
+      {"code": "c", "value": "666"},
+      {"code": "b", "value": "wilma"}
     ]},
     {"tag": "LOW", "subfields": [{"code": "a", "value": "TEST"}]}
   ]

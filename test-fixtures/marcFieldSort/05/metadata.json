@@ -1,4 +1,4 @@
 {
-  "description": "Sort SIDs",
+  "description": "Sort SIDs baseon on alphabetical $b value ",
   "skip": false
 }

@@ -68,7 +68,7 @@ export function sortAlphabetically(fieldA, fieldB) {
   // These are Aleph specific rules. However, we think that they are ok for all Aleph users, and irrelevant for others.
   const tagToSortingSubfields = {
     'LOW': ['a'],
-    'SID': ['c']
+    'SID': ['b']
   };
 
   function scoreSubfieldsAlphabetically(setOfSubfields) {
