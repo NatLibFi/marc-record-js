@@ -4,6 +4,10 @@ import {fieldOrderComparator} from './marcFieldSort';
 import {clone, validateRecord, validateField} from './utils';
 import MarcRecordError from './error';
 export {default as MarcRecordError} from './error';
+import createDebugLogger from 'debug';
+const debug = createDebugLogger('@natlibfi/marc-record');
+//const debugData = debug.extend('data');
+const debugDev = debug.extend('dev');
 
 // Default setting for validationOptions:
 // These default validationOptions are (mostly) backwards compatible with marc-record-js < 7.3.0
@@ -66,14 +70,23 @@ export class MarcRecord {
       this._validationErrors = validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions});
       if (!this._validationOptions.noFailValidation) {
         // eslint-disable-next-line functional/immutable-data
-        delete this._Errors;
+        delete this._validationErrors;
         return;
       }
+      debugDev(`${JSON.stringify(this)}`);
       return;
     }
 
     this.leader = '';
     this.fields = [];
+  }
+
+  getValidationErrors() {
+    debugDev(`getting validationErrors: ${this._validationErrors} <-`);
+    if (!this._validationOptions.noFailValidation) {
+      return [];
+    }
+    return this._validationErrors || [];
   }
 
   get(query) {

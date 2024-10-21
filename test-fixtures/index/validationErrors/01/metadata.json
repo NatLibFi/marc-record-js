@@ -1,0 +1,14 @@
+{
+  "description": "Should return validationErrors",
+  "skip": false,
+  "only": false,
+  "input": {"leader": "02848ccm a22005894i 4500"},
+  "validationOptions":  {"fields": true, "noFailValidation": true},
+  "operations": [
+    { "name": "getValidationErrors"}
+  ],
+  "returns": [
+    "instance.fields does not meet minimum length of 1"
+  ],
+  "immutable": true
+}

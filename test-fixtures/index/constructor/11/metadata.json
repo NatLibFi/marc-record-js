@@ -1,7 +1,7 @@
 {
   "description": "Should create MarcRecord that has no fields, but return validationErrors (validationOptions {\"noFailValidation\": true, \"fields\": true} )",
   "skip": false,
-  "only": true,
+  "only": false,
   "noinput": true,
   "operations": [
     { "name": "MarcRecord", "args": {
