@@ -14,6 +14,7 @@
     "leader": false,
     "noAdditionalProperties": false,
     "noControlCharacters": false,
+    "noFailValidation": false,
     "subfields": true,
     "subfieldValues": true,
     "strict": false

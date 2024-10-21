@@ -1,5 +1,5 @@
 {
-  "description": "Should fail to create record without subfields values",
+  "description": "Should fail to create record that has a (data)field without subfields values",
   "skip": false,
   "noinput": true,
   "operations": [

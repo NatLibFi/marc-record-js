@@ -6,17 +6,24 @@
   "operations": [
     { "name": "MarcRecord", "args": {
         "leader": "02848ccm a22005894i 4500",
+        "fields": [ 
+          {"tag": "245", "ind1": " ", "ind2": " ", "subfields": []},
+          {"tag": "500", "ind1": " ", "ind2": " ", "subfields": []}
+        ],
         "validationOptions": {"noFailValidation": true, "fields": true}
       }
     }
   ],
   "returns": {
     "_validationErrors": [
-      "instance.fields does not meet minimum length of 1"
+      "instance.fields[0] is not any of [subschema 0],[subschema 1]",
+      "instance.fields[1] is not any of [subschema 0],[subschema 1]"
     ],
     "_validationOptions": {"fields": true, "noFailValidation": true},
     "leader": "02848ccm a22005894i 4500",
-    "fields": []
+    "fields": [
+      {"tag": "245", "ind1": " ", "ind2": " ", "subfields": []},
+      {"tag": "500", "ind1": " ", "ind2": " ", "subfields": []}]
   },
   "immutable": true
 }

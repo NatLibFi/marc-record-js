@@ -1,0 +1,19 @@
+{
+  "description": "Should create MarcRecord that has no fields (validationOptions {\"fields\": false} )",
+  "skip": false,
+  "only": false,
+  "noinput": true,
+  "operations": [
+    { "name": "MarcRecord", "args": {
+        "leader": "02848ccm a22005894i 4500",
+        "validationOptions": {"fields": false}
+      }
+    }
+  ],
+  "returns": {
+    "_validationOptions": {"fields": false},
+    "leader": "02848ccm a22005894i 4500",
+    "fields": []
+  },
+  "immutable": true
+}

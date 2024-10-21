@@ -9,6 +9,7 @@ export {default as MarcRecordError} from './error';
 // These default validationOptions are (mostly) backwards compatible with marc-record-js < 7.3.0
 //
 // strict: false                  // All validationOptions below are set to true
+// noFailValidation: false        // Do not error if validation fails, return validationResults instead
 //
 // fields: true,                  // Do not allow record without fields
 // subfields: true,               // Do not allow empty subfields
@@ -21,6 +22,7 @@ export {default as MarcRecordError} from './error';
 
 const validationOptionsDefaults = {
   strict: false,
+  noFailValidation: false,
   fields: true,
   subfields: true,
   subfieldValues: true,
@@ -58,9 +60,15 @@ export class MarcRecord {
           field.ind2 = field.ind2 || ' ';
         });
 
-      validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions});
       this.leader = recordClone.leader;
       this.fields = recordClone.fields;
+
+      this._validationErrors = validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions});
+      if (!this._validationOptions.noFailValidation) {
+        // eslint-disable-next-line functional/immutable-data
+        delete this._Errors;
+        return;
+      }
       return;
     }
 
