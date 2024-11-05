@@ -47,6 +47,7 @@ validationOption `noFailValidation: false` (default) throws an error when the re
 validationOption `noFailValidation: true` saves errors in validationErrors instead of throwing an error when the record fails validation checks
 
 ```js
+// return validationErrors
 record.getValidationErrors();
 ```
 
@@ -69,7 +70,7 @@ MarcRecord.setValidationOptions(
     noControlCharacters: false,    // Do not allow ASCII control characters in field/subfield values
     noAdditionalProperties: false, // Do not allow additional properties in fields
 
-    strict: false                  // If true, set all validationOptions to true
+    strict: false,                 // If true, set all validationOptions to true
     noFailValidation: false        // If true, do not error if validation fails, save errors in validationErrors instead
   }
 );
