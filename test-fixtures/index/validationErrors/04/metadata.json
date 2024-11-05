@@ -1,0 +1,17 @@
+{
+  "description": "Should return empty array if validationErrors is undefined",
+  "skip": false,
+  "only": false,
+  "input": {
+  "leader": "02848ccm a22005894i 4500",
+  "fields": [ 
+    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}]},
+    {"tag": "500", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "A"}]}
+  ]},
+  "validationOptions": {"noFailValidation": false, "subfields": true},
+  "operations": [
+    { "name": "getValidationErrors"}
+  ],
+  "returns": [],
+  "immutable": true
+}

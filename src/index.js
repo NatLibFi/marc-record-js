@@ -4,11 +4,16 @@ import {fieldOrderComparator} from './marcFieldSort';
 import {clone, validateRecord, validateField} from './utils';
 import MarcRecordError from './error';
 export {default as MarcRecordError} from './error';
+import createDebugLogger from 'debug';
+const debug = createDebugLogger('@natlibfi/marc-record');
+//const debugData = debug.extend('data');
+const debugDev = debug.extend('dev');
 
 // Default setting for validationOptions:
 // These default validationOptions are (mostly) backwards compatible with marc-record-js < 7.3.0
 //
 // strict: false                  // All validationOptions below are set to true
+// noFailValidation: false        // Do not error if validation fails, return validationResults instead
 //
 // fields: true,                  // Do not allow record without fields
 // subfields: true,               // Do not allow empty subfields
@@ -21,6 +26,7 @@ export {default as MarcRecordError} from './error';
 
 const validationOptionsDefaults = {
   strict: false,
+  noFailValidation: false,
   fields: true,
   subfields: true,
   subfieldValues: true,
@@ -58,14 +64,29 @@ export class MarcRecord {
           field.ind2 = field.ind2 || ' ';
         });
 
-      validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions});
       this.leader = recordClone.leader;
       this.fields = recordClone.fields;
+
+      this._validationErrors = validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions});
+      if (!this._validationOptions.noFailValidation) {
+        // eslint-disable-next-line functional/immutable-data
+        delete this._validationErrors;
+        return;
+      }
+      debugDev(`${JSON.stringify(this)}`);
       return;
     }
 
     this.leader = '';
     this.fields = [];
+  }
+
+  getValidationErrors() {
+    debugDev(`getting validationErrors: ${this._validationErrors} <-`);
+    if (!this._validationOptions.noFailValidation) {
+      return [];
+    }
+    return this._validationErrors || [];
   }
 
   get(query) {
