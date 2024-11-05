@@ -41,6 +41,15 @@ When constructing or modifying the record, validation checks are run. You may ne
 validationOption `strict: true` sets all the other validationOptions as true regardless of if they are defined
 validationOption `strict: false` sets other validationOptions as they are defined or as default
 
+**noFailValidation**
+
+validationOption `noFailValidation: false` (default) throws an error when the record fails validation checks
+validationOption `noFailValidation: true` saves errors in validationErrors instead of throwing an error when the record fails validation checks
+
+```js
+record.getValidationErrors();
+```
+
 **Global validation options:**
 
 ```js
@@ -61,6 +70,7 @@ MarcRecord.setValidationOptions(
     noAdditionalProperties: false, // Do not allow additional properties in fields
 
     strict: false                  // If true, set all validationOptions to true
+    noFailValidation: false        // If true, do not error if validation fails, save errors in validationErrors instead
   }
 );
 ```
@@ -78,7 +88,6 @@ You can set all global validation options to true with validationOption strict: 
 // Set all validationOptions to true with strict: true
 MarcRecord.setValidationOptions({strict: true});
 ```
-
 
 **Record specific validation options** can be given when constructing:
 
