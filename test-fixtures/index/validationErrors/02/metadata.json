@@ -1,0 +1,17 @@
+{
+  "description": "Should return several validationErrors",
+  "skip": false,
+  "only": false,
+  "input": {
+  "leader": "02848ccm a22005894i 4500",
+  "fields": [ 
+    {"tag": "245", "ind1": " ", "ind2": " ", "subfields": []},
+    {"tag": "500", "ind1": " ", "ind2": " ", "subfields": []}
+  ]},
+  "validationOptions": {"noFailValidation": true, "subfields": false},
+  "operations": [
+    { "name": "getValidationErrors"}
+  ],
+  "returns": [],
+  "immutable": true
+}

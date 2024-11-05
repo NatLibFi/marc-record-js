@@ -13,23 +13,33 @@ const debugData = debug.extend('data');
 
 
 export function validateRecord(record, options = {}) {
+  const {noFailValidation} = options;
   const validationResults = validate(record, createSchema(options), {nestedErrors: false});
-  debugData(JSON.stringify(record));
+  //debugData(JSON.stringify(record));
   //debugDev(inspect(validationResults), {depth: 3});
   //debugDev(inspect(validationResults.errors));
+  debugData(validationResults.errors.toString());
+  if (noFailValidation) {
+    return validationResults.errors.map(valError => valError.toString());
+  }
   if (validationResults.errors.length > 0) { // eslint-disable-line functional/no-conditional-statements
-    debugData(validationResults.toString());
     throw new MarcRecordError('Record is invalid', validationResults);
   }
+  return [];
 }
 
 export function validateField(field, options = {}) {
+  const {noFailValidation} = options;
   const validationResults = validate(field, createSchema(options).properties.fields.items, {nestedErrors: false});
-  debugData(JSON.stringify(field));
+  //debugData(JSON.stringify(field));
   //debugDev(inspect(validationResults));
   //debugDev(inspect(validationResults.errors));
+  debugData(validationResults.errors.toString());
+  if (noFailValidation) {
+    return validationResults.errors.map(valError => valError.toString());
+  }
   if (validationResults.errors.length > 0) { // eslint-disable-line functional/no-conditional-statements
-    debugData(validationResults.toString());
     throw new MarcRecordError(`Field is invalid: ${JSON.stringify(field)}`, validationResults);
   }
+  return [];
 }

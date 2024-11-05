@@ -317,6 +317,11 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      if (name === 'getValidationErrors') {
+        return record.getValidationErrors();
+      }
+
+      //-------------------------------------------------------------------------
       if (name === 'MarcRecord') {
         const {leader, fields, validationOptions} = args ?? {};
         const object = args && {leader, fields};
