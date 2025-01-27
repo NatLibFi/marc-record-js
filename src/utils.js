@@ -1,14 +1,14 @@
 import {validate} from 'jsonschema';
 import createSchema from './schema';
 import MarcRecordError from './error';
-import createDebugLogger from 'debug';
+//import createDebugLogger from 'debug';
 //import {inspect} from 'util';
 
 export function clone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
-const debug = createDebugLogger('@natlibfi/marc-record:utils');
-const debugData = debug.extend('data');
+//const debug = createDebugLogger('@natlibfi/marc-record:utils');
+//const debugData = debug.extend('data');
 //const debugDev = debug.extend('dev');
 
 
@@ -18,7 +18,7 @@ export function validateRecord(record, options = {}) {
   //debugData(JSON.stringify(record));
   //debugDev(inspect(validationResults), {depth: 3});
   //debugDev(inspect(validationResults.errors));
-  debugData(validationResults.errors.toString());
+  //debugData(validationResults.errors.toString());
   if (noFailValidation) {
     return validationResults.errors.map(valError => valError.toString());
   }
@@ -34,7 +34,7 @@ export function validateField(field, options = {}) {
   //debugData(JSON.stringify(field));
   //debugDev(inspect(validationResults));
   //debugDev(inspect(validationResults.errors));
-  debugData(validationResults.errors.toString());
+  //debugData(validationResults.errors.toString());
   if (noFailValidation) {
     return validationResults.errors.map(valError => valError.toString());
   }
