@@ -25,7 +25,7 @@
 		"url": "git@github.com:natlibfi/marc-record-js.git"
 	},
 	"license": "MIT",
-	"version": "9.1.4",
+	"version": "9.1.5-alpha.1",
 	"main": "./dist/index.js",
 	"engines": {
 		"node": ">=18"
