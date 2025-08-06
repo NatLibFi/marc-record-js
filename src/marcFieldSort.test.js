@@ -1,8 +1,8 @@
 import generateTests from '@natlibfi/fixugen';
 import {READERS} from '@natlibfi/fixura';
-import {expect} from 'chai';
+import assert from 'node:assert';
 //import createDebugLogger from 'debug';
-import {MarcRecord} from '.';
+import {MarcRecord} from './index.js';
 
 //const debug = createDebugLogger('@natlibfi:marc-record:marcFieldSort:test);
 //const debugData = debug.extend('data');
@@ -10,7 +10,7 @@ import {MarcRecord} from '.';
 
 generateTests({
   callback,
-  path: [__dirname, '..', 'test-fixtures', 'marcFieldSort'],
+  path: [import.meta.dirname, '..', 'test-fixtures', 'marcFieldSort'],
   useMetadataFile: true,
   recurse: false,
   fixura: {
@@ -26,5 +26,6 @@ function callback({getFixture, disabled}) {
 
   const rec = new MarcRecord(getFixture('input.json'));
   const sorted = rec.sortFields();
-  expect(sorted).to.eql(new MarcRecord(getFixture('result.json')));
+  const expectedResult = new MarcRecord(getFixture('result.json'));
+  assert.deepStrictEqual(sorted, expectedResult);
 }

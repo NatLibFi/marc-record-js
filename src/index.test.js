@@ -1,13 +1,14 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-statements */
-/* eslint-disable complexity */
+
+
+
 /* eslint-disable no-unused-vars */
 
 import generateTests from '@natlibfi/fixugen';
 import {READERS} from '@natlibfi/fixura';
-import {expect, assert} from 'chai';
+import {describe, it} from 'node:test';
+import assert from 'node:assert';
 import createDebugLogger from 'debug';
-import {MarcRecord} from '.';
+import {MarcRecord} from './index.js';
 
 const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
 
@@ -106,12 +107,6 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
  ******************************************************************************/
 
 describe('index', () => {
-
-  beforeEach(() => {
-    // Reset global validation options before each case
-    MarcRecord.setValidationOptions({});
-  });
-
   //***************************************************************************
   //
   // Generate tests which use operations table in metadata to perform operations
@@ -120,17 +115,23 @@ describe('index', () => {
   //***************************************************************************
 
   generateTests({
-    callback: doTest,
-    path: [__dirname, '..', 'test-fixtures', 'index'],
+    callback,
+    path: [import.meta.dirname, '..', 'test-fixtures', 'index'],
     useMetadataFile: true,
     recurse: true,
     fixura: {
       reader: READERS.JSON,
       failWhenNotFound: true
+    },
+    hooks: {
+      beforeEach: () => {
+        // Reset global validation options before each case
+        MarcRecord.setValidationOptions({});
+      }
     }
   });
 
-  function doTest(metadata) {
+  function callback(metadata) {
 
     // Get input & expected output
     const {getFixture} = metadata;
@@ -152,21 +153,21 @@ describe('index', () => {
     const {operations, returns, throws} = metadata;
 
     checkResults(operations, throws, returns);
-    expect(record).to.eql(outputRecord);
+    assert.deepStrictEqual(record, outputRecord);
 
     return;
 
     //---------------------------------------------------------------------------
-
+    // MARK: Check results
     function checkResults(operations, throws, returns) {
       //debug(`Returns: ${returns} ${result}`);
       if (throws) {
         try {
           return runOps();
-        } catch (e) {
-          expect(e).to.have.property('message');
-          expect(e).to.have.property('validationResults');
-          expect(e.message).to.match(new RegExp(`^${throws}`, 'u'));
+        } catch (error) {
+          assert.equal(Object.hasOwn(error, 'message'), true);
+          assert.equal(Object.hasOwn(error, 'validationResults'), true);
+          assert.match(error.message, new RegExp(`^${throws}`, 'u'));
         }
         return;
       }
@@ -174,7 +175,7 @@ describe('index', () => {
       if (returns === undefined) {
         return;
       }
-      expect(result).to.eql(returns);
+      assert.deepEqual(result, returns);
 
       function runOps() {
         return operations.reduce((_, op) => runOperation(op), record);
@@ -182,7 +183,7 @@ describe('index', () => {
     }
 
     //---------------------------------------------------------------------------
-
+    // MARK: Get Record
     function getRecord(fromMeta, filename) {
       const data = fromMeta || getFixture(filename);
 
@@ -194,7 +195,8 @@ describe('index', () => {
     }
 
     //---------------------------------------------------------------------------
-
+    // Operation shuold return same object for chaining
+    // MARK: Run Operation
     function runOperation(op) {
       const {name, args} = op;
 
@@ -205,29 +207,32 @@ describe('index', () => {
 
       //-------------------------------------------------------------------------
       if (name === 'insertField') {
-        expect(record.insertField(args) === record);
+        assert.equal(record.insertField(args), record);
+
         return record;
       }
 
       //-------------------------------------------------------------------------
       if (name === 'insertFields') {
-        expect(record.insertFields(args) === record);
+        assert.equal(record.insertFields(args), record);
+
         return record;
       }
 
       //-------------------------------------------------------------------------
       if (name === 'appendField') {
-        expect(record.appendField(args) === record);
+        assert.equal(record.appendField(args), record);
         return record;
       }
 
       //-------------------------------------------------------------------------
       if (name === 'appendFields') {
-        expect(record.appendFields(args) === record);
+        assert.equal(record.appendFields(args), record);
         return record;
       }
 
       //-------------------------------------------------------------------------
+      // MARK: Remove field
       if (name === 'removeField') {
         const what = (function (args) {
           const {string, field, regexp, index} = args;
@@ -247,11 +252,12 @@ describe('index', () => {
           throw new Error(`No arg for ${name}(): ${JSON.stringify(args, null, 2)}`);
         }(args));
 
-        expect(record.removeField(what) === record);
+        assert.equal(record.removeField(what), record);
         return record;
       }
 
       //-------------------------------------------------------------------------
+      // MARK: Remove fields
       if (name === 'removeFields') {
         const what = (function (args) {
           const {getRegExp} = args;
@@ -263,19 +269,21 @@ describe('index', () => {
           throw new Error(`No arg for ${name}(): ${JSON.stringify(args, null, 2)}`);
         }(args));
 
-        expect(record.removeFields(what) === record);
+        assert.equal(record.removeFields(what), record);
         return record;
       }
 
       //-------------------------------------------------------------------------
+      // MARK: Remove subfield
       if (name === 'removeSubfield') {
         const field = record.fields[args.field];
         const subfield = field.subfields[args.subfield];
-        expect(record.removeSubfield(subfield, field) === record);
+        assert.equal(record.removeSubfield(subfield, field), record);
         return record;
       }
 
       //-------------------------------------------------------------------------
+      // MARK: Get & pop
       if (['get', 'pop'].includes(name)) {
         const what = (function (args) {
           const {string, regexp} = args;
@@ -291,7 +299,7 @@ describe('index', () => {
         }(args));
 
         if (name === 'pop') {
-          return record.pop(what); // eslint-disable-line functional/immutable-data
+          return record.pop(what);
         }
         return record.get(what);
       }
@@ -322,28 +330,35 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      // MARK: Marc record
       if (name === 'MarcRecord') {
         const {leader, fields, validationOptions} = args ?? {};
         const object = args && {leader, fields};
         //debug(`Object: ${JSON.stringify(object, null, 2)}`);
 
         const created = new MarcRecord(object, validationOptions);
-        expect(created).to.be.an('object');
-        expect(object === undefined || created.fields !== object.fields);
+        assert.equal(typeof created, 'object');
+        assert.ok(object === undefined || created.fields !== object.fields);
         //debug(`Created: ${JSON.stringify(created, null, 2)}`);
         return created;
       }
 
       //-------------------------------------------------------------------------
+      // MARK: Clone
       if (name === 'clone') {
-        const {validationOptions} = args ?? {};
+        const {validationOptions = {}} = args ?? {};
         const cloned = MarcRecord.clone(record, validationOptions);
 
         // Expect cloned record to be deeply cloned, and still being identical
-        expect(record._validationOptions !== cloned._validationOptions);
-        expect(record.fields !== cloned.fields);
-        expect(record.leader !== cloned.leader);
-        expect(record.equalsTo(cloned) === true);
+        assert.equal(Object.is(record, cloned), false);
+        if (args === undefined || args.validationOptions === undefined) {
+          assert.deepStrictEqual(record, cloned);
+          return cloned;
+        }
+
+        assert.deepStrictEqual(validationOptions, cloned._validationOptions);
+        assert.equal(record.leader, cloned.leader);
+        assert.deepStrictEqual(record.fields, cloned.fields);
         return cloned;
       }
 
@@ -358,6 +373,7 @@ describe('index', () => {
       }
 
       //-------------------------------------------------------------------------
+      // MARK: Equals to
       if (name === 'equalsTo') {
         const what = (function (args) {
           const {self, clone, string, object} = args;
@@ -383,20 +399,22 @@ describe('index', () => {
         //debug(`What: ${JSON.stringify(what, null, 2)}`);
 
         const result = record.equalsTo(what);
-        expect(MarcRecord.isEqual(record, what) === result);
+        assert.equal(MarcRecord.isEqual(record, what), result);
         return result;
       }
 
       //-------------------------------------------------------------------------
+      // MARK: Get fields
       if (name === 'getFields') {
         const {tag, value} = args;
 
         const fields = record.getFields(tag, value);
-        expect(record.containsFieldWithValue(tag, value)).eql(fields.length > 0);
+        assert.equal(record.containsFieldWithValue(tag, value), fields.length > 0);
         return fields;
       }
 
       //-------------------------------------------------------------------------
+      // MARK: Is type of material
       if (name === 'isTypeOfMaterial') {
         const {target} = args;
 

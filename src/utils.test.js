@@ -1,19 +1,25 @@
 /* eslint-disable max-lines */
-import {expect} from 'chai';
-import * as Utils from './utils';
+import {describe, it} from 'node:test';
+import assert from 'node:assert';
+import * as Utils from './utils.js';
 
 describe('utils', () => {
+  // MARK: Clone
   describe('#clone', () => {
     it('Should clone an object', () => {
       const a = {foo: 'bar'};
       const b = Utils.clone(a);
 
-      expect(JSON.stringify(a)).to.equal(JSON.stringify(b));
-      expect(a).to.be.eql(b);
-      expect(a).to.not.equal(b);
+      //expect(JSON.stringify(a)).to.equal(JSON.stringify(b));
+      assert.deepStrictEqual(JSON.stringify(a), JSON.stringify(b));
+      //expect(a).to.be.eql(b);
+      assert.deepStrictEqual(a, b);
+      //expect(a).to.not.equal(b);
+      assert.equal(Object.is(a, b), false);
     });
   });
 
+  // MARK: Validate Record
   describe('#validateRecord', () => {
     it('Should consider the record valid', () => {
       const record = {
@@ -21,7 +27,8 @@ describe('utils', () => {
         fields: [{tag: 'FOO', value: 'bar'}]
       };
 
-      expect(Utils.validateRecord(record)).to.not.throw; // eslint-disable-line no-unused-expressions
+      //expect(Utils.validateRecord(record)).to.not.throw;
+      assert.ok(Utils.validateRecord(record), 'Should not fail!');
     });
 
     it('Should consider the record valid, strict: true', () => {
@@ -30,7 +37,8 @@ describe('utils', () => {
         fields: [{tag: 'FOO', value: 'bar'}]
       };
 
-      expect(Utils.validateRecord(record, {strict: true})).to.not.throw; // eslint-disable-line no-unused-expressions
+      //expect(Utils.validateRecord(record, {strict: true})).to.not.throw;
+      assert.ok(Utils.validateRecord(record, {strict: true}), 'Should not fail!');
     });
 
 
@@ -42,46 +50,46 @@ describe('utils', () => {
       try {
         Utils.validateRecord(record);
       } catch (err) {
-        expect(err.message).to.match(/^Record is invalid/u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Record is invalid/u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
-      }
-
-      throw new Error('Should throw');
+      } throw new Error('Should throw');
     });
 
     it('Should consider the record invalid (control character in subfield value, noControlCharacters: true)', () => {
-      const record = {'leader': '12345cam a22002417i 4500',
+      const record = {
+        'leader': '12345cam a22002417i 4500',
         'fields': [
           {'tag': '001', 'value': '000123456'},
           {'tag': '100', 'ind1': '1', 'ind2': ' ', 'subfields': [{'code': 'a', 'value': '\tSukunimi, Etunimi'}]},
           {'tag': '245', 'ind1': '1', 'ind2': ' ', 'subfields': [{'code': 'a', 'value': 'Nimeke.'}]}
-        ]};
+        ]
+      };
 
       try {
         Utils.validateRecord(record, {noControlCharacters: true});
       } catch (err) {
-        expect(err.message).to.match(/^Record is invalid/u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Record is invalid/u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
   });
 
+  // MARK: Validate Fields
   describe('#validateField', () => {
     it('Should consider the field valid (control field: tag and value)', () => {
       const field = {tag: 'FOO', value: 'BAR'};
 
-      expect(Utils.validateField(field)).to.not.throw; // eslint-disable-line no-unused-expressions
+      assert.ok(Utils.validateField(field), 'Should not fail!');
     });
 
     it('Should consider the field valid (data field: tag, indicators and subfields)', () => {
       const field = {tag: 'FOO', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': '39'}, {'code': 'c', 'value': '20150121'}]};
 
-      expect(Utils.validateField(field)).to.not.throw; // eslint-disable-line no-unused-expressions
+      assert.ok(Utils.validateField(field), 'Should not fail!');
     });
 
     it('Should consider the field invalid (just value)', () => {
@@ -90,11 +98,10 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid:/u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Field is invalid: /u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
@@ -104,11 +111,10 @@ describe('utils', () => {
       try {
         Utils.validateField(field, {controlFieldValues: true});
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid: \{"tag":"FOO"\}/u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Field is invalid: \{"tag":"FOO"\}/u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
@@ -118,11 +124,10 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid:/u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Field is invalid: /u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
@@ -132,11 +137,10 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid:/u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Field is invalid: /u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
@@ -150,11 +154,10 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid:/u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Field is invalid: /u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
@@ -164,11 +167,10 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid: /u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Field is invalid: /u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
@@ -178,11 +180,10 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid: /u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Field is invalid: /u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
@@ -193,11 +194,10 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid: /u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Field is invalid: /u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
@@ -207,14 +207,14 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        expect(err.message).to.match(/^Field is invalid: /u);
-        expect(err).to.have.property('validationResults');
+        assert.match(err.message, /^Field is invalid: /u);
+        assert.equal(Object.hasOwn(err, 'validationResults'), true);
         return;
       }
-
       throw new Error('Should throw');
     });
 
+    // MARK: Controlfields/datafields
     describe('controlfields/datafields', () => {
 
       //  https://www.loc.gov/marc/specifications/specrecstruc.html
@@ -228,19 +228,17 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid:/u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
       it('Should consider the field valid (numeric controlfield tag not beginning with 00), characters: false', () => {
         const field = {'tag': '500', 'value': '123456'};
 
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {characters: false})).not.to.throw;
+        assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
 
 
@@ -250,18 +248,17 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid:/u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
       it('Should consider the field valid (controlfield with non-ASCII content), characters: false', () => {
         const field = {'tag': '003', 'value': 'ÅÖÖ'};
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+        assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
 
 
@@ -275,21 +272,21 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid:/u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
       it('Should consider the field valid (datafield tag beginning with 00), characters: false', () => {
         const field = {'tag': '004', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+        assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
     });
 
+    // MARK: Tag
     describe('tag', () => {
 
       // https://www.loc.gov/marc/specifications/specrecstruc.html
@@ -302,11 +299,10 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
@@ -316,11 +312,10 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
@@ -330,11 +325,10 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
@@ -344,18 +338,17 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
       it('Should consider the field valid (tag with non-alphanumeric character), characters: false', () => {
         const field = {'tag': '#44', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+        assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
 
       it('Should consider the field invalid (tag with mixed case characters), characters: true', () => {
@@ -364,19 +357,18 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
 
       it('Should consider the field valid (tag with mixed case characters), characters: false', () => {
         const field = {'tag': 'AaA', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+        assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
 
 
@@ -386,24 +378,25 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
       it('Should consider the field valid (tag with non-ASCII characters), characters: false', () => {
         const field = {'tag': 'ÄÄÄ', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+        assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
 
     });
 
+    // MARK: Subfields
     describe('subfields', () => {
 
+      // MARK: Subfield Codes
       describe('subfieldCodes', () => {
 
         // https://www.loc.gov/marc/specifications/specrecstruc.html
@@ -421,11 +414,10 @@ describe('utils', () => {
           try {
             Utils.validateField(field);
           } catch (err) {
-            expect(err.message).to.match(/^Field is invalid: /u);
-            expect(err).to.have.property('validationResults');
+            assert.match(err.message, /^Field is invalid: /u);
+            assert.equal(Object.hasOwn(err, 'validationResults'), true);
             return;
           }
-
           throw new Error('Should throw');
         });
 
@@ -435,18 +427,17 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {characters: true});
           } catch (err) {
-            expect(err.message).to.match(/^Field is invalid: /u);
-            expect(err).to.have.property('validationResults');
+            assert.match(err.message, /^Field is invalid: /u);
+            assert.equal(Object.hasOwn(err, 'validationResults'), true);
             return;
           }
-
           throw new Error('Should throw');
         });
 
         it('Should consider the field valid (subfield with empty code), characters: false', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': ' ', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
-          // eslint-disable-next-line no-unused-expressions
-          expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+          assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
         });
 
         it('Should consider the field invalid (subfield with two-character code)', () => {
@@ -455,11 +446,10 @@ describe('utils', () => {
           try {
             Utils.validateField(field);
           } catch (err) {
-            expect(err.message).to.match(/^Field is invalid: /u);
-            expect(err).to.have.property('validationResults');
+            assert.match(err.message, /^Field is invalid: /u);
+            assert.equal(Object.hasOwn(err, 'validationResults'), true);
             return;
           }
-
           throw new Error('Should throw');
         });
 
@@ -469,18 +459,17 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {characters: true});
           } catch (err) {
-            expect(err.message).to.match(/^Field is invalid: /u);
-            expect(err).to.have.property('validationResults');
+            assert.match(err.message, /^Field is invalid: /u);
+            assert.equal(Object.hasOwn(err, 'validationResults'), true);
             return;
           }
-
           throw new Error('Should throw');
         });
 
         it('Should consider the field valid (subfield with uppercase code), characters: false', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'A', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
-          // eslint-disable-next-line no-unused-expressions
-          expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+          assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
         });
 
         it('Should consider the field invalid (subfield with non-ASCII code), characters: true', () => {
@@ -489,22 +478,22 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {characters: true});
           } catch (err) {
-            expect(err.message).to.match(/^Field is invalid: /u);
-            expect(err).to.have.property('validationResults');
+            assert.match(err.message, /^Field is invalid: /u);
+            assert.equal(Object.hasOwn(err, 'validationResults'), true);
             return;
           }
-
           throw new Error('Should throw');
         });
 
         it('Should consider the field valid (subfield with non-ASCII code), characters: false', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'Ä', 'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
-          // eslint-disable-next-line no-unused-expressions
-          expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+          assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
         });
 
       });
 
+      // MARK: Subfield Values
       describe('subfieldValues', () => {
 
         it('Should consider the field invalid (subfield with empty value), subieldValues: true', () => {
@@ -513,20 +502,17 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {subfieldValues: true});
           } catch (err) {
-            expect(err.message).to.match(/^Field is invalid: /u);
-            expect(err).to.have.property('validationResults');
+            assert.match(err.message, /^Field is invalid: /u);
+            assert.equal(Object.hasOwn(err, 'validationResults'), true);
             return;
           }
-
           throw new Error('Should throw');
         });
 
         it('Should consider the field valid (subfield with empty value), subfieldValues: false', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': ''}, {'code': 'c', 'value': '20150121'}]};
 
-          // eslint-disable-next-line no-unused-expressions
-          expect(Utils.validateField(field, {subfieldValues: false})).not.to.throw;
-
+          assert.ok(Utils.validateField(field, {subfieldValues: false}), 'Should not fail!');
         });
 
         it('Should consider the field invalid (subfield with no value), subfieldValues: true', () => {
@@ -535,20 +521,17 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {subfieldValues: true});
           } catch (err) {
-            expect(err.message).to.match(/^Field is invalid: /u);
-            expect(err).to.have.property('validationResults');
+            assert.match(err.message, /^Field is invalid: /u);
+            assert.equal(Object.hasOwn(err, 'validationResults'), true);
             return;
           }
-
           throw new Error('Should throw');
         });
 
         it('Should consider the field valid (subfield with no value), subfieldValues: false', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b'}, {'code': 'c', 'value': '20150121'}]};
 
-          // eslint-disable-next-line no-unused-expressions
-          expect(Utils.validateField(field, {subfieldValues: false})).not.to.throw;
-
+          assert.ok(Utils.validateField(field, {subfieldValues: false}), 'Should not fail!');
         });
 
         it('Should consider the field invalid (subfield with value containing control characters), noControlCharacters: true', () => {
@@ -557,24 +540,23 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {noControlCharacters: true});
           } catch (err) {
-            expect(err.message).to.match(/^Field is invalid: /u);
-            expect(err).to.have.property('validationResults');
+            assert.match(err.message, /^Field is invalid: /u);
+            assert.equal(Object.hasOwn(err, 'validationResults'), true);
             return;
           }
-
           throw new Error('Should throw');
         });
 
         it('Should consider the field valid (subfield with value containing control characters), noControlCharacters: false', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': `2015\n0121\t124`}]};
-          // eslint-disable-next-line no-unused-expressions
-          expect(Utils.validateField(field, {subfieldValues: true})).not.to.throw;
 
+          assert.ok(Utils.validateField(field, {subfieldValues: true}), 'Should not fail!');
         });
 
       });
     });
 
+    // MARK: Indicators
     describe('indicators', () => {
       it('Should consider the field invalid (empty indicator)', () => {
         const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': '', 'subfields': [{'code': 'c', 'value': '20150121'}]};
@@ -582,11 +564,10 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
@@ -596,11 +577,10 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
@@ -613,18 +593,17 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
       it('Should consider the field valid (uppercase indicator), characters: false', () => {
         const field = {'tag': 'CAT', 'ind1': 'A', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+        assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
 
 
@@ -634,19 +613,18 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
       it('Should consider the field invalid (non alpha-numeric/blank indicator), characters: false', () => {
         const field = {'tag': 'CAT', 'ind1': '#', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
 
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+        assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
 
       it('Should consider the field invalid (non-ASCII indicator), characters: true', () => {
@@ -655,23 +633,22 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
       it('Should consider the field invalid (non-ASCII indicator), characters: false', () => {
         const field = {'tag': 'CAT', 'ind1': 'Ä', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {characters: false})).not.to.throw;
+
+        assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
 
     });
 
-
+    // MARK: Additional Properties
     describe('additionalProperties', () => {
       it('Should consider the field with additional properties invalid, noAdditionalProperties: true', () => {
         const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': `20150121124`}], 'foo': 'bar'};
@@ -679,25 +656,21 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {noAdditionalProperties: true});
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
       it('Should consider the field with additional properties valid, noAdditionalProperties: false', () => {
         const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': `20150121124`}], 'foo': 'bar'};
 
-        // eslint-disable-next-line no-unused-expressions
-        expect(Utils.validateField(field, {noAdditionalProperties: false})).not.to.throw;
-
+        assert.ok(Utils.validateField(field, {noAdditionalProperties: false}), 'Should not fail!');
       });
-
     });
 
-
+    // MARK: Field Length
     describe('fieldLength', () => {
 
       it('Should consider datafield with too long subfield value (>9999 chars) invalid', () => {
@@ -706,11 +679,10 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
           return;
         }
-
         throw new Error('Should throw');
       });
 
@@ -720,13 +692,12 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          expect(err.message).to.match(/^Field is invalid: /u);
-          expect(err).to.have.property('validationResults');
-          // eslint-disable-next-line no-console
+          assert.match(err.message, /^Field is invalid: /u);
+          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+
           //console.log(err.validationResults);
           return;
         }
-
         throw new Error('Should throw');
       });
     });
