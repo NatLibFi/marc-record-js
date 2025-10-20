@@ -1,6 +1,6 @@
 import {validate} from 'jsonschema';
-import createSchema from './schema';
-import MarcRecordError from './error';
+import createSchema from './schema.js';
+import MarcRecordError from './error.js';
 //import createDebugLogger from 'debug';
 //import {inspect} from 'util';
 
@@ -22,7 +22,7 @@ export function validateRecord(record, options = {}) {
   if (noFailValidation) {
     return validationResults.errors.map(valError => valError.toString());
   }
-  if (validationResults.errors.length > 0) { // eslint-disable-line functional/no-conditional-statements
+  if (validationResults.errors.length > 0) {
     throw new MarcRecordError('Record is invalid', validationResults);
   }
   return [];
@@ -38,7 +38,7 @@ export function validateField(field, options = {}) {
   if (noFailValidation) {
     return validationResults.errors.map(valError => valError.toString());
   }
-  if (validationResults.errors.length > 0) { // eslint-disable-line functional/no-conditional-statements
+  if (validationResults.errors.length > 0) {
     throw new MarcRecordError(`Field is invalid: ${JSON.stringify(field)}`, validationResults);
   }
   return [];

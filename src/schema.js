@@ -32,7 +32,6 @@ const dataFieldTagPattern = /^(?:[1-9A-Z][0-9A-Z][0-9A-Z]|[0-9A-Z][1-9A-Z][0-9A-
 // ASCII - blank/space: 32 (\x20)
 // ASCII - uppercase alphabetic: 65-90 (\x41 - \x5A)
 
-// eslint-disable-next-line no-control-regex
 const subfieldCodePattern = /^[\x21-\x40\x5B-\x7E]$/u;
 
 // https://www.loc.gov/marc/specifications/specrecstruc.html:
@@ -42,7 +41,7 @@ const indicatorPattern = /^[0-9a-z ]$/u;
 
 // Option to not allow ASCII control characters in subfield values
 
-// eslint-disable-next-line no-control-regex
+
 const dataFieldValuePatternNoControlCharacters = /^[^\x00-\x1F\x7F]*$/u;
 // Match anything - no restrictions
 const dataFieldValuePattern = /.*/u;
