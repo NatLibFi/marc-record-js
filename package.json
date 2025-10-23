@@ -16,13 +16,12 @@
 		"bibliography",
 		"bibliographic"
 	],
-	"homepage": "https://github.com/natlibfi/marc-record-js",
+	"homepage": "https://www.npmjs.com/package/@natlibfi/marc-record",
 	"bugs": {
 		"url": "https://github.com/natlibfi/marc-record-js/issues"
 	},
 	"repository": {
-		"type": "git",
-		"url": "git@github.com:natlibfi/marc-record-js.git"
+		"url": "https://github.com/NatLibFi/marc-record-js"
 	},
 	"license": "MIT",
 	"version": "10.0.0-alpha.1",
@@ -50,8 +49,8 @@
 		"jsonschema": "^1.5.0"
 	},
 	"devDependencies": {
-		"@natlibfi/fixugen": "^3.0.0-alpha.5",
-		"@natlibfi/fixura": "^4.0.0-alpha.12",
+		"@natlibfi/fixugen": "next",
+		"@natlibfi/fixura": "next",
 		"cross-env": "^7.0.3",
 		"esbuild": "^0.25.8",
 		"eslint": "^9.32.0"
