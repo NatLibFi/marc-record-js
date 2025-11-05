@@ -45,14 +45,14 @@
 		"dev:debug": "cross-env LOG_LEVEL=debug DEBUG=@natlibfi/* NODE_ENV=test npm run watch:test"
 	},
 	"dependencies": {
-		"debug": "^4.4.1",
+		"debug": "^4.4.3",
 		"jsonschema": "^1.5.0"
 	},
 	"devDependencies": {
-		"@natlibfi/fixugen": "next",
-		"@natlibfi/fixura": "next",
-		"cross-env": "^7.0.3",
-		"esbuild": "^0.25.8",
-		"eslint": "^9.32.0"
+		"@natlibfi/fixugen": "^3.0.0",
+		"@natlibfi/fixura": "^4.0.0",
+		"cross-env": "^10.1.0",
+		"esbuild": "^0.25.12",
+		"eslint": "^9.39.1"
 	}
 }
