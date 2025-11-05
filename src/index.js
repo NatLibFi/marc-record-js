@@ -1,10 +1,11 @@
-/* eslint-disable functional/no-this-expressions */
+/* eslint-disable array-callback-return */
 
-import {fieldOrderComparator} from './marcFieldSort';
-import {clone, validateRecord, validateField} from './utils';
-import MarcRecordError from './error';
-export {default as MarcRecordError} from './error';
 import createDebugLogger from 'debug';
+import MarcRecordError from './error.js';
+import {fieldOrderComparator} from './marcFieldSort.js';
+import {clone, validateRecord, validateField} from './utils.js';
+
+export {default as MarcRecordError} from './error.js';
 const debug = createDebugLogger('@natlibfi/marc-record');
 //const debugData = debug.extend('data');
 const debugDev = debug.extend('dev');
@@ -37,7 +38,7 @@ const validationOptionsDefaults = {
   noAdditionalProperties: false
 };
 
-let globalValidationOptions = {...validationOptionsDefaults}; // eslint-disable-line functional/no-let
+let globalValidationOptions = {...validationOptionsDefaults};
 
 export class MarcRecord {
 
@@ -69,7 +70,6 @@ export class MarcRecord {
 
       this._validationErrors = validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions});
       if (!this._validationOptions.noFailValidation) {
-        // eslint-disable-next-line functional/immutable-data
         delete this._validationErrors;
         return;
       }
@@ -100,7 +100,7 @@ export class MarcRecord {
   }
 
   sortFields() {
-    this.fields.sort(fieldOrderComparator); // eslint-disable-line functional/immutable-data
+    this.fields.sort(fieldOrderComparator);
     return this;
   }
 
@@ -111,7 +111,7 @@ export class MarcRecord {
       if (this.fields.length === 1 && keepLastField) {
         throw new MarcRecordError('Cannot remove last field');
       }
-      this.fields.splice(index, 1); // eslint-disable-line functional/immutable-data
+      this.fields.splice(index, 1);
       return this;
     }
     return this;
@@ -122,9 +122,9 @@ export class MarcRecord {
     return this;
   }
 
-  removeSubfield(subfield, field) { // eslint-disable-line class-methods-use-this
+  removeSubfield(subfield, field) {
     const index = field.subfields.indexOf(subfield);
-    field.subfields.splice(index, 1); // eslint-disable-line functional/immutable-data
+    field.subfields.splice(index, 1);
     if (field.subfields.length === 0) {
       return this.removeField(field);
     }
@@ -146,7 +146,7 @@ export class MarcRecord {
 
     validateField(newField, {...globalValidationOptions, ...this._validationOptions});
 
-    this.fields.splice(index ?? this.findPosition(newField), 0, newField); //eslint-disable-line functional/immutable-data
+    this.fields.splice(index ?? this.findPosition(newField), 0, newField);
     return this;
 
     function format(field) {
@@ -326,7 +326,7 @@ export class MarcRecord {
         const {tag, ind1, ind2, data} = field;
 
         if (tag === 'LDR') {
-          record.leader = data; // eslint-disable-line functional/immutable-data
+          record.leader = data;
           return;
         }
 
@@ -358,7 +358,7 @@ export class MarcRecord {
     return JSON.stringify(reorder(r1)) === JSON.stringify(reorder(r2));
 
     function reorder(obj) {
-      return Object.keys(obj).sort().reduce((acc, key) => ({ // eslint-disable-line functional/immutable-data
+      return Object.keys(obj).sort().reduce((acc, key) => ({
         ...acc,
         [key]: typeof obj[key] === 'object' ? reorder(obj[key]) : obj[key]
       }), {});

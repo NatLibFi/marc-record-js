@@ -16,103 +16,43 @@
 		"bibliography",
 		"bibliographic"
 	],
-	"homepage": "https://github.com/natlibfi/marc-record-js",
+	"homepage": "https://www.npmjs.com/package/@natlibfi/marc-record",
 	"bugs": {
 		"url": "https://github.com/natlibfi/marc-record-js/issues"
 	},
 	"repository": {
-		"type": "git",
-		"url": "git@github.com:natlibfi/marc-record-js.git"
+		"url": "https://github.com/NatLibFi/marc-record-js"
 	},
 	"license": "MIT",
-	"version": "9.1.6",
+	"version": "10.0.0-alpha.3",
 	"main": "./dist/index.js",
+	"type": "module",
 	"engines": {
-		"node": ">=18"
+		"node": ">=22"
 	},
 	"publishConfig": {
 		"access": "public"
 	},
 	"scripts": {
 		"prepare": "npm run build",
-		"lint": "eslint src",
-		"lint:dev": "eslint --fix src",
-		"test:base": "cross-env NODE_ENV=test mocha --require @babel/register --reporter-option maxDiffSize=15000 src/*.spec.js",
+		"build": "esbuild src/**/*.js --sourcemap --platform=node --main-fields=main --outdir=dist --allow-overwrite --analyze",
+		"lint": "eslint ./src",
+		"lint:dev": "eslint --fix ./src",
+		"test:base": "node --test --experimental-test-coverage --test-reporter=spec './src/*.test.js' './src/**/*.test.js'",
 		"test": "npm run lint && npm run test:base",
-		"test:dev": "clear && npm run lint:dev && npm run coverage",
-		"coverage": "npm run coverage:unit && npm run coverage:report",
-		"coverage:unit": "nyc --silent npm run test:base",
-		"coverage:report": "nyc report --reporter=text",
-		"build": "babel src --source-maps --copy-files --delete-dir-on-start --out-dir=dist",
-		"dev:test": "cross-env DEBUG=@natlibfi/* NODE_ENV=test nodemon -w src -w test-fixtures --exec 'npm run test:dev'"
+		"watch:test": "cross-env DEBUG=@natlibfi/* NODE_ENV=test node --watch --test --experimental-test-coverage --test-reporter=spec './src/*.test.js' './src/**/*.test.js'",
+		"dev": "npm run watch:test",
+		"dev:debug": "cross-env LOG_LEVEL=debug DEBUG=@natlibfi/* NODE_ENV=test npm run watch:test"
 	},
 	"dependencies": {
-		"debug": "^4.4.1",
+		"debug": "^4.4.3",
 		"jsonschema": "^1.5.0"
 	},
 	"devDependencies": {
-		"@babel/cli": "^7.27.2",
-		"@babel/core": "^7.27.4",
-		"@babel/node": "^7.27.1",
-		"@babel/plugin-transform-runtime": "^7.27.4",
-		"@babel/preset-env": "^7.27.2",
-		"@babel/register": "^7.27.1",
-		"@babel/runtime": "^7.27.6",
-		"@natlibfi/eslint-config-melinda-backend": "^3.0.6",
-		"@natlibfi/fixugen": "^2.0.15",
-		"@natlibfi/fixura": "^3.0.14",
-		"babel-plugin-istanbul": "^7.0.0",
-		"chai": "^4.5.0",
-		"cross-env": "^7.0.3",
-		"eslint": "^8.57.1",
-		"mocha": "^11.7.1",
-		"nodemon": "^3.1.10",
-		"nyc": "^17.1.0"
-	},
-	"eslintConfig": {
-		"extends": "@natlibfi/melinda-backend"
-	},
-	"babel": {
-		"plugins": [
-			[
-				"@babel/transform-runtime"
-			]
-		],
-		"presets": [
-			[
-				"@babel/preset-env",
-				{
-					"targets": [
-						"defaults",
-						"maintained node versions"
-					]
-				}
-			]
-		],
-		"env": {
-			"test": {
-				"plugins": [
-					"istanbul"
-				]
-			}
-		}
-	},
-	"nyc": {
-		"exclude": [
-			"*/*.spec.js"
-		],
-		"reporter": [
-			"lcov",
-			"html"
-		],
-		"require": [
-			"@babel/register"
-		],
-		"sourceMap": false,
-		"instrument": false,
-		"lines": 100,
-		"statements": 100,
-		"functions": 100,
-		"branches": 100
+		"@natlibfi/fixugen": "^3.0.0",
+		"@natlibfi/fixura": "^4.0.0",
+		"cross-env": "^10.1.0",
+		"esbuild": "^0.25.12",
+		"eslint": "^9.39.1"
 	}
 }

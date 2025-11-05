@@ -1,5 +1,3 @@
-/* eslint-disable functional/no-this-expressions */
-
 export default class extends Error {
 
   constructor(message, validationResults) {

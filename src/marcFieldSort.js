@@ -18,7 +18,7 @@ export function fieldOrderComparator(fieldA, fieldB, sorterFunctions = defaultSo
     }
   }
 
-  for (const sortFn of sorterFunctions) { // eslint-disable-line functional/no-loop-statements
+  for (const sortFn of sorterFunctions) {
     const result = sortFn(fieldA, fieldB);
     debugDev(`${sortFn.name}: '${fieldToString(fieldA)}' vs '${fieldToString(fieldB)}' ${result}`);
     if (result !== 0) {
