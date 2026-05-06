@@ -21,7 +21,7 @@
 		"url": "https://github.com/natlibfi/marc-record-js/issues"
 	},
 	"repository": {
-		"url": "https://github.com/NatLibFi/marc-record-js"
+		"url": "git+https://github.com/NatLibFi/marc-record-js.git"
 	},
 	"license": "MIT",
 	"version": "10.0.2-alpha.2",
