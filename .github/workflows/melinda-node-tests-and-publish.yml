@@ -60,7 +60,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    container: node:22
+    container: node:24
     needs: [build-node-versions, njsscan]
     if: contains(github.ref, 'refs/tags/')
 
@@ -70,7 +70,7 @@ jobs:
       - name: Prepare node for publish
         uses: actions/setup-node@v6
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Update npm
         run: npm install -g npm@latest
