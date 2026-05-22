@@ -1,11 +1,11 @@
 import createDebugLogger from 'debug';
-import type {MarcField} from './index.ts';
+import type {MarcControlField, MarcField} from './index.ts';
 const debug = createDebugLogger('@natlibfi/marc-record:marcFieldSort');
 //const debugData = debug.extend('data');
 const debugDev = debug.extend('dev');
 
 /** Default array of sorter functions: sortByTag, then sortAlphabetically. */
-export const defaultSorterFunctions: ((fieldA: MarcField, fieldB: MarcField) => number)[]
+export const defaultSorterFunctions: ((fieldA: MarcControlField | MarcField, fieldB: MarcControlField | MarcField) => number)[]
   = [sortByTag, sortAlphabetically];
 
 /**
@@ -17,11 +17,11 @@ export const defaultSorterFunctions: ((fieldA: MarcField, fieldB: MarcField) => 
 * @returns Negative if fieldA < fieldB, positive if fieldA > fieldB, 0 if equal.
 */
 export function fieldOrderComparator(
-  fieldA: MarcField,
-  fieldB: MarcField,
-  sorterFunctions: ((fieldA: MarcField, fieldB: MarcField) => number)[] = defaultSorterFunctions): number {
+  fieldA: MarcControlField | MarcField,
+  fieldB: MarcControlField | MarcField,
+  sorterFunctions: ((fieldA: MarcControlField | MarcField, fieldB: MarcControlField | MarcField) => number)[] = defaultSorterFunctions): number {
 
-  function fieldToString(f: MarcField): string {
+  function fieldToString(f: MarcControlField | MarcField): string {
     if ('subfields' in f) {
       return `${f.tag} ${f.ind1}${f.ind2} ‡${formatSubfields(f)}`;
     }
@@ -49,7 +49,7 @@ export function fieldOrderComparator(
  * @param fieldB - Second field to compare.
  * @returns Negative if fieldA < fieldB, positive if fieldA > fieldB, 0 if equal.
  */
-export function sortByTag(fieldA: MarcField, fieldB: MarcField): number {
+export function sortByTag(fieldA: MarcControlField | MarcField, fieldB: MarcControlField | MarcField): number {
   const orderA = getSortIndex(fieldA.tag);
   const orderB = getSortIndex(fieldB.tag);
 
@@ -63,7 +63,7 @@ export function sortByTag(fieldA: MarcField, fieldB: MarcField): number {
   return 0;
 
   function getSortIndex(tag: string): string {
-    const sortIndex: Record<string, string> = {
+    const sortIndex = {
       LDR: '000',
       STA: '001.1', // STA comes now after 001. However 003+001 form a combo, so I'm not sure...
       SID: '999.1',
@@ -72,7 +72,7 @@ export function sortByTag(fieldA: MarcField, fieldB: MarcField): number {
       HLI: '999.4'
     };
 
-    if (tag in sortIndex && typeof sortIndex === 'string') { // <- this allows weights for numeric values as well (not that we use them yet)
+    if (tag in sortIndex) { // <- this allows weights for numeric values as well (not that we use them yet)
       return sortIndex[tag];
     }
     if (isNaN(Number(tag))) {
@@ -89,7 +89,7 @@ export function sortByTag(fieldA: MarcField, fieldB: MarcField): number {
  * @param fieldB - Second field to compare.
  * @returns Negative if fieldA < fieldB, positive if fieldA > fieldB, 0 if equal.
  */
-export function sortAlphabetically(fieldA: MarcField, fieldB: MarcField): number {
+export function sortAlphabetically(fieldA: MarcControlField | MarcField, fieldB: MarcControlField | MarcField): number {
   if (fieldA.tag !== fieldB.tag) {
     return 0;
   }
@@ -115,8 +115,8 @@ export function sortAlphabetically(fieldA: MarcField, fieldB: MarcField): number
       return 0;
     }
     const [subfieldCode, ...remainingSubfieldCodes] = setOfSubfields;
-    const valA = selectFirstValue(fieldA, subfieldCode);
-    const valB = selectFirstValue(fieldB, subfieldCode);
+    const valA = selectFirstValue(fieldA as MarcField, subfieldCode);
+    const valB = selectFirstValue(fieldB as MarcField, subfieldCode);
     //debugDev(`CHECKING SUBFIELD '${subfieldCode}'`);
     if (!valA) {
       if (!valB) {

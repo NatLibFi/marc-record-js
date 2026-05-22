@@ -20,8 +20,9 @@ generateTests({
 });
 
 function callback({getFixture}) {
-  const rec = new MarcRecord(getFixture('input.json'));
-  const sorted = rec.sortFields();
+  const record = new MarcRecord(getFixture('input.json'));
+  const sortedRecord = record.sortFields();
   const expectedResult = new MarcRecord(getFixture('result.json'));
-  assert.deepStrictEqual(sorted, expectedResult);
+
+  assert.deepStrictEqual(sortedRecord, expectedResult);
 }

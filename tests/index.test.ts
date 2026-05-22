@@ -8,7 +8,8 @@ import {READERS} from '@natlibfi/fixura';
 import {describe, it} from 'node:test';
 import assert from 'node:assert';
 import createDebugLogger from 'debug';
-import {MarcRecord, MarcRecordError, MarcRecordType, ValidationOptions} from '../src/index.ts';
+import type {MarcRecordObject, ValidationOptions} from '../src/index.ts';
+import {MarcRecord, MarcRecordError} from '../src/index.ts';
 
 const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
 
@@ -110,7 +111,7 @@ interface operation {name: string, args: any}
 
 interface metadata {
   getFixture: any;
-  input: MarcRecordType | string[];
+  input: MarcRecordObject | string[];
   result: any;
   immutable: boolean;
   noinput: boolean;
@@ -198,7 +199,7 @@ describe('index', () => {
 
     //---------------------------------------------------------------------------
     // MARK: Get Record
-    function getRecord(fromMeta: MarcRecordType | string[], filename: string) {
+    function getRecord(fromMeta: MarcRecordObject | string[], filename: string) {
       const data = fromMeta ?? getFixture(filename);
 
       if (Array.isArray(data)) {
@@ -324,9 +325,12 @@ describe('index', () => {
       //-------------------------------------------------------------------------
       // MARK: Remove subfield
       if (name === 'removeSubfield') {
-        const field = record.getDatafields()[args.field];
-        const subfield = field.subfields[args.subfield];
-        assert.equal(record.removeSubfield(subfield, field), record);
+        const field = record.fields[args.field];
+        if ('subfields' in field) {
+          const subfield = field.subfields[args.subfield];
+          assert.equal(record.removeSubfield(subfield, field), record);
+          return record;
+        }
         return record;
       }
 

@@ -1,4 +1,4 @@
-import type {MarcField, MarcRecordType, ValidationOptions} from './index.ts';
+import type {MarcControlField, MarcField, MarcRecordObject, ValidationOptions} from './index.ts';
 import {validate} from 'jsonschema';
 import createSchema from './schema.ts';
 import MarcRecordError from './error.ts';
@@ -17,7 +17,7 @@ export function clone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
 
-export function validateRecord(record: MarcRecordType, options: ValidationOptions = {}): string[] {
+export function validateRecord(record: MarcRecordObject, options: ValidationOptions = {}): string[] {
   const {noFailValidation = false} = options;
   const validationResults = validate(record, createSchema(options), {nestedErrors: false});
   //debugData(JSON.stringify(record));
@@ -25,13 +25,11 @@ export function validateRecord(record: MarcRecordType, options: ValidationOption
   //debugDev(inspect(validationResults.errors));
   //debugData(validationResults.errors.toString());
   if (noFailValidation === true) {
-    console.log(validationResults.errors.length);
     const errorStrings = validationResults.errors.map(valError => valError.toString());
-    console.log(errorStrings);
     return errorStrings;
   }
   if (validationResults.errors.length > 0) {
-    console.log('Record validation throws');
+    //console.log('Record validation throws');
     throw new MarcRecordError('Record is invalid', validationResults);
   }
   return [];
@@ -44,7 +42,7 @@ export function validateRecord(record: MarcRecordType, options: ValidationOption
  * @returns Array of validation error strings if noFailValidation is true; empty array otherwise.
  * @throws MarcRecordError if validation fails and noFailValidation is false.
  */
-export function validateField(field: MarcField, options: ValidationOptions = {}): string[] {
+export function validateField(field: MarcControlField | MarcField, options: ValidationOptions = {}): string[] {
   const {noFailValidation = false} = options;
   const schema = createSchema(options);
   const validationResults = validate(

@@ -1,5 +1,3 @@
-/* eslint-disable array-callback-return */
-
 import createDebugLogger from 'debug';
 import MarcRecordError from './error.ts';
 import {fieldOrderComparator} from './marcFieldSort.ts';
@@ -8,13 +6,10 @@ import {clone, validateRecord, validateField} from './utils.ts';
 export {default as MarcRecordError} from './error.ts';
 
 /** Plain data structure for constructing a MARC record. */
-export interface MarcRecordType {
+export interface MarcRecordObject {
   leader: string;
-  fields: MarcField[];
+  fields: (MarcControlField | MarcField)[];
 }
-
-/** Union type for any MARC field entry (control or data field). */
-export type MarcField = MarcControlField | MarcDataField;
 
 /**
  * A MARC control field (tag + value, no indicators or subfields).
@@ -27,7 +22,7 @@ export interface MarcControlField {
 /**
  * A MARC data field (tag + two optional indicators + subfields).
  */
-export interface MarcDataField {
+export interface MarcField {
   tag: string;
   ind1: string;
   ind2: string;
@@ -104,7 +99,7 @@ let globalValidationOptions: ValidationOptions = {...validationOptionsDefaults};
 
 export class MarcRecord {
   leader: string;
-  fields: MarcField[];
+  fields: (MarcControlField | MarcField)[];
   _validationOptions: ValidationOptions;
   _validationErrors?: string[];
 
@@ -129,7 +124,7 @@ export class MarcRecord {
    * @param record - Optional record data to initialize the record. If omitted, creates an empty record.
    * @param validationOptions - Optional validation options for this record instance.
    */
-  constructor(record?: MarcRecordType, validationOptions: ValidationOptions = {}) {
+  constructor(record?: MarcRecordObject, validationOptions: ValidationOptions = {}) {
     this._validationOptions = validationOptions;
 
     if (record) {
@@ -140,7 +135,7 @@ export class MarcRecord {
       recordClone.fields
         .filter((field) => 'subfields' in field)
         .forEach((field) => {
-          const dataField = field as MarcDataField;
+          const dataField = field as MarcField;
           dataField.ind1 = dataField.ind1 || ' ';
           dataField.ind2 = dataField.ind2 || ' ';
         });
@@ -148,7 +143,7 @@ export class MarcRecord {
       this.leader = recordClone.leader;
       this.fields = recordClone.fields;
 
-      this._validationErrors = validateRecord(recordClone as MarcRecordType, {...globalValidationOptions, ...this._validationOptions});
+      this._validationErrors = validateRecord(recordClone as MarcRecordObject, {...globalValidationOptions, ...this._validationOptions});
 
       if (!this._validationOptions.noFailValidation) {
         delete this._validationErrors;
@@ -180,7 +175,7 @@ export class MarcRecord {
    * @param query - Regular expression to match against field tags.
    * @returns Array of matching field entries.
    */
-  get(query: RegExp): MarcField[] {
+  get(query: RegExp): (MarcControlField | MarcField)[] {
     return this.fields.filter(field => field.tag.match(query));
   }
 
@@ -189,7 +184,7 @@ export class MarcRecord {
    * @param query - Regular expression to match against field tags.
    * @returns Array of removed field entries.
    */
-  pop(query: RegExp): MarcField[] {
+  pop(query: RegExp): (MarcControlField | MarcField)[] {
     const fields = this.get(query);
     this.removeFields(fields);
     return fields;
@@ -209,7 +204,7 @@ export class MarcRecord {
    * @param field - The field entry to remove.
    * @returns This MarcRecord instance for chaining.
    */
-  removeField(field: MarcField): this {
+  removeField(field: MarcControlField | MarcField): this {
     const index = this.fields.indexOf(field);
     if (index !== -1) {
       const {fields: keepLastField} = {...globalValidationOptions, ...this._validationOptions};
@@ -227,7 +222,7 @@ export class MarcRecord {
    * @param fields - Array of field entries to remove.
    * @returns This MarcRecord instance for chaining.
    */
-  removeFields(fields: MarcField[]): this {
+  removeFields(fields: (MarcControlField | MarcField)[]): this {
     fields.forEach(f => this.removeField(f));
     return this;
   }
@@ -238,7 +233,7 @@ export class MarcRecord {
    * @param field - The data field containing the subfield.
    * @returns This MarcRecord instance for chaining.
    */
-  removeSubfield(subfield: MarcSubfield, field: MarcDataField): this {
+  removeSubfield(subfield: MarcSubfield, field: MarcField): this {
     const index = field.subfields.indexOf(subfield);
     field.subfields.splice(index, 1);
     if (field.subfields.length === 0) {
@@ -252,7 +247,7 @@ export class MarcRecord {
    * @param field - Field entry or array shorthand to append.
    * @returns This MarcRecord instance for chaining.
    */
-  appendField(field: MarcField): this {
+  appendField(field: MarcControlField | MarcField): this {
     this.insertField(field, this.fields.length);
     return this;
   }
@@ -262,7 +257,7 @@ export class MarcRecord {
    * @param fields - Array of field entries to append.
    * @returns This MarcRecord instance for chaining.
    */
-  appendFields(fields: MarcField[]): this {
+  appendFields(fields: (MarcControlField | MarcField)[]): this {
     fields.forEach(f => this.appendField(f));
     return this;
   }
@@ -276,7 +271,7 @@ export class MarcRecord {
    * @param index - Optional position to insert at. If omitted, uses auto-sort position.
    * @returns This MarcRecord instance for chaining.
    */
-  insertField(field: MarcField | string[], index?: number): this {
+  insertField(field: MarcControlField | MarcField | string[], index?: number): this {
     const newField = Array.isArray(field) ? format(convertFromArray(field)) : format(field);
 
     validateField(newField, {...globalValidationOptions, ...this._validationOptions});
@@ -284,7 +279,7 @@ export class MarcRecord {
     this.fields.splice(index ?? this.findPosition(newField), 0, newField);
     return this;
 
-    function format(field: MarcDataField | MarcControlField): MarcDataField | MarcControlField {
+    function format(field: MarcField | MarcControlField): MarcField | MarcControlField {
       const cloned = clone(field);
 
       if ('subfields' in field) {
@@ -298,7 +293,7 @@ export class MarcRecord {
       return cloned;
     }
 
-    function convertFromArray(args: string[]): MarcDataField | MarcControlField {
+    function convertFromArray(args: string[]): MarcField | MarcControlField {
       if (args.length === 2) {
         const [tag, value] = args;
         // @ts-expect-error should be fine
@@ -331,7 +326,7 @@ export class MarcRecord {
    * @param fields - Array of field entries to insert.
    * @returns This MarcRecord instance for chaining.
    */
-  insertFields(fields: MarcField[]): this {
+  insertFields(fields: (MarcControlField | MarcField)[]): this {
     fields.forEach(f => this.insertField(f));
     return this;
   }
@@ -342,7 +337,7 @@ export class MarcRecord {
    * @param fieldA - The field to find a position for.
    * @returns The index where the field should be inserted.
    */
-  findPosition(fieldA: MarcField): number {
+  findPosition(fieldA: MarcControlField | MarcField): number {
     const index = this.fields.findIndex((fieldB) =>
       fieldOrderComparator(fieldB, fieldA) > 0
     );
@@ -361,8 +356,8 @@ export class MarcRecord {
    * Get all data fields from the record.
    * @returns Array of data field entries.
    */
-  getDatafields(): MarcDataField[] {
-    return this.fields.filter((field): field is MarcDataField => 'subfields' in field);
+  getDatafields(): MarcField[] {
+    return this.fields.filter((field): field is MarcField => 'subfields' in field);
   }
 
   /**
@@ -371,7 +366,7 @@ export class MarcRecord {
    * @param query - Optional value string (for control fields) or array of subfield queries (for data fields).
    * @returns Array of matching field entries.
    */
-  getFields(tag: string, query?: string | MarcSubfield[]): MarcField[] {
+  getFields(tag: string, query?: string | MarcSubfield[]): (MarcControlField | MarcField)[] {
     const fields = this.fields.filter((f) => f.tag === tag);
     if (typeof query === 'string') {
       return fields.filter((f) => 'value' in f && f.value === query);
@@ -527,10 +522,10 @@ export class MarcRecord {
       ...this.getDatafields().map(mapDatafield)
     ].join('\n');
 
-    function mapDatafield(f: MarcDataField): string {
+    function mapDatafield(f: MarcField): string {
       return `${f.tag} ${f.ind1}${f.ind2} ‡${formatSubfields(f)}`;
 
-      function formatSubfields(field: MarcDataField): string {
+      function formatSubfields(field: MarcField): string {
         return field.subfields.map(sf => `${sf.code}${sf.value || ''}`).join('‡');
       }
     }

@@ -31,8 +31,8 @@
   ],
   "returns": {
     "_validationErrors": [
-      "instance.fields[0] is not any of <MarcControlField>,<MarcDataField>",
-      "instance.fields[1] is not any of <MarcControlField>,<MarcDataField>"
+      "instance.fields[0] is not any of <MarcControlField>,<MarcField>",
+      "instance.fields[1] is not any of <MarcControlField>,<MarcField>"
     ],
     "_validationOptions": {
       "fields": true,

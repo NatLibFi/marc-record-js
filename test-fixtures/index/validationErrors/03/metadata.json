@@ -29,8 +29,8 @@
     }
   ],
   "returns": [
-    "instance.fields[0] is not any of <MarcControlField>,<MarcDataField>",
-    "instance.fields[1] is not any of <MarcControlField>,<MarcDataField>"
+    "instance.fields[0] is not any of <MarcControlField>,<MarcField>",
+    "instance.fields[1] is not any of <MarcControlField>,<MarcField>"
   ],
   "immutable": true
 }

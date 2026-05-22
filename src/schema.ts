@@ -122,11 +122,11 @@ function schema({
   noAdditionalProperties = false,
 }: ValidationOptions) {
   return {
-    id: 'MarcRecordType',
+    id: 'MarcRecordObject',
     type: 'object',
     properties: {
       leader: {
-        id: 'MarcRecordType leader ',
+        id: 'MarcRecordObject leader ',
         type: 'string',
         minLength: leader ? 24 : 0,
         maxLength: leader ? 24 : maximumFieldLength,
@@ -134,7 +134,7 @@ function schema({
         maxOccurence: 1
       },
       fields: {
-        id: 'MarcRecordType MarcField[]',
+        id: 'MarcRecordObject MarcField[]',
         type: 'array',
         minItems: fields ? 1 : 0,
         items: {
@@ -165,34 +165,34 @@ function schema({
               required: controlFieldValues ? ['tag', 'value'] : ['tag'],
               additionalProperties: !noAdditionalProperties
             },
-            // MarcDataField schema
+            // MarcField schema
             {
-              id: 'MarcDataField',
+              id: 'MarcField',
               type: 'object',
               properties: {
                 tag: {
-                  id: 'MarcDataField tag',
+                  id: 'MarcField tag',
                   type: 'string',
                   minLength: 3,
                   maxLength: 3,
                   pattern: characters ? dataFieldTagPattern : anythingPattern
                 },
                 ind1: {
-                  id: 'MarcDataField ind1',
+                  id: 'MarcField ind1',
                   type: 'string',
                   minLength: 1,
                   maxLength: 1,
                   pattern: characters ? indicatorPattern : anythingPattern
                 },
                 ind2: {
-                  id: 'MarcDataField ind2',
+                  id: 'MarcField ind2',
                   type: 'string',
                   minLength: 1,
                   maxLength: 1,
                   pattern: characters ? indicatorPattern : anythingPattern
                 },
                 subfields: {
-                  id: 'MarcDataField MarcSubfield[]',
+                  id: 'MarcField MarcSubfield[]',
                   type: 'array',
                   minItems: subfields ? 1 : 0,
                   items: {
