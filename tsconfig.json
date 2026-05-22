@@ -1,0 +1,63 @@
+{
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "compilerOptions": {
+    // File Layout
+    "rootDir": "./src",
+    "outDir": "./dist",
+    // Environment Settings
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "target": "esnext",
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "esnext"
+    ],
+    // Other Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true,
+    // Style Options
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    // Recommended Options
+    "strict": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": false,
+    "noImplicitAny": false,
+    // Customized options
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "allowUnreachableCode": false,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "removeComments": true,
+    // Only allow syntax accepted by Node >= 23.6
+    "erasableSyntaxOnly": true,
+    // Proposed options from Node docs: https://nodejs.org/api/typescript.html#type-stripping
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+  }
+}
