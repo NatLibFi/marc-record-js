@@ -41,7 +41,6 @@ export interface MarcSubfield {
 export type TypeOfMaterial = 'BK' | 'CF' | 'CR' | 'MP' | 'MU' | 'MX' | 'VM';
 
 const debug = createDebugLogger('@natlibfi/marc-record');
-//const debugData = debug.extend('data');
 const debugDev = debug.extend('dev');
 
 /**

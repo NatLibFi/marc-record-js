@@ -1,7 +1,6 @@
 import createDebugLogger from 'debug';
 import type {MarcControlField, MarcField} from './index.ts';
 const debug = createDebugLogger('@natlibfi/marc-record:marcFieldSort');
-//const debugData = debug.extend('data');
 const debugDev = debug.extend('dev');
 
 /** Default array of sorter functions: sortByTag, then sortAlphabetically. */
@@ -106,7 +105,6 @@ export function sortAlphabetically(fieldA: MarcControlField | MarcField, fieldB:
     return 0;
   }
 
-  //debugDev(`CHECKING ${subfieldsToCheck.join(', ')}`);
   const result = scoreSubfieldsAlphabetically(subfieldsToCheck);
   debugDev(`RESULT ${result}`);
   return result;
@@ -121,7 +119,6 @@ export function sortAlphabetically(fieldA: MarcControlField | MarcField, fieldB:
     }
     const valA = selectFirstValue(fieldA, subfieldCode);
     const valB = selectFirstValue(fieldB, subfieldCode);
-    //debugDev(`CHECKING SUBFIELD '${subfieldCode}'`);
     if (!valA) {
       if (!valB) {
         return scoreSubfieldsAlphabetically(remainingSubfieldCodes);

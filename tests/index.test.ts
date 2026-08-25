@@ -177,7 +177,6 @@ describe('index', () => {
     //---------------------------------------------------------------------------
     // MARK: Check results
     function checkResults(operations: operation[], throws: string, returns: any) {
-      //debug(`Returns: ${returns} ${result}`);
       try {
         const result = operations.reduce((_: any, op) => runOperation(op), record);
         if (returns === undefined) {
@@ -230,12 +229,10 @@ describe('index', () => {
       if (name === 'MarcRecord') {
         const {leader, fields, validationOptions} = args ?? {};
         const object = args && {leader, fields};
-        //debug(`Object: ${JSON.stringify(object, null, 2)}`);
 
         const created = new MarcRecord(object, validationOptions);
         assert.equal(typeof created, 'object');
         assert.ok(object === undefined || created.fields !== object.fields);
-        //debug(`Created: ${JSON.stringify(created, null, 2)}`);
         return created;
       }
 
@@ -420,9 +417,6 @@ describe('index', () => {
           return new MarcRecord({leader, fields}, validationOptions);
         }(args));
 
-        //debug(`Record: ${JSON.stringify(record, null, 2)}`);
-        //debug(`What: ${JSON.stringify(what, null, 2)}`);
-
         const result = record.equalsTo(what);
         assert.equal(MarcRecord.isEqual(record, what), result);
         return result;
@@ -443,7 +437,6 @@ describe('index', () => {
       if (name === 'isTypeOfMaterial') {
         const {target} = args;
 
-        // console.info(`TARGET: '${target}'\n${record.toString()}`); // eslint-disable-line no-console
         if (target === 'BK') { // Book
           return record.isBK();
         }
