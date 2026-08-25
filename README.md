@@ -336,10 +336,10 @@ if (record.getTypeOfMaterial() === 'MU') { // NB! Failure returns undefined
 The raw leader characters behind these checks are exposed directly:
 
 ```js
-// Type of record from leader position 6 (e.g. 'a' language material, 'c' manuscript)
+// Type of record from leader position 6 (e.g. 'a' language material, 'c' notated music)
 record.getTypeOfRecord();       // NB! Failure returns undefined
 
-// Bibliographic level from leader position 7 (e.g. 'a' single unit, 'm' monograph)
+// Bibliographic level from leader position 7 (e.g. 'a'  monographic component part, 'm' monograph)
 record.getBibliographicLevel(); // NB! Failure returns undefined
 ```
 
