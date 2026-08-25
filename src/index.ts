@@ -421,7 +421,7 @@ export class MarcRecord {
 
   /**
    * Get the type of record from leader position 6.
-   * @returns Type character (e.g., 'a' for language material, 'm' for monograph).
+   * @returns Type character (e.g., 'a' for language material, 'c' for notated music).
    */
   getTypeOfRecord(): string | undefined {
     return this.leader?.[6];
@@ -429,7 +429,7 @@ export class MarcRecord {
 
   /**
    * Get the bibliographic level from leader position 7.
-   * @returns Bibliographic level character (e.g., 'a' for single unit, 'm' for monograph).
+   * @returns Bibliographic level character (e.g., 'a' for monographic component part, 'm' for monograph).
    */
   getBibliographicLevel(): string | undefined {
     return this.leader?.[7];
