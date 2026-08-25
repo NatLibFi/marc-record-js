@@ -1,12 +1,12 @@
 # MARC record implementation in JavaScript
 
 [![NPM Version](https://img.shields.io/npm/v/@natlibfi/marc-record.svg)](https://npmjs.org/package/@natlibfi/marc-record)
-[![Build Status](https://travis-ci.org/NatLibFi/marc-record-js.svg)](https://travis-ci.org/NatLibFi/marc-record-js)
-[![Test Coverage](https://codeclimate.com/github/NatLibFi/marc-record-js/badges/coverage.svg)](https://codeclimate.com/github/NatLibFi/marc-record-js/coverage)
+[![Test branch](https://github.com/NatLibFi/marc-record-js/actions/workflows/melinda-node-tests-and-publish.yml/badge.svg?branch=test)](https://github.com/NatLibFi/marc-record-js/actions/workflows/melinda-node-tests-and-publish.yml?query=branch%3Atest)
+[![Main branch](https://github.com/NatLibFi/marc-record-js/actions/workflows/melinda-node-tests-and-publish.yml/badge.svg?branch=main)](https://github.com/NatLibFi/marc-record-js/actions/workflows/melinda-node-tests-and-publish.yml?query=branch%3Amain)
 
-MARC record implementation in JavaScript. [A JSON schema](src/schema.js) file specifies the data format.
+MARC record implementation in JavaScript. [A JSON schema](src/schema.ts) file specifies the data format.
 
-This a fork of the original [marc-record-js](https://github.com/petuomin/marc-record-js). The new implementation uses ES6 syntax and adds validation of the record structure.
+This is a fork of the original [marc-record-js](https://github.com/petuomin/marc-record-js). The new implementation uses ES6 syntax and adds validation of the record structure.
 
 ## Usage
 ```js
@@ -358,3 +358,11 @@ Copyright (c) 2014-2017 **Pasi Tuominen <pasi.tuominen@gmail.com>**
 Copyright (c) 2018-2026 **University Of Helsinki (The National Library Of Finland)**
 
 This project's source code is licensed under the terms of **MIT License** or any later version.
+
+## Possible future extensions
+
+Ideas considered but not implemented (removed from `src/schema.ts` in 2026):
+
+- Check actual field length in addition to single field/subfield value. The 9999 octet limit includes indicators + subfield separators + subfield codes in data fields, which could be subtracted.
+- Check the record length (maximum 99999 octets). Record length (leader character positions 00-04) contains a five-character ASCII numeric string equal to the length of the entire record, including itself and the record terminator. The maximum length of a record is 99999 octets (https://www.loc.gov/marc/specifications/specrecstruc.html).
+- Add a checker for MARC21 hardcoded codes in leader (https://www.loc.gov/marc/specifications/specrecstruc.html#leader).
