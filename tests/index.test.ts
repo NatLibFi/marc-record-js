@@ -479,3 +479,32 @@ describe('index', () => {
     }
   }
 });
+
+describe('index (manual cases)', () => {
+  it('removeSubfield leaves the field untouched when the subfield is not found', () => {
+    const record = new MarcRecord({
+      leader: '',
+      fields: [
+        {tag: '260', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'x'}, {code: 'b', value: 'y'}]}
+      ]
+    });
+    const field = record.fields[0];
+    if (!('subfields' in field)) {
+      throw new Error('expected a data field');
+    }
+
+    const result = record.removeSubfield({code: 'z', value: 'nope'}, field);
+
+    assert.equal(result, record);
+    assert.deepStrictEqual(field.subfields, [{code: 'a', value: 'x'}, {code: 'b', value: 'y'}]);
+  });
+
+  it('getTypeOfMaterial returns undefined for an unrecognized leader type', () => {
+    const record = new MarcRecord({
+      leader: '01234cbi a22005894i 4500',
+      fields: [{tag: '001', value: 'bar'}]
+    });
+
+    assert.equal(record.getTypeOfMaterial(), undefined);
+  });
+});

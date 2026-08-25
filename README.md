@@ -320,7 +320,7 @@ if (record.isBK()) {
 }
 
 // 2) Ask for record type:
-if (record.getTypeOfMaterial() === 'MU') { // NB! Failure returns false
+if (record.getTypeOfMaterial() === 'MU') { // NB! Failure returns undefined
   // Do something else
 }
 ```

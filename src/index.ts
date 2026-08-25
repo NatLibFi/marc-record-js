@@ -37,6 +37,9 @@ export interface MarcSubfield {
   value?: string;
 }
 
+/** Type-of-material short codes derivable from the leader. */
+export type TypeOfMaterial = 'BK' | 'CF' | 'CR' | 'MP' | 'MU' | 'MX' | 'VM';
+
 const debug = createDebugLogger('@natlibfi/marc-record');
 //const debugData = debug.extend('data');
 const debugDev = debug.extend('dev');
@@ -252,6 +255,9 @@ export class MarcRecord {
    */
   removeSubfield(subfield: MarcSubfield, field: MarcField): this {
     const index = field.subfields.indexOf(subfield);
+    if (index === -1) {
+      return this;
+    }
     field.subfields.splice(index, 1);
     if (field.subfields.length === 0) {
       return this.removeField(field);
@@ -426,7 +432,7 @@ export class MarcRecord {
    * Get the bibliographic level from leader position 7.
    * @returns Bibliographic level character (e.g., 'a' for single unit, 'm' for monograph).
    */
-  getBibliograpicLevel(): string | undefined {
+  getBibliographicLevel(): string | undefined {
     return this.leader?.[7];
   }
 
@@ -490,9 +496,9 @@ export class MarcRecord {
 
   /**
    * Get the type of material as a short code.
-   * @returns One of 'BK', 'CF', 'CR', 'MP', 'MU', 'MX', 'VM', or false if unrecognized.
+   * @returns One of 'BK', 'CF', 'CR', 'MP', 'MU', 'MX', 'VM', or undefined if unrecognized.
    */
-  getTypeOfMaterial(): string | false {
+  getTypeOfMaterial(): TypeOfMaterial | undefined {
     if (this.isBK()) {
       return 'BK';
     }
@@ -514,11 +520,11 @@ export class MarcRecord {
     if (this.isVM()) {
       return 'VM';
     }
-    return false;
+    return undefined;
   }
 
   private _bibliographicLevelIsBis(): boolean {
-    return ['b', 'i', 's'].includes(this.getBibliograpicLevel() ?? '');
+    return ['b', 'i', 's'].includes(this.getBibliographicLevel() ?? '');
   }
 
   /**
@@ -554,10 +560,11 @@ export class MarcRecord {
    * Convert the record to a plain JavaScript object (excluding private fields).
    * @returns Plain object representation of the record.
    */
-  toObject(): Record<string, unknown> {
-    return Object.entries(clone(this))
-      .filter(([k]) => k.startsWith('_') === false)
-      .reduce<Record<string, unknown>>((acc, [k, v]) => ({...acc, [k]: v}), {});
+  toObject(): MarcRecordObject {
+    return {
+      leader: this.leader,
+      fields: clone(this.fields)
+    };
   }
 
   /**
@@ -622,18 +629,31 @@ export class MarcRecord {
    * @returns True if the records have equivalent data.
    */
   static isEqual(r1: MarcRecord, r2: MarcRecord): boolean {
-    return JSON.stringify(reorder(r1.toObject())) === JSON.stringify(reorder(r2.toObject()));
-
-    function reorder(obj: Record<string, unknown>): Record<string, unknown> {
-      return Object.keys(obj)
-        .sort()
-        .reduce<Record<string, unknown>>((acc, key) => {
-          const val = obj[key];
-          return {
-            ...acc,
-            [key]: typeof val === 'object' && val !== null ? reorder(val as Record<string, unknown>) : val
-          };
-        }, {});
-    }
+    return normalizeForComparison(r1.toObject()) === normalizeForComparison(r2.toObject());
   }
+}
+
+/**
+ * Serialize a record to a JSON string with stable key order, so that
+ * structurally equal records always produce identical strings.
+ * @param record - The record to serialize.
+ * @returns Canonical JSON string of the record.
+ */
+function normalizeForComparison(record: MarcRecordObject): string {
+  return JSON.stringify({
+    fields: record.fields.map(normalizeField),
+    leader: record.leader
+  });
+}
+
+function normalizeField(field: MarcControlField | MarcField): MarcControlField | MarcField {
+  if ('subfields' in field) {
+    return {
+      ind1: field.ind1,
+      ind2: field.ind2,
+      subfields: field.subfields.map(subfield => ({code: subfield.code, value: subfield.value})),
+      tag: field.tag
+    };
+  }
+  return {tag: field.tag, value: field.value};
 }
