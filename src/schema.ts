@@ -111,6 +111,16 @@ export default function createSchema(options: ValidationOptions) {
   return schema(options);
 }
 
+/**
+ * Create the JSON Schema for a single MARC field (control or data field).
+ * Used to validate fields in isolation, without wrapping them in a record schema.
+ * @param options - Validation options.
+ * @returns A jsonschema-compatible schema object with an anyOf for control and data fields.
+ */
+export function createFieldSchema(options: ValidationOptions) {
+  return createSchema(options).properties.fields.items;
+}
+
 function schema({
   fields = true,
   subfields = true,

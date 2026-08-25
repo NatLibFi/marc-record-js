@@ -674,7 +674,7 @@ describe('utils', () => {
   });
 });
 
-function isMarcRecordError(err: any, regexp: RegExp) {
+function isMarcRecordError(err: unknown, regexp: RegExp) {
   if (err instanceof MarcRecordError) {
     assert.match(err.message, regexp);
     assert.equal(Object.hasOwn(err, 'validationResults'), true);

@@ -1,6 +1,6 @@
 import type {MarcControlField, MarcField, MarcRecordObject, ValidationOptions} from './index.ts';
 import {validate} from 'jsonschema';
-import createSchema from './schema.ts';
+import createSchema, {createFieldSchema} from './schema.ts';
 import MarcRecordError from './error.ts';
 //import createDebugLogger from 'debug';
 //import {inspect} from 'util';
@@ -44,10 +44,9 @@ export function validateRecord(record: MarcRecordObject, options: ValidationOpti
  */
 export function validateField(field: MarcControlField | MarcField, options: ValidationOptions = {}): string[] {
   const {noFailValidation = false} = options;
-  const schema = createSchema(options);
   const validationResults = validate(
     field,
-    (schema as {properties: {fields: {items: unknown}}}).properties.fields.items,
+    createFieldSchema(options),
     {nestedErrors: false}
   );
   //debugData(JSON.stringify(field));

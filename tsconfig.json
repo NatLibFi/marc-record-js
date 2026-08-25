@@ -44,7 +44,6 @@
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "noEmit": false,
-    "noImplicitAny": false,
     // Customized options
     "allowJs": true,
     "checkJs": true,

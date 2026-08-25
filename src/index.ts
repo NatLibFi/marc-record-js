@@ -41,6 +41,18 @@ const debug = createDebugLogger('@natlibfi/marc-record');
 //const debugData = debug.extend('data');
 const debugDev = debug.extend('dev');
 
+/**
+ * Check whether a field tag matches a query.
+ * String queries match as substrings (matching String.prototype.match semantics),
+ * RegExp queries are tested against the tag.
+ * @param tag - The field tag to check.
+ * @param query - Substring or regular expression to match.
+ * @returns True if the tag matches the query.
+ */
+function tagMatches(tag: string, query: RegExp | string): boolean {
+  return typeof query === 'string' ? tag.includes(query) : query.test(tag);
+}
+
 // Default setting for validationOptions:
 // These default validationOptions are (mostly) backwards compatible with marc-record-js < 7.3.0
 //
@@ -81,6 +93,12 @@ export interface ValidationOptions {
   /** Reject additional properties beyond the defined schema. */
   noAdditionalProperties?: boolean;
 }
+
+/** Shorthand for insertField: [tag, value] creates a control field. */
+export type MarcControlFieldShorthand = [tag: string, value: string];
+
+/** Shorthand for insertField: [tag, ind1, ind2, ...code/value pairs] creates a data field. */
+export type MarcDataFieldShorthand = [tag: string, ind1: string, ind2: string, ...subfieldCodesAndValues: string[]];
 
 const validationOptionsDefaults = {
   strict: false,
@@ -133,17 +151,16 @@ export class MarcRecord {
       recordClone.fields = recordClone.fields || [];
 
       recordClone.fields
-        .filter((field) => 'subfields' in field)
+        .filter((field): field is MarcField => 'subfields' in field)
         .forEach((field) => {
-          const dataField = field as MarcField;
-          dataField.ind1 = dataField.ind1 || ' ';
-          dataField.ind2 = dataField.ind2 || ' ';
+          field.ind1 = field.ind1 || ' ';
+          field.ind2 = field.ind2 || ' ';
         });
 
       this.leader = recordClone.leader;
       this.fields = recordClone.fields;
 
-      this._validationErrors = validateRecord(recordClone as MarcRecordObject, {...globalValidationOptions, ...this._validationOptions});
+      this._validationErrors = validateRecord(recordClone, {...globalValidationOptions, ...this._validationOptions});
 
       if (!this._validationOptions.noFailValidation) {
         delete this._validationErrors;
@@ -171,20 +188,20 @@ export class MarcRecord {
   }
 
   /**
-   * Find all fields whose tag matches the given regex.
-   * @param query - Regular expression to match against field tags.
+   * Find all fields whose tag matches the given query.
+   * @param query - Regular expression or substring to match against field tags.
    * @returns Array of matching field entries.
    */
-  get(query: RegExp): (MarcControlField | MarcField)[] {
-    return this.fields.filter(field => field.tag.match(query));
+  get(query: RegExp | string): (MarcControlField | MarcField)[] {
+    return this.fields.filter(field => tagMatches(field.tag, query));
   }
 
   /**
-   * Find and remove all fields whose tag matches the given regex.
-   * @param query - Regular expression to match against field tags.
+   * Find and remove all fields whose tag matches the given query.
+   * @param query - Regular expression or substring to match against field tags.
    * @returns Array of removed field entries.
    */
-  pop(query: RegExp): (MarcControlField | MarcField)[] {
+  pop(query: RegExp | string): (MarcControlField | MarcField)[] {
     const fields = this.get(query);
     this.removeFields(fields);
     return fields;
@@ -200,7 +217,7 @@ export class MarcRecord {
   }
 
   /**
-   * Remove a single field by reference. Throws if this is the last field and keepLastField validation is enabled.
+   * Remove a single field by reference. Throws if this is the last field and the fields validation option is enabled.
    * @param field - The field entry to remove.
    * @returns This MarcRecord instance for chaining.
    */
@@ -271,7 +288,7 @@ export class MarcRecord {
    * @param index - Optional position to insert at. If omitted, uses auto-sort position.
    * @returns This MarcRecord instance for chaining.
    */
-  insertField(field: MarcControlField | MarcField | string[], index?: number): this {
+  insertField(field: MarcControlField | MarcField | MarcControlFieldShorthand | MarcDataFieldShorthand, index?: number): this {
     const newField = Array.isArray(field) ? format(convertFromArray(field)) : format(field);
 
     validateField(newField, {...globalValidationOptions, ...this._validationOptions});
@@ -293,17 +310,15 @@ export class MarcRecord {
       return cloned;
     }
 
-    function convertFromArray(args: string[]): MarcField | MarcControlField {
-      if (args.length === 2) {
+    function convertFromArray(args: MarcControlFieldShorthand | MarcDataFieldShorthand): MarcField | MarcControlField {
+      if (isControlFieldShorthand(args)) {
         const [tag, value] = args;
-        // @ts-expect-error should be fine
         return {tag, value};
       }
 
-      const [tag, ind1, ind2] = args;
-      const subfields = parseSubfields(args.slice(3));
+      const [tag, ind1, ind2, ...rest] = args;
+      const subfields = parseSubfields(rest);
 
-      // @ts-expect-error not expecting undefineds in array
       return {tag, ind1, ind2, subfields};
 
       function parseSubfields(
@@ -317,6 +332,10 @@ export class MarcRecord {
         }
 
         return subfields;
+      }
+
+      function isControlFieldShorthand(args: MarcControlFieldShorthand | MarcDataFieldShorthand): args is MarcControlFieldShorthand {
+        return args.length === 2;
       }
     }
   }
@@ -507,7 +526,7 @@ export class MarcRecord {
    * @param record - The other MarcRecord to compare against.
    * @returns True if the records are equivalent.
    */
-  equalsTo(record) {
+  equalsTo(record: MarcRecord): boolean {
     return MarcRecord.isEqual(this, record);
   }
 

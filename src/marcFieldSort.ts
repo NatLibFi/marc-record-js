@@ -26,8 +26,9 @@ export function fieldOrderComparator(
       return `${f.tag} ${f.ind1}${f.ind2} ‡${formatSubfields(f)}`;
     }
     return `${f.tag}    ${f.value}`;
-    function formatSubfields(field) {
-      return field.subfields.map(sf => `${sf.code}${sf.value || ''}`).join('‡');
+
+    function formatSubfields(dataField: MarcField): string {
+      return dataField.subfields.map(sf => `${sf.code}${sf.value || ''}`).join('‡');
     }
   }
 
@@ -63,7 +64,7 @@ export function sortByTag(fieldA: MarcControlField | MarcField, fieldB: MarcCont
   return 0;
 
   function getSortIndex(tag: string): string {
-    const sortIndex = {
+    const sortIndex: Record<string, string> = {
       LDR: '000',
       STA: '001.1', // STA comes now after 001. However 003+001 form a combo, so I'm not sure...
       SID: '999.1',
@@ -72,8 +73,9 @@ export function sortByTag(fieldA: MarcControlField | MarcField, fieldB: MarcCont
       HLI: '999.4'
     };
 
-    if (tag in sortIndex) { // <- this allows weights for numeric values as well (not that we use them yet)
-      return sortIndex[tag];
+    const specialIndex = sortIndex[tag]; // <- this allows weights for numeric values as well (not that we use them yet)
+    if (specialIndex !== undefined) {
+      return specialIndex;
     }
     if (isNaN(Number(tag))) {
       return '999.9';
@@ -94,29 +96,31 @@ export function sortAlphabetically(fieldA: MarcControlField | MarcField, fieldB:
     return 0;
   }
 
-  const tagToSortingSubfields = {
+  const tagToSortingSubfields: Record<string, string[]> = {
     'LOW': ['a'],
     'SID': ['b']
   };
 
-  if (!(fieldA.tag in tagToSortingSubfields)) {
+  const subfieldsToCheck = tagToSortingSubfields[fieldA.tag];
+  if (subfieldsToCheck === undefined) {
     return 0;
   }
-
-  const subfieldsToCheck = tagToSortingSubfields[fieldA.tag];
 
   //debugDev(`CHECKING ${subfieldsToCheck.join(', ')}`);
   const result = scoreSubfieldsAlphabetically(subfieldsToCheck);
   debugDev(`RESULT ${result}`);
   return result;
 
-  function scoreSubfieldsAlphabetically(setOfSubfields) {
+  function scoreSubfieldsAlphabetically(setOfSubfields: string[]): number {
     if (setOfSubfields.length === 0) {
       return 0;
     }
     const [subfieldCode, ...remainingSubfieldCodes] = setOfSubfields;
-    const valA = selectFirstValue(fieldA as MarcField, subfieldCode);
-    const valB = selectFirstValue(fieldB as MarcField, subfieldCode);
+    if (subfieldCode === undefined) {
+      return 0;
+    }
+    const valA = selectFirstValue(fieldA, subfieldCode);
+    const valB = selectFirstValue(fieldB, subfieldCode);
     //debugDev(`CHECKING SUBFIELD '${subfieldCode}'`);
     if (!valA) {
       if (!valB) {
@@ -138,7 +142,7 @@ export function sortAlphabetically(fieldA: MarcControlField | MarcField, fieldB:
     return scoreSubfieldsAlphabetically(remainingSubfieldCodes);
   }
 
-  function selectFirstValue(field: MarcField, subcode: string): string | undefined {
+  function selectFirstValue(field: MarcControlField | MarcField, subcode: string): string | undefined {
     if ('subfields' in field) {
       return field.subfields
         .filter(subfield => subcode === subfield.code)
