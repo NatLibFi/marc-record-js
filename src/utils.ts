@@ -1,12 +1,7 @@
 import type {MarcControlField, MarcField, MarcRecordObject, ValidationOptions} from './index.ts';
 import {validate} from 'jsonschema';
-import createSchema from './schema.ts';
+import createSchema, {createFieldSchema} from './schema.ts';
 import MarcRecordError from './error.ts';
-//import createDebugLogger from 'debug';
-//import {inspect} from 'util';
-//const debug = createDebugLogger('@natlibfi/marc-record:utils');
-//const debugData = debug.extend('data');
-//const debugDev = debug.extend('dev');
 
 /**
  * Deep clone an object using JSON serialization.
@@ -20,16 +15,11 @@ export function clone<T>(obj: T): T {
 export function validateRecord(record: MarcRecordObject, options: ValidationOptions = {}): string[] {
   const {noFailValidation = false} = options;
   const validationResults = validate(record, createSchema(options), {nestedErrors: false});
-  //debugData(JSON.stringify(record));
-  //debugDev(inspect(validationResults), {depth: 3});
-  //debugDev(inspect(validationResults.errors));
-  //debugData(validationResults.errors.toString());
   if (noFailValidation === true) {
     const errorStrings = validationResults.errors.map(valError => valError.toString());
     return errorStrings;
   }
   if (validationResults.errors.length > 0) {
-    //console.log('Record validation throws');
     throw new MarcRecordError('Record is invalid', validationResults);
   }
   return [];
@@ -44,16 +34,11 @@ export function validateRecord(record: MarcRecordObject, options: ValidationOpti
  */
 export function validateField(field: MarcControlField | MarcField, options: ValidationOptions = {}): string[] {
   const {noFailValidation = false} = options;
-  const schema = createSchema(options);
   const validationResults = validate(
     field,
-    (schema as {properties: {fields: {items: unknown}}}).properties.fields.items,
+    createFieldSchema(options),
     {nestedErrors: false}
   );
-  //debugData(JSON.stringify(field));
-  //debugDev(inspect(validationResults));
-  //debugDev(inspect(validationResults.errors));
-  //debugData(validationResults.errors.toString());
   if (noFailValidation === true) {
     return validationResults.errors.map(valError => valError.toString());
   }

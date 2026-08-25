@@ -11,11 +11,8 @@ describe('utils', () => {
       const a = {foo: 'bar'};
       const b = Utils.clone(a);
 
-      //expect(JSON.stringify(a)).to.equal(JSON.stringify(b));
       assert.deepStrictEqual(JSON.stringify(a), JSON.stringify(b));
-      //expect(a).to.be.eql(b);
       assert.deepStrictEqual(a, b);
-      //expect(a).to.not.equal(b);
       assert.equal(Object.is(a, b), false);
     });
   });
@@ -28,7 +25,6 @@ describe('utils', () => {
         fields: [{tag: 'FOO', value: 'bar'}]
       };
 
-      //expect(Utils.validateRecord(record)).to.not.throw;
       assert.ok(Utils.validateRecord(record), 'Should not fail!');
     });
 
@@ -38,7 +34,6 @@ describe('utils', () => {
         fields: [{tag: 'FOO', value: 'bar'}]
       };
 
-      //expect(Utils.validateRecord(record, {strict: true})).to.not.throw;
       assert.ok(Utils.validateRecord(record, {strict: true}), 'Should not fail!');
     });
 
@@ -674,7 +669,7 @@ describe('utils', () => {
   });
 });
 
-function isMarcRecordError(err: any, regexp: RegExp) {
+function isMarcRecordError(err: unknown, regexp: RegExp) {
   if (err instanceof MarcRecordError) {
     assert.match(err.message, regexp);
     assert.equal(Object.hasOwn(err, 'validationResults'), true);

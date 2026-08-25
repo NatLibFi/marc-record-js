@@ -1,12 +1,12 @@
 # MARC record implementation in JavaScript
 
 [![NPM Version](https://img.shields.io/npm/v/@natlibfi/marc-record.svg)](https://npmjs.org/package/@natlibfi/marc-record)
-[![Build Status](https://travis-ci.org/NatLibFi/marc-record-js.svg)](https://travis-ci.org/NatLibFi/marc-record-js)
-[![Test Coverage](https://codeclimate.com/github/NatLibFi/marc-record-js/badges/coverage.svg)](https://codeclimate.com/github/NatLibFi/marc-record-js/coverage)
+[![Test branch](https://github.com/NatLibFi/marc-record-js/actions/workflows/melinda-node-tests-and-publish.yml/badge.svg?branch=test)](https://github.com/NatLibFi/marc-record-js/actions/workflows/melinda-node-tests-and-publish.yml?query=branch%3Atest)
+[![Main branch](https://github.com/NatLibFi/marc-record-js/actions/workflows/melinda-node-tests-and-publish.yml/badge.svg?branch=main)](https://github.com/NatLibFi/marc-record-js/actions/workflows/melinda-node-tests-and-publish.yml?query=branch%3Amain)
 
-MARC record implementation in JavaScript. [A JSON schema](src/schema.js) file specifies the data format.
+MARC record implementation in JavaScript. [A JSON schema](src/schema.ts) file specifies the data format.
 
-This a fork of the original [marc-record-js](https://github.com/petuomin/marc-record-js). The new implementation uses ES6 syntax and adds validation of the record structure.
+This is a fork of the original [marc-record-js](https://github.com/petuomin/marc-record-js). The new implementation uses ES6 syntax and adds validation of the record structure.
 
 ## Usage
 ```js
@@ -222,6 +222,14 @@ record.insertFields([
 ]);
 ```
 
+**findPosition()** returns the index where a field would be inserted by the
+auto-sort used by `insertField()`. Useful for inspecting or controlling field
+ordering before insertion:
+
+```js
+const index = record.findPosition({tag: "245", subfields: [{code: "a", value: "foo"}]});
+```
+
 **appendField / appendFields:** Appending fields to the end of record. In general, you
 close always use insert instead of append.
 
@@ -320,9 +328,19 @@ if (record.isBK()) {
 }
 
 // 2) Ask for record type:
-if (record.getTypeOfMaterial() === 'MU') { // NB! Failure returns false
+if (record.getTypeOfMaterial() === 'MU') { // NB! Failure returns undefined
   // Do something else
 }
+```
+
+The raw leader characters behind these checks are exposed directly:
+
+```js
+// Type of record from leader position 6 (e.g. 'a' language material, 'c' notated music)
+record.getTypeOfRecord();       // NB! Failure returns undefined
+
+// Bibliographic level from leader position 7 (e.g. 'a' monographic component part, 'm' monograph)
+record.getBibliographicLevel(); // NB! Failure returns undefined
 ```
 
 ## Sorting fields
@@ -358,3 +376,11 @@ Copyright (c) 2014-2017 **Pasi Tuominen <pasi.tuominen@gmail.com>**
 Copyright (c) 2018-2026 **University Of Helsinki (The National Library Of Finland)**
 
 This project's source code is licensed under the terms of **MIT License** or any later version.
+
+## Possible future extensions
+
+Ideas considered but not implemented (removed from `src/schema.ts` in 2026):
+
+- Check actual field length in addition to single field/subfield value. The 9999 octet limit includes indicators + subfield separators + subfield codes in data fields, which could be subtracted.
+- Check the record length (maximum 99999 octets). Record length (leader character positions 00-04) contains a five-character ASCII numeric string equal to the length of the entire record, including itself and the record terminator. The maximum length of a record is 99999 octets (https://www.loc.gov/marc/specifications/specrecstruc.html).
+- Add a checker for MARC21 hardcoded codes in leader (https://www.loc.gov/marc/specifications/specrecstruc.html#leader).

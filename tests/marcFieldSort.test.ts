@@ -1,12 +1,7 @@
 import generateTests from '@natlibfi/fixugen';
 import {READERS} from '@natlibfi/fixura';
 import assert from 'node:assert';
-//import createDebugLogger from 'debug';
 import {MarcRecord} from '../src/index.ts';
-
-//const debug = createDebugLogger('@natlibfi:marc-record:marcFieldSort:test);
-//const debugData = debug.extend('data');
-
 
 generateTests({
   callback,

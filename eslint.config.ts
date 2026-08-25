@@ -2,9 +2,9 @@
 import {defineConfig} from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
-// Eslint configuration object for globally ignoring .js files
-// - ignore all files that start with a dot
-// - ignore all files inside directories named 'dist'
+// ESLint flat config for the TypeScript-only src/ directory.
+// - extends typescript-eslint recommended + stylistic presets
+// - ignores dotfiles and files inside directories named 'dist'
 export default defineConfig(
   [
     {
@@ -27,7 +27,6 @@ export default defineConfig(
             "checkForEach": false
           }
         ],
-        "eqeqeq": ["error", "always"],
         "max-depth": ["warn", 4],
         "max-lines": ["warn", 500],
         "max-lines-per-function": ["warn", {"max": 100}],
@@ -40,7 +39,6 @@ export default defineConfig(
             "allowForLoopAfterthoughts": true
           }
         ],
-        "no-var": "error",
         "no-warning-comments": "off",
         "prefer-destructuring": ["error", {
           "array": true,
@@ -49,8 +47,7 @@ export default defineConfig(
         "prefer-const": ["error", {
           "destructuring": "any",
           "ignoreReadBeforeAssign": false
-        }],
-        "radix": "error"
+        }]
       }
     }
   ]

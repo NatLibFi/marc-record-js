@@ -177,7 +177,6 @@ describe('index', () => {
     //---------------------------------------------------------------------------
     // MARK: Check results
     function checkResults(operations: operation[], throws: string, returns: any) {
-      //debug(`Returns: ${returns} ${result}`);
       try {
         const result = operations.reduce((_: any, op) => runOperation(op), record);
         if (returns === undefined) {
@@ -230,12 +229,10 @@ describe('index', () => {
       if (name === 'MarcRecord') {
         const {leader, fields, validationOptions} = args ?? {};
         const object = args && {leader, fields};
-        //debug(`Object: ${JSON.stringify(object, null, 2)}`);
 
         const created = new MarcRecord(object, validationOptions);
         assert.equal(typeof created, 'object');
         assert.ok(object === undefined || created.fields !== object.fields);
-        //debug(`Created: ${JSON.stringify(created, null, 2)}`);
         return created;
       }
 
@@ -420,9 +417,6 @@ describe('index', () => {
           return new MarcRecord({leader, fields}, validationOptions);
         }(args));
 
-        //debug(`Record: ${JSON.stringify(record, null, 2)}`);
-        //debug(`What: ${JSON.stringify(what, null, 2)}`);
-
         const result = record.equalsTo(what);
         assert.equal(MarcRecord.isEqual(record, what), result);
         return result;
@@ -443,7 +437,6 @@ describe('index', () => {
       if (name === 'isTypeOfMaterial') {
         const {target} = args;
 
-        // console.info(`TARGET: '${target}'\n${record.toString()}`); // eslint-disable-line no-console
         if (target === 'BK') { // Book
           return record.isBK();
         }
@@ -478,4 +471,33 @@ describe('index', () => {
       throw new Error(`Invalid operation: ${name}`);
     }
   }
+});
+
+describe('index (manual cases)', () => {
+  it('removeSubfield leaves the field untouched when the subfield is not found', () => {
+    const record = new MarcRecord({
+      leader: '',
+      fields: [
+        {tag: '260', ind1: ' ', ind2: ' ', subfields: [{code: 'a', value: 'x'}, {code: 'b', value: 'y'}]}
+      ]
+    });
+    const field = record.fields[0];
+    if (!('subfields' in field)) {
+      throw new Error('expected a data field');
+    }
+
+    const result = record.removeSubfield({code: 'z', value: 'nope'}, field);
+
+    assert.equal(result, record);
+    assert.deepStrictEqual(field.subfields, [{code: 'a', value: 'x'}, {code: 'b', value: 'y'}]);
+  });
+
+  it('getTypeOfMaterial returns undefined for an unrecognized leader type', () => {
+    const record = new MarcRecord({
+      leader: '01234cbi a22005894i 4500',
+      fields: [{tag: '001', value: 'bar'}]
+    });
+
+    assert.equal(record.getTypeOfMaterial(), undefined);
+  });
 });

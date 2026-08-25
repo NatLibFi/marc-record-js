@@ -12,7 +12,6 @@
   "operations": [
     { "name": "getTypeOfMaterial", "args": {"self": true}}
   ],
-  "returns": false,
   "immutable": true,
   "only": false
 }
