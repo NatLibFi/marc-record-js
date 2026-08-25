@@ -219,7 +219,7 @@ export class MarcRecord {
   }
 
   /**
-   * Remove a single field by reference. Throws if this is the last field and the fields validation option is enabled.
+   * Remove a single field by reference. Throws an error if this is the last field and the fields validation option is enabled.
    * @param field - The field entry to remove.
    * @returns This MarcRecord instance for chaining.
    */
