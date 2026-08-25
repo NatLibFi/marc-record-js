@@ -1,3 +1,5 @@
+import type {ValidationOptions} from "./index.ts";
+
 const anythingPattern = /[\s\S]*/su;
 
 // https://www.loc.gov/marc/specifications/specrecstruc.html
@@ -31,17 +33,15 @@ const dataFieldTagPattern = /^(?:[1-9A-Z][0-9A-Z][0-9A-Z]|[0-9A-Z][1-9A-Z][0-9A-
 // ASCII - all printable/graphic: 32-126 (\x20 - \x7E)
 // ASCII - blank/space: 32 (\x20)
 // ASCII - uppercase alphabetic: 65-90 (\x41 - \x5A)
-
 const subfieldCodePattern = /^[\x21-\x40\x5B-\x7E]$/u;
 
 // https://www.loc.gov/marc/specifications/specrecstruc.html:
 // ... An indicator may be any ASCII lowercase alphabetic, numeric, or blank .
-
 const indicatorPattern = /^[0-9a-z ]$/u;
 
 // Option to not allow ASCII control characters in subfield values
 
-
+// data field value patterns
 const dataFieldValuePatternNoControlCharacters = /^[^\x00-\x1F\x7F]*$/u;
 // Match anything - no restrictions
 const dataFieldValuePattern = /.*/u;
@@ -89,19 +89,44 @@ const maximumFieldLength = 9999;
 // noControlCharacters: false,    // Do not allow ASCII control characters in field/subfield values
 // noAdditionalProperties: false  // Do not allow additional properties in fields
 
-
-export default function ({strict = false, fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalProperties = false}) {
-  if (strict) {
-    return schema({fields: true, subfields: true, subfieldValues: true, controlFieldValues: true, leader: true, characters: true, noControlCharacters: true, noAdditionalProperties: true});
+/**
+ * Create a JSON Schema for MARC record validation.
+ * If strict mode is enabled, all validation options are set to true.
+ * @param options - Validation options (ignored in strict mode).
+ * @returns A jsonschema-compatible schema object.
+ */
+export default function createSchema(options: ValidationOptions) {
+  if (options.strict) {
+    return schema({
+      fields: true,
+      subfields: true,
+      subfieldValues: true,
+      controlFieldValues: true,
+      leader: true,
+      characters: true,
+      noControlCharacters: true,
+      noAdditionalProperties: true
+    });
   }
-  return schema({fields, subfields, subfieldValues, controlFieldValues, leader, characters, noControlCharacters, noAdditionalProperties});
+  return schema(options);
 }
 
-function schema({fields = true, subfields = true, subfieldValues = true, controlFieldValues = true, leader = false, characters = false, noControlCharacters = false, noAdditionalProperties = false}) {
+function schema({
+  fields = true,
+  subfields = true,
+  subfieldValues = true,
+  controlFieldValues = true,
+  leader = false,
+  characters = false,
+  noControlCharacters = false,
+  noAdditionalProperties = false,
+}: ValidationOptions) {
   return {
+    id: 'MarcRecordObject',
     type: 'object',
     properties: {
       leader: {
+        id: 'MarcRecordObject leader ',
         type: 'string',
         minLength: leader ? 24 : 0,
         maxLength: leader ? 24 : maximumFieldLength,
@@ -109,20 +134,25 @@ function schema({fields = true, subfields = true, subfieldValues = true, control
         maxOccurence: 1
       },
       fields: {
+        id: 'MarcRecordObject MarcField[]',
         type: 'array',
         minItems: fields ? 1 : 0,
         items: {
           anyOf: [
+            // Control field schema
             {
+              id: 'MarcControlField',
               type: 'object',
               properties: {
                 tag: {
+                  id: 'MarcControlField tag',
                   type: 'string',
                   minLength: 3,
                   maxLength: 3,
                   pattern: characters ? controlFieldTagPattern : anythingPattern
                 },
                 value: {
+                  id: 'MarcControlField value',
                   type: 'string',
                   minLength: controlFieldValues ? 1 : 0,
                   maxLength: maximumFieldLength,
@@ -135,45 +165,54 @@ function schema({fields = true, subfields = true, subfieldValues = true, control
               required: controlFieldValues ? ['tag', 'value'] : ['tag'],
               additionalProperties: !noAdditionalProperties
             },
+            // MarcField schema
             {
+              id: 'MarcField',
               type: 'object',
               properties: {
                 tag: {
+                  id: 'MarcField tag',
                   type: 'string',
                   minLength: 3,
                   maxLength: 3,
                   pattern: characters ? dataFieldTagPattern : anythingPattern
                 },
                 ind1: {
+                  id: 'MarcField ind1',
                   type: 'string',
                   minLength: 1,
                   maxLength: 1,
                   pattern: characters ? indicatorPattern : anythingPattern
                 },
                 ind2: {
+                  id: 'MarcField ind2',
                   type: 'string',
                   minLength: 1,
                   maxLength: 1,
                   pattern: characters ? indicatorPattern : anythingPattern
                 },
                 subfields: {
+                  id: 'MarcField MarcSubfield[]',
                   type: 'array',
                   minItems: subfields ? 1 : 0,
                   items: {
+                    id: 'MarcSubfield',
                     type: 'object',
                     properties: {
                       code: {
+                        id: 'MarcSubfield code',
                         type: 'string',
                         minLength: 1,
                         maxLength: 1,
                         pattern: characters ? subfieldCodePattern : anythingPattern
                       },
                       value: {
+                        id: 'MarcSubfield value',
                         type: 'string',
                         maxLength: maximumFieldLength,
                         minLength: subfieldValues ? 1 : 0,
                         pattern: noControlCharacters ? dataFieldValuePatternNoControlCharacters : dataFieldValuePattern
-                      }
+                      },
                     },
                     required: subfieldValues ? ['code', 'value'] : ['code'],
                     additionalProperties: !noAdditionalProperties
@@ -196,4 +235,8 @@ function schema({fields = true, subfields = true, subfieldValues = true, control
     },
     required: leader ? ['leader', 'fields'] : ['fields']
   };
+
+
+
+
 }

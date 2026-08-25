@@ -2,7 +2,7 @@ import generateTests from '@natlibfi/fixugen';
 import {READERS} from '@natlibfi/fixura';
 import assert from 'node:assert';
 //import createDebugLogger from 'debug';
-import {MarcRecord} from './index.js';
+import {MarcRecord} from '../src/index.ts';
 
 //const debug = createDebugLogger('@natlibfi:marc-record:marcFieldSort:test);
 //const debugData = debug.extend('data');
@@ -19,13 +19,10 @@ generateTests({
   }
 });
 
-function callback({getFixture, disabled}) {
-  if (disabled) {
-    throw new Error('Test disabled.');
-  }
-
-  const rec = new MarcRecord(getFixture('input.json'));
-  const sorted = rec.sortFields();
+function callback({getFixture}) {
+  const record = new MarcRecord(getFixture('input.json'));
+  const sortedRecord = record.sortFields();
   const expectedResult = new MarcRecord(getFixture('result.json'));
-  assert.deepStrictEqual(sorted, expectedResult);
+
+  assert.deepStrictEqual(sortedRecord, expectedResult);
 }

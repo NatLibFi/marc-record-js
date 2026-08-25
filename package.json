@@ -24,23 +24,23 @@
 		"url": "git+https://github.com/NatLibFi/marc-record-js.git"
 	},
 	"license": "MIT",
-	"version": "10.0.2",
+	"version": "11.0.0-alpha.2",
 	"main": "./dist/index.js",
 	"type": "module",
 	"engines": {
-		"node": ">=22"
+		"node": ">=24"
 	},
 	"publishConfig": {
 		"access": "public"
 	},
 	"scripts": {
 		"prepare": "npm run build",
-		"build": "esbuild src/**/*.js --sourcemap --platform=node --main-fields=main --outdir=dist --allow-overwrite --analyze",
+		"build": "tsc",
 		"lint": "eslint ./src",
 		"lint:dev": "eslint --fix ./src",
-		"test:base": "node --test --experimental-test-coverage --test-reporter=spec './src/*.test.js' './src/**/*.test.js'",
+		"test:base": "node --test --experimental-test-coverage --test-reporter=spec './tests/*.test.ts'",
 		"test": "npm run lint && npm run test:base",
-		"watch:test": "cross-env DEBUG=@natlibfi/* NODE_ENV=test node --watch --test --experimental-test-coverage --test-reporter=spec './src/*.test.js' './src/**/*.test.js'",
+		"watch:test": "cross-env DEBUG=@natlibfi/* NODE_ENV=test node --watch --test --experimental-test-coverage --test-reporter=spec './tests/*.test.ts'",
 		"dev": "npm run watch:test",
 		"dev:debug": "cross-env LOG_LEVEL=debug DEBUG=@natlibfi/* NODE_ENV=test npm run watch:test"
 	},
@@ -49,10 +49,14 @@
 		"jsonschema": "^1.5.0"
 	},
 	"devDependencies": {
-		"@natlibfi/fixugen": "^3.0.1",
-		"@natlibfi/fixura": "^4.0.1",
+		"@natlibfi/fixugen": "^4.0.0-alpha.4",
+		"@natlibfi/fixura": "^5.0.0-alpha.8",
+		"@types/debug": "^4.1.12",
+		"@types/node": "^26.1.0",
 		"cross-env": "^10.1.0",
-		"esbuild": "^0.28.0",
-		"eslint": "^10.3.0"
+		"eslint": "^10.6.0",
+		"jiti": "^2.7.0",
+		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.63.0"
 	}
 }

@@ -8,7 +8,8 @@ import {READERS} from '@natlibfi/fixura';
 import {describe, it} from 'node:test';
 import assert from 'node:assert';
 import createDebugLogger from 'debug';
-import {MarcRecord} from './index.js';
+import type {MarcRecordObject, ValidationOptions} from '../src/index.ts';
+import {MarcRecord, MarcRecordError} from '../src/index.ts';
 
 const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
 
@@ -106,7 +107,29 @@ const debug = createDebugLogger('@natlibfi/marc-record/index.spec.js'); // <---
  *
  ******************************************************************************/
 
+interface operation {name: string, args: any}
+
+interface metadata {
+  getFixture: any;
+  input: MarcRecordObject | string[];
+  result: any;
+  immutable: boolean;
+  noinput: boolean;
+  validationOptions: ValidationOptions;
+  operations: operation[];
+  returns: any;
+  throws: string;
+}
+
 describe('index', () => {
+  describe('constructor', () => {
+    it('creates an empty record', () => {
+      const record = new MarcRecord();
+      assert.equal(record.leader, '');
+      assert.deepStrictEqual(record.fields, []);
+    });
+  });
+
   //***************************************************************************
   //
   // Generate tests which use operations table in metadata to perform operations
@@ -131,12 +154,7 @@ describe('index', () => {
     }
   });
 
-  function callback(metadata) {
-
-    // Get input & expected output
-    const {getFixture} = metadata;
-    const {input, result, immutable, noinput, validationOptions} = metadata;
-
+  function callback({getFixture, input, result, immutable, noinput, validationOptions, operations, returns, throws}: metadata) {
     // if !noinput and we have input in metadata we use it, otherwise we get it from file input.json
     const inputRecord = noinput ? null : getRecord(input, 'input.json');
     const record = inputRecord ? MarcRecord.clone(inputRecord, validationOptions) : null;
@@ -149,43 +167,40 @@ describe('index', () => {
     const outputRecord = immutable ? inputRecord : getRecord(result, 'result.json');
     MarcRecord.setValidationOptions({});
 
-    // Get operations
-    const {operations, returns, throws} = metadata;
-
     checkResults(operations, throws, returns);
-    assert.deepStrictEqual(record, outputRecord);
+    assert.deepStrictEqual(record?._validationOptions, outputRecord?._validationOptions);
+    assert.deepStrictEqual(record?.leader, outputRecord?.leader);
+    assert.deepStrictEqual(record?.fields, outputRecord?.fields);
 
     return;
 
     //---------------------------------------------------------------------------
     // MARK: Check results
-    function checkResults(operations, throws, returns) {
+    function checkResults(operations: operation[], throws: string, returns: any) {
       //debug(`Returns: ${returns} ${result}`);
-      if (throws) {
-        try {
-          return runOps();
-        } catch (error) {
+      try {
+        const result = operations.reduce((_: any, op) => runOperation(op), record);
+        if (returns === undefined) {
+          return;
+        }
+        assert.deepEqual(result, returns);
+        return;
+      } catch (error) {
+        if (throws && error instanceof MarcRecordError) {
           assert.equal(Object.hasOwn(error, 'message'), true);
           assert.equal(Object.hasOwn(error, 'validationResults'), true);
           assert.match(error.message, new RegExp(`^${throws}`, 'u'));
+          return;
         }
-        return;
-      }
-      const result = runOps();
-      if (returns === undefined) {
-        return;
-      }
-      assert.deepEqual(result, returns);
-
-      function runOps() {
-        return operations.reduce((_, op) => runOperation(op), record);
+        throw error;
       }
     }
 
+
     //---------------------------------------------------------------------------
     // MARK: Get Record
-    function getRecord(fromMeta, filename) {
-      const data = fromMeta || getFixture(filename);
+    function getRecord(fromMeta: MarcRecordObject | string[], filename: string) {
+      const data = fromMeta ?? getFixture(filename);
 
       if (Array.isArray(data)) {
         const text = data.join('\n');
@@ -197,8 +212,42 @@ describe('index', () => {
     //---------------------------------------------------------------------------
     // Operation shuold return same object for chaining
     // MARK: Run Operation
-    function runOperation(op) {
+    function runOperation(op: operation) {
       const {name, args} = op;
+
+      //-------------------------------------------------------------------------
+      if (name === 'getValidationOptions') {
+        return MarcRecord.getValidationOptions();
+      }
+
+      //-------------------------------------------------------------------------
+      if (name === 'setValidationOptions') {
+        return MarcRecord.setValidationOptions(args);
+      }
+
+      //-------------------------------------------------------------------------
+      // MARK: Marc record
+      if (name === 'MarcRecord') {
+        const {leader, fields, validationOptions} = args ?? {};
+        const object = args && {leader, fields};
+        //debug(`Object: ${JSON.stringify(object, null, 2)}`);
+
+        const created = new MarcRecord(object, validationOptions);
+        assert.equal(typeof created, 'object');
+        assert.ok(object === undefined || created.fields !== object.fields);
+        //debug(`Created: ${JSON.stringify(created, null, 2)}`);
+        return created;
+      }
+
+      //-------------------------------------------------------------------------
+      if (record === null) {
+        throw new Error('Cant test null record!');
+      }
+
+      //-------------------------------------------------------------------------
+      if (name === 'getValidationErrors') {
+        return record.getValidationErrors();
+      }
 
       //-------------------------------------------------------------------------
       if (name === 'nop') {
@@ -277,8 +326,11 @@ describe('index', () => {
       // MARK: Remove subfield
       if (name === 'removeSubfield') {
         const field = record.fields[args.field];
-        const subfield = field.subfields[args.subfield];
-        assert.equal(record.removeSubfield(subfield, field), record);
+        if ('subfields' in field) {
+          const subfield = field.subfields[args.subfield];
+          assert.equal(record.removeSubfield(subfield, field), record);
+          return record;
+        }
         return record;
       }
 
@@ -314,34 +366,7 @@ describe('index', () => {
         return record.getDatafields();
       }
 
-      //-------------------------------------------------------------------------
-      if (name === 'getValidationOptions') {
-        return MarcRecord.getValidationOptions();
-      }
 
-      //-------------------------------------------------------------------------
-      if (name === 'setValidationOptions') {
-        return MarcRecord.setValidationOptions(args);
-      }
-
-      //-------------------------------------------------------------------------
-      if (name === 'getValidationErrors') {
-        return record.getValidationErrors();
-      }
-
-      //-------------------------------------------------------------------------
-      // MARK: Marc record
-      if (name === 'MarcRecord') {
-        const {leader, fields, validationOptions} = args ?? {};
-        const object = args && {leader, fields};
-        //debug(`Object: ${JSON.stringify(object, null, 2)}`);
-
-        const created = new MarcRecord(object, validationOptions);
-        assert.equal(typeof created, 'object');
-        assert.ok(object === undefined || created.fields !== object.fields);
-        //debug(`Created: ${JSON.stringify(created, null, 2)}`);
-        return created;
-      }
 
       //-------------------------------------------------------------------------
       // MARK: Clone

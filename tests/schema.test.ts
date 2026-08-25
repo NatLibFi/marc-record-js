@@ -1,6 +1,6 @@
 import {describe, it} from 'node:test';
 import assert from 'node:assert';
-import createSchema from './schema.js';
+import createSchema from '../src/schema.ts';
 
 describe('schema', () => {
   it('Create a schema', () => {

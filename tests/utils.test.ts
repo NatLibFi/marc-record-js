@@ -1,7 +1,8 @@
 /* eslint-disable max-lines */
 import {describe, it} from 'node:test';
 import assert from 'node:assert';
-import * as Utils from './utils.js';
+import * as Utils from '../src/utils.ts';
+import {MarcRecordError} from '../src/index.ts';
 
 describe('utils', () => {
   // MARK: Clone
@@ -48,12 +49,15 @@ describe('utils', () => {
       };
 
       try {
+        // @ts-expect-error mock record
         Utils.validateRecord(record);
       } catch (err) {
-        assert.match(err.message, /^Record is invalid/u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
-        return;
-      } throw new Error('Should throw');
+        if (err instanceof MarcRecordError) {
+          isMarcRecordError(err, /^Record is invalid/u);
+          return;
+        }
+      }
+      throw new Error('Should throw');
     });
 
     it('Should consider the record invalid (control character in subfield value, noControlCharacters: true)', () => {
@@ -69,8 +73,7 @@ describe('utils', () => {
       try {
         Utils.validateRecord(record, {noControlCharacters: true});
       } catch (err) {
-        assert.match(err.message, /^Record is invalid/u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Record is invalid/u);
         return;
       }
       throw new Error('Should throw');
@@ -96,10 +99,10 @@ describe('utils', () => {
       const field = {value: 'FOO'};
 
       try {
+        // @ts-expect-error mock field
         Utils.validateField(field);
       } catch (err) {
-        assert.match(err.message, /^Field is invalid: /u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Field is invalid: /u);
         return;
       }
       throw new Error('Should throw');
@@ -109,10 +112,10 @@ describe('utils', () => {
       const field = {tag: 'FOO'};
 
       try {
+        // @ts-expect-error mock field
         Utils.validateField(field, {controlFieldValues: true});
       } catch (err) {
-        assert.match(err.message, /^Field is invalid: \{"tag":"FOO"\}/u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Field is invalid: \{"tag":"FOO"\}/u);
         return;
       }
       throw new Error('Should throw');
@@ -122,10 +125,10 @@ describe('utils', () => {
       const field = {'subfields': [{'code': 'b', 'value': '39'}, {'code': 'c', 'value': '20150121'}]};
 
       try {
+        // @ts-expect-error mock field
         Utils.validateField(field);
       } catch (err) {
-        assert.match(err.message, /^Field is invalid: /u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Field is invalid: /u);
         return;
       }
       throw new Error('Should throw');
@@ -135,10 +138,10 @@ describe('utils', () => {
       const field = {'ind1': ' ', 'ind2': ' '};
 
       try {
+        // @ts-expect-error mock field
         Utils.validateField(field);
       } catch (err) {
-        assert.match(err.message, /^Field is invalid: /u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Field is invalid: /u);
         return;
       }
       throw new Error('Should throw');
@@ -154,8 +157,7 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        assert.match(err.message, /^Field is invalid: /u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Field is invalid: /u);
         return;
       }
       throw new Error('Should throw');
@@ -167,8 +169,7 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        assert.match(err.message, /^Field is invalid: /u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Field is invalid: /u);
         return;
       }
       throw new Error('Should throw');
@@ -180,8 +181,7 @@ describe('utils', () => {
       try {
         Utils.validateField(field);
       } catch (err) {
-        assert.match(err.message, /^Field is invalid: /u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Field is invalid: /u);
         return;
       }
       throw new Error('Should throw');
@@ -192,10 +192,10 @@ describe('utils', () => {
       const field = {'tag': 'CAT', 'subfields': [{'code': 'b', 'value': '39'}, {'code': 'c', 'value': '20150121'}]};
 
       try {
+        // @ts-expect-error mock field
         Utils.validateField(field);
       } catch (err) {
-        assert.match(err.message, /^Field is invalid: /u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Field is invalid: /u);
         return;
       }
       throw new Error('Should throw');
@@ -205,10 +205,10 @@ describe('utils', () => {
       const field = {'tag': 'FOO', 'ind1': ' ', 'ind2': ' '};
 
       try {
+        // @ts-expect-error mock field
         Utils.validateField(field);
       } catch (err) {
-        assert.match(err.message, /^Field is invalid: /u);
-        assert.equal(Object.hasOwn(err, 'validationResults'), true);
+        isMarcRecordError(err, /^Field is invalid: /u);
         return;
       }
       throw new Error('Should throw');
@@ -228,8 +228,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -248,8 +247,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -272,8 +270,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -299,8 +296,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -312,8 +308,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -325,8 +320,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -338,8 +332,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -357,8 +350,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -378,8 +370,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -412,10 +403,10 @@ describe('utils', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'value': 'foo'}, {'code': 'c', 'value': '20150121'}]};
 
           try {
+            // @ts-expect-error mock field
             Utils.validateField(field);
           } catch (err) {
-            assert.match(err.message, /^Field is invalid: /u);
-            assert.equal(Object.hasOwn(err, 'validationResults'), true);
+            isMarcRecordError(err, /^Field is invalid: /u);
             return;
           }
           throw new Error('Should throw');
@@ -427,8 +418,7 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {characters: true});
           } catch (err) {
-            assert.match(err.message, /^Field is invalid: /u);
-            assert.equal(Object.hasOwn(err, 'validationResults'), true);
+            isMarcRecordError(err, /^Field is invalid: /u);
             return;
           }
           throw new Error('Should throw');
@@ -446,8 +436,7 @@ describe('utils', () => {
           try {
             Utils.validateField(field);
           } catch (err) {
-            assert.match(err.message, /^Field is invalid: /u);
-            assert.equal(Object.hasOwn(err, 'validationResults'), true);
+            isMarcRecordError(err, /^Field is invalid: /u);
             return;
           }
           throw new Error('Should throw');
@@ -459,8 +448,7 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {characters: true});
           } catch (err) {
-            assert.match(err.message, /^Field is invalid: /u);
-            assert.equal(Object.hasOwn(err, 'validationResults'), true);
+            isMarcRecordError(err, /^Field is invalid: /u);
             return;
           }
           throw new Error('Should throw');
@@ -478,8 +466,7 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {characters: true});
           } catch (err) {
-            assert.match(err.message, /^Field is invalid: /u);
-            assert.equal(Object.hasOwn(err, 'validationResults'), true);
+            isMarcRecordError(err, /^Field is invalid: /u);
             return;
           }
           throw new Error('Should throw');
@@ -502,8 +489,7 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {subfieldValues: true});
           } catch (err) {
-            assert.match(err.message, /^Field is invalid: /u);
-            assert.equal(Object.hasOwn(err, 'validationResults'), true);
+            isMarcRecordError(err, /^Field is invalid: /u);
             return;
           }
           throw new Error('Should throw');
@@ -511,7 +497,6 @@ describe('utils', () => {
 
         it('Should consider the field valid (subfield with empty value), subfieldValues: false', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b', 'value': ''}, {'code': 'c', 'value': '20150121'}]};
-
           assert.ok(Utils.validateField(field, {subfieldValues: false}), 'Should not fail!');
         });
 
@@ -521,8 +506,7 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {subfieldValues: true});
           } catch (err) {
-            assert.match(err.message, /^Field is invalid: /u);
-            assert.equal(Object.hasOwn(err, 'validationResults'), true);
+            isMarcRecordError(err, /^Field is invalid: /u);
             return;
           }
           throw new Error('Should throw');
@@ -530,7 +514,6 @@ describe('utils', () => {
 
         it('Should consider the field valid (subfield with no value), subfieldValues: false', () => {
           const field = {'tag': 'CAT', 'ind1': ' ', 'ind2': ' ', 'subfields': [{'code': 'b'}, {'code': 'c', 'value': '20150121'}]};
-
           assert.ok(Utils.validateField(field, {subfieldValues: false}), 'Should not fail!');
         });
 
@@ -540,8 +523,7 @@ describe('utils', () => {
           try {
             Utils.validateField(field, {noControlCharacters: true});
           } catch (err) {
-            assert.match(err.message, /^Field is invalid: /u);
-            assert.equal(Object.hasOwn(err, 'validationResults'), true);
+            isMarcRecordError(err, /^Field is invalid: /u);
             return;
           }
           throw new Error('Should throw');
@@ -564,8 +546,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -577,8 +558,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -593,8 +573,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -613,8 +592,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -622,8 +600,6 @@ describe('utils', () => {
 
       it('Should consider the field invalid (non alpha-numeric/blank indicator), characters: false', () => {
         const field = {'tag': 'CAT', 'ind1': '#', 'ind2': ' ', 'subfields': [{'code': 'c', 'value': '20150121'}]};
-
-
         assert.ok(Utils.validateField(field, {characters: false}), 'Should not fail!');
       });
 
@@ -633,8 +609,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {characters: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -656,8 +631,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field, {noAdditionalProperties: true});
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -679,8 +653,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -692,10 +665,7 @@ describe('utils', () => {
         try {
           Utils.validateField(field);
         } catch (err) {
-          assert.match(err.message, /^Field is invalid: /u);
-          assert.equal(Object.hasOwn(err, 'validationResults'), true);
-
-          //console.log(err.validationResults);
+          isMarcRecordError(err, /^Field is invalid: /u);
           return;
         }
         throw new Error('Should throw');
@@ -703,3 +673,13 @@ describe('utils', () => {
     });
   });
 });
+
+function isMarcRecordError(err: any, regexp: RegExp) {
+  if (err instanceof MarcRecordError) {
+    assert.match(err.message, regexp);
+    assert.equal(Object.hasOwn(err, 'validationResults'), true);
+    return;
+  }
+
+  throw new Error('MarcRecordError expected');
+}

@@ -1,31 +1,89 @@
 {
   "description": "Should insert fields specified as arrays (Incomplete subfields /w custom validation)",
   "skip": false,
-  "validationOptions": { "subfieldValues": false },
+  "validationOptions": {
+    "subfieldValues": false
+  },
   "input": {
     "leader": "02848ccm a22005894i 4500",
-    "fields":
-    [
-      {"tag": "001", "value": "bar"},
-      {"tag": "003", "value": "bar"},
-      {"tag": "005", "value": "bar"},
-      {"tag": "006", "value": "bar"}
+    "fields": [
+      {
+        "tag": "001",
+        "value": "bar"
+      },
+      {
+        "tag": "003",
+        "value": "bar"
+      },
+      {
+        "tag": "005",
+        "value": "bar"
+      },
+      {
+        "tag": "006",
+        "value": "bar"
+      }
     ]
   },
   "operations": [
-    { "name": "insertField", "args": ["002", "bar"]},
-    { "name": "insertField", "args": ["504", "", "", "a", "foo", "b", ""]}
+    {
+      "name": "insertField",
+      "args": [
+        "002",
+        "bar"
+      ]
+    },
+    {
+      "name": "insertField",
+      "args": [
+        "504",
+        " ",
+        " ",
+        "a",
+        "foo",
+        "b",
+        ""
+      ]
+    }
   ],
   "result": {
     "leader": "02848ccm a22005894i 4500",
-    "fields":
-    [
-      {"tag": "001", "value": "bar"},
-      {"tag": "002", "value": "bar"},
-      {"tag": "003", "value": "bar"},
-      {"tag": "005", "value": "bar"},
-      {"tag": "006", "value": "bar"},
-      {"tag": "504", "ind1": "", "ind2": "", "subfields": [{"code": "a", "value": "foo"}, {"code": "b", "value": ""}]} 
+    "fields": [
+      {
+        "tag": "001",
+        "value": "bar"
+      },
+      {
+        "tag": "002",
+        "value": "bar"
+      },
+      {
+        "tag": "003",
+        "value": "bar"
+      },
+      {
+        "tag": "005",
+        "value": "bar"
+      },
+      {
+        "tag": "006",
+        "value": "bar"
+      },
+      {
+        "tag": "504",
+        "ind1": " ",
+        "ind2": " ",
+        "subfields": [
+          {
+            "code": "a",
+            "value": "foo"
+          },
+          {
+            "code": "b",
+            "value": ""
+          }
+        ]
+      }
     ]
   }
 }
