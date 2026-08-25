@@ -43,8 +43,6 @@ const indicatorPattern = /^[0-9a-z ]$/u;
 
 // data field value patterns
 const dataFieldValuePatternNoControlCharacters = /^[^\x00-\x1F\x7F]*$/u;
-// Match anything - no restrictions
-const dataFieldValuePattern = /.*/u;
 
 // https://www.loc.gov/marc/specifications/specrecstruc.html
 // ... MARC 21 sets the length of the length of field portion of the entry at four characters, thus a field may contain a maximum of 9999 octets.
@@ -186,7 +184,7 @@ function schema({
                         type: 'string',
                         maxLength: maximumFieldLength,
                         minLength: subfieldValues ? 1 : 0,
-                        pattern: noControlCharacters ? dataFieldValuePatternNoControlCharacters : dataFieldValuePattern
+                        pattern: noControlCharacters ? dataFieldValuePatternNoControlCharacters : anythingPattern
                       },
                     },
                     required: subfieldValues ? ['code', 'value'] : ['code'],
