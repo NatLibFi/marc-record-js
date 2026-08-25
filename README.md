@@ -222,6 +222,14 @@ record.insertFields([
 ]);
 ```
 
+**findPosition()** returns the index where a field would be inserted by the
+auto-sort used by `insertField()`. Useful for inspecting or controlling field
+ordering before insertion:
+
+```js
+const index = record.findPosition({tag: "245", subfields: [{code: "a", value: "foo"}]});
+```
+
 **appendField / appendFields:** Appending fields to the end of record. In general, you
 close always use insert instead of append.
 
@@ -323,6 +331,16 @@ if (record.isBK()) {
 if (record.getTypeOfMaterial() === 'MU') { // NB! Failure returns undefined
   // Do something else
 }
+```
+
+The raw leader characters behind these checks are exposed directly:
+
+```js
+// Type of record from leader position 6 (e.g. 'a' language material, 'c' manuscript)
+record.getTypeOfRecord();       // NB! Failure returns undefined
+
+// Bibliographic level from leader position 7 (e.g. 'a' single unit, 'm' monograph)
+record.getBibliographicLevel(); // NB! Failure returns undefined
 ```
 
 ## Sorting fields
