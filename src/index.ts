@@ -43,17 +43,7 @@ export type TypeOfMaterial = 'BK' | 'CF' | 'CR' | 'MP' | 'MU' | 'MX' | 'VM';
 const debug = createDebugLogger('@natlibfi/marc-record');
 const debugDev = debug.extend('dev');
 
-/**
- * Check whether a field tag matches a query.
- * String queries match as substrings (matching String.prototype.match semantics),
- * RegExp queries are tested against the tag.
- * @param tag - The field tag to check.
- * @param query - Substring or regular expression to match.
- * @returns True if the tag matches the query.
- */
-function tagMatches(tag: string, query: RegExp | string): boolean {
-  return typeof query === 'string' ? tag.includes(query) : query.test(tag);
-}
+
 
 // Default setting for validationOptions:
 // These default validationOptions are (mostly) backwards compatible with marc-record-js < 7.3.0
@@ -191,11 +181,13 @@ export class MarcRecord {
 
   /**
    * Find all fields whose tag matches the given query.
+   * String queries match as substrings (matching String.prototype.match semantics),
+   * RegExp queries are tested against the tag.
    * @param query - Regular expression or substring to match against field tags.
    * @returns Array of matching field entries.
    */
   get(query: RegExp | string): (MarcControlField | MarcField)[] {
-    return this.fields.filter(field => tagMatches(field.tag, query));
+    return this.fields.filter(field => field.tag.match(query));
   }
 
   /**
