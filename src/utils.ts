@@ -3,15 +3,6 @@ import {validate} from 'jsonschema';
 import createSchema, {createFieldSchema} from './schema.ts';
 import MarcRecordError from './error.ts';
 
-/**
- * Deep clone an object using JSON serialization.
- * @param obj - The object to clone.
- * @returns A deep copy of the object.
- */
-export function clone<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
-}
-
 export function validateRecord(record: MarcRecordObject, options: ValidationOptions = {}): string[] {
   const {noFailValidation = false} = options;
   const validationResults = validate(record, createSchema(options), {nestedErrors: false});

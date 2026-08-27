@@ -1,7 +1,7 @@
 import createDebugLogger from 'debug';
 import MarcRecordError from './error.ts';
 import {fieldOrderComparator} from './marcFieldSort.ts';
-import {clone, validateRecord, validateField} from './utils.ts';
+import {validateRecord, validateField} from './utils.ts';
 
 export {default as MarcRecordError} from './error.ts';
 
@@ -126,7 +126,7 @@ export class MarcRecord {
    * @returns A clone of the global validation options.
    */
   static getValidationOptions(): ValidationOptions {
-    return clone(globalValidationOptions);
+    return structuredClone(globalValidationOptions);
   }
 
   /**
@@ -138,7 +138,7 @@ export class MarcRecord {
     this._validationOptions = validationOptions;
 
     if (record) {
-      const recordClone = clone(record);
+      const recordClone = structuredClone(record);
       recordClone.leader = recordClone.leader || '';
       recordClone.fields = recordClone.fields || [];
 
@@ -294,7 +294,7 @@ export class MarcRecord {
     return this;
 
     function format(field: MarcField | MarcControlField): MarcField | MarcControlField {
-      const cloned = clone(field);
+      const cloned = structuredClone(field);
 
       if ('subfields' in field) {
         return {
@@ -554,7 +554,7 @@ export class MarcRecord {
   toObject(): MarcRecordObject {
     return {
       leader: this.leader,
-      fields: clone(this.fields)
+      fields: structuredClone(this.fields)
     };
   }
 
@@ -620,8 +620,8 @@ export class MarcRecord {
    * @returns True if the records have equivalent data.
    */
   static isEqual(r1: MarcRecord, r2: MarcRecord): boolean {
-    const r1c = new MarcRecord(clone(r1));
-    const r2c = new MarcRecord(clone(r2));
+    const r1c = MarcRecord.clone(r1);
+    const r2c = MarcRecord.clone(r2);
     return JSON.stringify(r1c.sortFields()) === JSON.stringify(r2c.sortFields());
   }
 }

@@ -5,18 +5,6 @@ import * as Utils from '../src/utils.ts';
 import {MarcRecordError} from '../src/index.ts';
 
 describe('utils', () => {
-  // MARK: Clone
-  describe('#clone', () => {
-    it('Should clone an object', () => {
-      const a = {foo: 'bar'};
-      const b = Utils.clone(a);
-
-      assert.deepStrictEqual(JSON.stringify(a), JSON.stringify(b));
-      assert.deepStrictEqual(a, b);
-      assert.equal(Object.is(a, b), false);
-    });
-  });
-
   // MARK: Validate Record
   describe('#validateRecord', () => {
     it('Should consider the record valid', () => {
