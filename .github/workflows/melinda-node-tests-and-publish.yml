@@ -20,9 +20,9 @@ jobs:
 
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -39,7 +39,7 @@ jobs:
     container: node:24
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: mikaelvesavuori/license-compliance-action@v1
         with:
           exclude_pattern: /^@natlibfi/
@@ -51,7 +51,7 @@ jobs:
 
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
     - name: nodejsscan scan
       id: njsscan
       uses: ajinabraham/njsscan-action@master
@@ -65,7 +65,7 @@ jobs:
     if: contains(github.ref, 'refs/tags/')
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Clean install
         run: npm ci
       # Publish stable release with --tag latest
