@@ -620,31 +620,9 @@ export class MarcRecord {
    * @returns True if the records have equivalent data.
    */
   static isEqual(r1: MarcRecord, r2: MarcRecord): boolean {
-    return normalizeForComparison(r1.toObject()) === normalizeForComparison(r2.toObject());
+    const r1c = new MarcRecord(clone(r1));
+    const r2c = new MarcRecord(clone(r2));
+    return JSON.stringify(r1c.sortFields()) === JSON.stringify(r2c.sortFields());
   }
 }
 
-/**
- * Serialize a record to a JSON string with stable key order, so that
- * structurally equal records always produce identical strings.
- * @param record - The record to serialize.
- * @returns Canonical JSON string of the record.
- */
-function normalizeForComparison(record: MarcRecordObject): string {
-  return JSON.stringify({
-    fields: record.fields.map(normalizeField),
-    leader: record.leader
-  });
-}
-
-function normalizeField(field: MarcControlField | MarcField): MarcControlField | MarcField {
-  if ('subfields' in field) {
-    return {
-      ind1: field.ind1,
-      ind2: field.ind2,
-      subfields: field.subfields.map(subfield => ({code: subfield.code, value: subfield.value})),
-      tag: field.tag
-    };
-  }
-  return {tag: field.tag, value: field.value};
-}
